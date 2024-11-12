@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
@@ -10,7 +9,7 @@ void Continue();
 void Highscores();
 void Settings();
 
-int main() {
+void test() {
 
     char Menu[5] = {'\0'};
 
@@ -97,6 +96,7 @@ int Inputs(){
             case 'K': return 1; // LEFT
             case 'P': return 2; // DOWN
             case 'M': return 3; // RIGHT
+            default : return -1;
         }
     } else if (a == '\r') { //TODO: ganti char enter dengan variabel yang bisa di customize
         return 4;
