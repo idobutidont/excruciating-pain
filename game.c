@@ -36,9 +36,9 @@ void printTower(Tower towers[3]) {
     for (int i = MAX_DISKS - 1; i >= 0; i--) {
         for (int j = 0; j < 3; j++) {
             if (i <= towers[j].top)
-            printf("%d     ", towers[j].disks[i]);      // print number with spaces instead of number without spaces
+                printf("%d     ", towers[j].disks[i]);      // print number with spaces instead of number without spaces
             else
-            printf("      ");                           // handling empty disks
+                printf("      ");                           // handling empty disks
         }
         printf("\n");
     }

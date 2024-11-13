@@ -14,9 +14,12 @@
 
 typedef struct PlayerData                       // Gunanya buat di simpan ke save-file.
 {   
+    char Username[25];                          // Literal Username
     int Moves;                                  // Udah berapa move yang dilakukan player
     int difficulty;                             // Tingkat kesulitan (1 - 5), niatnya sih jumlah tiang sama platesnya yang nentuin difficulty-nya
-    //int poles[max_poles][max_plates];         // Tiang buat platesnya, format poles[Y][X], Y buat tiangnya, X buat anggota plates pada tiang Y
+    int DiscsItems[16][16];                     // DiscsItems[Y][X], Tower Y Discs X, gunanya buat nyimpen data disc ke file
+    int Towers;                                 // Ada berapa towers yang dimiliki player       // niatnya Towers dan Discs itu
+    int Discs;                                  // Ada berapa Discs yang dimiliki player        // diambil dari DiscsItems, jadi ga butuh 2 var ini sebenarnya
     int hand;                                   // Apakah di tangannya ada plate atau kosong, kalau ada berapa besarnya
     int currentPosition;                        // Posisi Tangannya ada di pole mana
 
@@ -24,15 +27,16 @@ typedef struct PlayerData                       // Gunanya buat di simpan ke sav
 
 };
 
-// Buat Main Menu playernya
 void Menu();
+// Buat Main Menu playernya
 
-// Buat WASD, ARROW_KEY, INTERACT, dll
 void PlayerInput();
+// Buat WASD, ARROW_KEY, INTERACT, dll
 
-// kayak printf tapi ada tambahan warna pada fontnya
 void printfColor(char input[], int color);
+// kayak printf tapi ada tambahan warna pada fontnya
 
+void PutPlatestoString(char plate[], int besar_plate, int max_plate);
 // buat nge render plate, max_plate ditentukan difficulty-nya, besar_plate itu panjang '=' nya
 /*
     Kenapa pakai max_plate?
@@ -53,10 +57,8 @@ void printfColor(char input[], int color);
 
 */
 // DEMO: " <=============> " atau "⊏==============⊐" "⊂================⊃"
-void PutPlatestoString(char plate[], int besar_plate, int max_plate);
 
-
-
+void PrintScreen();
 // buat nge print layar in-game
 /*
     PEAK DEMO INCOMING!!!
@@ -78,6 +80,14 @@ void PutPlatestoString(char plate[], int besar_plate, int max_plate);
 
     ini masi rencana, niatnya bakal lebih terlihat lah
 */
-void PrintScreen();
+
+int MovesToScore(int Moves, int Towers, int Discs);
+// Hitung Score Multiplier yang dipengaruhi oleh settingan jumlah towers dan discs
+// Jika towers nambah, Score Multiplier ngurang
+// Jika Discs nambah, Score Multiplier nambah
+// Jika Moves nambah, Score Multiplier ngurang
+
+void SaveToFile(PlayerData player);
+// Menyimpan data player ke file save.dat
 
 #endif

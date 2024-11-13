@@ -30,8 +30,7 @@ void test() {
             Menu[0], Menu[1], Menu[2], Menu[3], Menu[4]
             );
 
-        switch (Inputs())
-        {
+        switch (Inputs()) {
         // UP
         case 0:
 
@@ -66,6 +65,8 @@ void test() {
             case 3: Settings(); break;
             case 4: return 0;
             }
+
+        default: break;
         }
 
     } while (1);
