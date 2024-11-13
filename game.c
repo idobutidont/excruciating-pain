@@ -1,4 +1,5 @@
 // BASIC IMPLEMENTATION, NO GAMEPLAY
+// TODO: GAME LOGIC, USER INTERACTION, PROPER CODE COMMENTS, REFACTOR (MAYBE)
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,12 +8,12 @@
 
 typedef struct {
     int disks[MAX_DISKS];
-    int top;
+    int top; // Tracks the latest or topmost disk pushed onto a tower 
 } Tower;
 
-// Function to initialize a tower
-void initTower(Tower *tower) {
-    tower->top = -1; // Initialize the empty tower
+// Function to initialize tower
+void initializeTower(Tower *tower) {
+    tower->top = -1; // Initialize the tower as empty
 }
 
 // Function to push a disk onto a tower
@@ -22,7 +23,7 @@ void push(Tower *tower, int disk) {
     }
 }
 
-// Function to pop a disk from a tower
+// Function to "pop" a disk from a tower
 int pop(Tower *tower) {
     if (tower->top >= 0) {                      
         return tower->disks[(tower->top)--];    // return tower.disks[top]; top--;
@@ -34,11 +35,6 @@ int pop(Tower *tower) {
 void printTower(Tower towers[3]) {
     for (int i = MAX_DISKS - 1; i >= 0; i--) {
         for (int j = 0; j < 3; j++) {
-            // if (i <= towers[j].top) {
-            //     printf("%2d", towers[j].disks[i]);
-            // } else {
-            //     printf("     "); // Messy print, the spaces are going everywhere
-            // }
             if (i <= towers[j].top)
             printf("%d     ", towers[j].disks[i]);      // print number with spaces instead of number without spaces
             else
@@ -46,14 +42,14 @@ void printTower(Tower towers[3]) {
         }
         printf("\n");
     }
-    printf("███████████\n");
+    printf("███  ███  ███\n"); // tower base
     printf("A     B     C\n");
 }
 
-int main() {
+int main() { //placeholder main function
     Tower towers[3];
     for (int i = 0; i < 3; i++) {
-        initTower(&towers[i]);
+        initializeTower(&towers[i]);
     }
     
     // Initialize the starting tower with disks
