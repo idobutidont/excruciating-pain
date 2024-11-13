@@ -5,3 +5,4 @@
 build/Debug/main.o
 build/Debug/outDebug.exe
 main.exe
+build/Debug/game.o

@@ -37,7 +37,7 @@ void printfColor(char input[], int color);
 /*
     Kenapa pakai max_plate?
     Karena nanti masing-masing plate itu bisa beda beda panjangnya, dan nanti si visualnya bakal rusak
-    - Dan untuk mengatasi hal ini aing nge render string se panjang max_plate.
+    - Dan untuk mengatasi hal ini aing nge render string se panjang max_plate + 2.
 
     Terus kalau tempat yang kosongnya gimana?
     - Di string plate nya nanti aku tambahin spasi ' ' sebanyak yang dibutuhkan

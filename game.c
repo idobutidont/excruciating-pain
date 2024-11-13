@@ -17,15 +17,15 @@ void initTower(Tower *tower) {
 
 // Function to push a disk onto a tower
 void push(Tower *tower, int disk) {
-    if (tower->top < MAX_DISKS - 1) {
-        tower->disks[++(tower->top)] = disk;
+    if (tower->top < MAX_DISKS - 1) {           // make sure the top isn't on the most upper slot
+        tower->disks[++(tower->top)] = disk;    // tower.top = disk, tower.top++
     }
 }
 
 // Function to pop a disk from a tower
 int pop(Tower *tower) {
-    if (tower->top >= 0) {
-        return tower->disks[(tower->top)--];
+    if (tower->top >= 0) {                      
+        return tower->disks[(tower->top)--];    // return tower.disks[top]; top--;
     }
     return -1; // Return -1 if tower is empty
 }
@@ -34,16 +34,20 @@ int pop(Tower *tower) {
 void printTower(Tower towers[3]) {
     for (int i = MAX_DISKS - 1; i >= 0; i--) {
         for (int j = 0; j < 3; j++) {
-            if (i <= towers[j].top) {
-                printf("%2d", towers[j].disks[i]);
-            } else {
-                printf("     "); // Messy print, the spaces are going everywhere
-            }
+            // if (i <= towers[j].top) {
+            //     printf("%2d", towers[j].disks[i]);
+            // } else {
+            //     printf("     "); // Messy print, the spaces are going everywhere
+            // }
+            if (i <= towers[j].top)
+            printf("%d     ", towers[j].disks[i]);      // print number with spaces instead of number without spaces
+            else
+            printf("      ");                           // handling empty disks
         }
         printf("\n");
     }
     printf("███████████\n");
-    printf(" A   B   C\n");
+    printf("A     B     C\n");
 }
 
 int main() {
