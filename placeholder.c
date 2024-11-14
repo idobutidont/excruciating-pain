@@ -63,7 +63,7 @@ void test() {
             case 1: Continue(); break;
             case 2: Highscores(); break;
             case 3: Settings(); break;
-            case 4: return 0;
+            case 4: return;
             }
 
         default: break;
@@ -71,14 +71,13 @@ void test() {
 
     } while (1);
     
-    return 0;
+    return;
 }
 
 void KirimScore(int score) {
 
 }
 
-//Author: Azzar
 int Inputs(){
 
     char a, b;

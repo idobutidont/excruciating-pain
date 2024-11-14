@@ -5,9 +5,11 @@
 * DATE: 
 ****************************************************************/
 
-#include <stdio.h>
+#include "helper.h"
 
 int main() {
-    printf("aisudhtiausoadhug");
+
+    PrintfColor("YESSSS!!! ", 15);
+    printf("what");
     return 0;
 }

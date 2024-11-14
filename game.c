@@ -19,7 +19,7 @@ void initializeTower(Tower *tower) {
 // Function to push a disk onto a tower
 void push(Tower *tower, int disk) {
     if (tower->top < MAX_DISKS - 1) {           // make sure the top isn't on the most upper slot
-        tower->disks[++(tower->top)] = disk;    // tower.top = disk, tower.top++
+        tower->disks[++(tower->top)] = disk;    // tower.top++; tower.disks[tower.top] = disk;
     }
 }
 
@@ -46,7 +46,7 @@ void printTower(Tower towers[3]) {
     printf("A     B     C\n");
 }
 
-int main() { //placeholder main function
+int maintest() { //placeholder main function
     Tower towers[3];
     for (int i = 0; i < 3; i++) {
         initializeTower(&towers[i]);
