@@ -13,12 +13,10 @@ void PrintfColor(char* input, int color) {
 
 int PlayerInput() {
 
-    char firstInput;
+    int firstInput = getch();
 
-    firstInput = getch();
-
-    if (firstInput == -32 || firstInput == 0) {
-
+    if (firstInput == 224 || firstInput == 0) {
+    
         switch(getch()) {
             case 'H': return 0; // UP
             case 'K': return 1; // LEFT
@@ -27,7 +25,7 @@ int PlayerInput() {
             default : return -1;
         }
 
-    } else if (firstInput == '\r') {
+    } else if (firstInput == '\r') { // ENTER
         return 4; // Proceed, Interact
     } else {
         return -1;
@@ -60,7 +58,7 @@ void PutDiscsToString(char* discs, int current_disc, int biggest_disc) {
 void PutEmptyDiscsToString(char* discs, int biggest_disc) {
 
     int count = 0;
-    int space = biggest_disc / 2;
+    int space = (biggest_disc / 2) + 1;
 
     for (int i = 0; i < space; ++i)
         discs[count++] = ' ';

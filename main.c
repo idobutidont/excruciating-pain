@@ -7,9 +7,8 @@
 
 #include "helper.h"
 
-int main() {
+int maintest() {
 
-    PrintfColor("YESSSS!!! ", 15);
     printf("what");
     return 0;
 }
