@@ -33,7 +33,7 @@ int PlayerInput() {
 }
 
 //PRECONDITION besar_discs pasti lebih dari 0.
-void PutDiscsToString(char* discs, int current_disc, int biggest_disc) {
+void DiscToString(char* discs, int current_disc, int biggest_disc) {
 
     int count = 0;
     int space = (biggest_disc - current_disc) / 2;
@@ -55,7 +55,15 @@ void PutDiscsToString(char* discs, int current_disc, int biggest_disc) {
 
 }
 
-void PutEmptyDiscsToString(char* discs, int biggest_disc) {
+void TowerToString(char* discs, int biggest_disc, char accessories) {
+
+    //handling empty string.
+    if (accessories == ' ')  {
+        for (int i = biggest_disc + 2; i >= 0; --i) {
+            discs[i] = ' ';
+        }
+        return;
+    }
 
     int count = 0;
     int space = (biggest_disc / 2) + 1;
@@ -63,7 +71,7 @@ void PutEmptyDiscsToString(char* discs, int biggest_disc) {
     for (int i = 0; i < space; ++i)
         discs[count++] = ' ';
     
-    discs[count++] = '|';
+    discs[count++] = accessories;
 
     for (int i = 0; i < space; ++i)
         discs[count++] = ' ';

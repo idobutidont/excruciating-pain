@@ -21,7 +21,7 @@ int PlayerInput();
     more keybind can be easily added
 */
 
-void PutDiscsToString(char* discs, int current_disc, int biggest_disc);
+void DiscToString(char* discs, int current_disc, int biggest_disc);
 /*
     Convert Disc length to String, e.g:
     besar_disc = 5     biggest_disc = 7
@@ -49,7 +49,7 @@ void PutDiscsToString(char* discs, int current_disc, int biggest_disc);
     return all those strings to discs
 */
 
-void PutEmptyDiscsToString(char* discs, int biggest_disc);
+void TowerToString(char* discs, int biggest_disc, char accessories);
 /*
     same as above except
     e.g: biggest_disc = 7
@@ -57,7 +57,7 @@ void PutEmptyDiscsToString(char* discs, int biggest_disc);
     input biggest_disc / 2 spaces (3)
     "   "
 
-    input '|'
+    input '|' or ACCESSORIES (bisa dipakai buat petunjuk, atau A B C, dll)
     "   |"
 
     input 3 spaces
