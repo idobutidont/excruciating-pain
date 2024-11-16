@@ -5,6 +5,7 @@
 build/Debug/main.o
 build/Debug/outDebug.exe
 main.exe
+game.exe
 build/Debug/game.o
 build/Debug/placeholder.o
 build/Debug/helper.o
