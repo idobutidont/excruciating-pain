@@ -95,7 +95,10 @@ void printCursor(int current_pos, int lenArray) {
 // TODO: switch from constant to variable for MAX_DISKS.
 int main() { //placeholder main function
 
-    scanf("%d %d", &MAX_DISKS, &MAX_TOWERS);
+    while (1){
+        scanf("%d %d", &MAX_DISKS, &MAX_TOWERS);
+        if (MAX_DISKS <= 16 && MAX_TOWERS <= 6) break; // Validate input (a 1920x1080 laptop display can fit about 6 towers max in fullscreen)
+    }
 
     int biggest_disk = (MAX_DISKS * 2) - 1;     // 5 -> 9
     int lenArray = biggest_disk + 3;            // 5 -> 12 (9, + 2 for '<' and '>', + 1 for '\0')
