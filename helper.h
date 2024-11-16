@@ -21,21 +21,21 @@ int PlayerInput();
     more keybind can be easily added
 */
 
-void DiscToString(char* discs, int current_disc, int biggest_disc);
+void DiskToString(char* disks, int current_disk, int biggest_disk);
 /*
-    Convert Disc length to String, e.g:
-    besar_disc = 5     biggest_disc = 7
+    Convert Disk length to String, e.g:
+    besar_disk = 5     biggest_disk = 7
     
-    discs has (biggest_disc + 2) elements of chars
-    so discs now has 9 elements of chars
+    disks has (biggest_disk + 2) elements of chars
+    so disks now has 9 elements of chars
 
-    input (biggest_disc - current_disc)/2, or 1 space
+    input (biggest_disk - current_disk)/2, or 1 space
     " "
 
     input '<'
     " <"
     
-    input (current_disc), or 5 '='
+    input (current_disk), or 5 '='
     " <====="
 
     input '>'
@@ -46,15 +46,15 @@ void DiscToString(char* discs, int current_disc, int biggest_disc);
 
     and add null terminator since c always acts funny
 
-    return all those strings to discs
+    return all those strings to disks
 */
 
-void TowerToString(char* discs, int biggest_disc, char accessories);
+void TowerToString(char* disks, int biggest_disk, char accessories);
 /*
     same as above except
-    e.g: biggest_disc = 7
+    e.g: biggest_disk = 7
 
-    input biggest_disc / 2 spaces (3)
+    input biggest_disk / 2 spaces (3)
     "   "
 
     input '|' or ACCESSORIES (bisa dipakai buat petunjuk, atau A B C, dll)
@@ -63,7 +63,7 @@ void TowerToString(char* discs, int biggest_disc, char accessories);
     input 3 spaces
     "   |   "
 
-    return those strings to discs
+    return those strings to disks
 */
 
 #endif

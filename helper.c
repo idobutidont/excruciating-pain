@@ -32,50 +32,50 @@ int PlayerInput() {
     }
 }
 
-//PRECONDITION besar_discs pasti lebih dari 0.
-void DiscToString(char* discs, int current_disc, int biggest_disc) {
+//PRECONDITION besar_disks pasti lebih dari 0.
+void DiskToString(char* disks, int current_disk, int biggest_disk) {
 
     int count = 0;
-    int space = (biggest_disc - current_disc) / 2;
+    int space = (biggest_disk - current_disk) / 2;
 
     for (int i = 0; i < space; ++i)
-        discs[count++] = ' ';
+        disks[count++] = ' ';
 
-    discs[count++] = '<';
+    disks[count++] = '<';
 
-    for (int i = 0; i < current_disc; ++i)
-        discs[count++] = '=';
+    for (int i = 0; i < current_disk; ++i)
+        disks[count++] = '=';
 
-    discs[count++] = '>';
+    disks[count++] = '>';
 
     for (int i = 0; i < space; ++i)
-        discs[count++] = ' ';
+        disks[count++] = ' ';
 
-    discs[count] = '\0'; 
+    disks[count] = '\0'; 
 
 }
 
-void TowerToString(char* discs, int biggest_disc, char accessories) {
+void TowerToString(char* disks, int biggest_disk, char accessories) {
 
     //handling empty string.
     if (accessories == ' ')  {
-        for (int i = biggest_disc + 2; i >= 0; --i) {
-            discs[i] = ' ';
+        for (int i = biggest_disk + 2; i >= 0; --i) {
+            disks[i] = ' ';
         }
         return;
     }
 
     int count = 0;
-    int space = (biggest_disc / 2) + 1;
+    int space = (biggest_disk / 2) + 1;
 
     for (int i = 0; i < space; ++i)
-        discs[count++] = ' ';
+        disks[count++] = ' ';
     
-    discs[count++] = accessories;
+    disks[count++] = accessories;
 
     for (int i = 0; i < space; ++i)
-        discs[count++] = ' ';
+        disks[count++] = ' ';
 
-    discs[count] = '\0';
+    disks[count] = '\0';
 
 }
