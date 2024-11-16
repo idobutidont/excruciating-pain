@@ -9,7 +9,7 @@ void Continue();
 void Highscores();
 void Settings();
 
-void test() {
+void maintests() {
 
     char Menu[5] = {'\0'};
 
@@ -34,9 +34,9 @@ void test() {
         // UP
         case 0:
 
-            --selected;
-            if (selected < 0) {
-                selected++;
+            //--selected;
+            if (--selected < 0) {
+                ++selected;
                 break;
             }
 
@@ -47,9 +47,9 @@ void test() {
         // DOWN
         case 2:
 
-            ++selected;
-            if (selected > 4) {
-                selected--;
+            //++selected;
+            if (++selected > 4) {
+                --selected;
                 break;
             }
 
@@ -78,7 +78,7 @@ void KirimScore(int score) {
 
 }
 
-int Inputs(){
+int Inputs (){
 
     char a, b;
     a = getch();
@@ -91,10 +91,10 @@ int Inputs(){
     */
     if (a == -32 || a == 0) {
         b = getch();
-        switch(b) {
+        switch(b) { 
             case 'H': return 0; // UP
             case 'K': return 1; // LEFT
-            case 'P': return 2; // DOWN
+            case 'P': return 2; // DOWN 
             case 'M': return 3; // RIGHT
             default : return -1;
         }

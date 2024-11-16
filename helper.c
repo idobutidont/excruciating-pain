@@ -1,14 +1,13 @@
 #include "helper.h"
 
-void setConsoleColor(int color) {
+void PrintfColor(char* input, int color) {
+    
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, color);
-}
 
-void PrintfColor(char* input, int color) {
-    setConsoleColor(color);
     printf("%s", input);
-    setConsoleColor(15); //bright white supposedly
+
+    SetConsoleTextAttribute(hConsole, 15);
 }
 
 int PlayerInput() {

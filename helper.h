@@ -5,8 +5,6 @@
 #include <windows.h>
 #include <stdio.h>
 
-void setConsoleColor(int color);
-
 void PrintfColor(char* input, int color);
 
 int PlayerInput();

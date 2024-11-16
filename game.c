@@ -56,17 +56,35 @@ void printTower(Tower towers[], int biggest_disk, char* disk, char* empty_disk) 
 }
 
 // Module to print Cursor
-void printCursor(int current_pos, int lenArray) {
+void printCursor(int current_pos, int lenArray, char accessories) {
 
     int empty_length = (lenArray * current_pos) + (lenArray / 2) - 1;
     for (int i = 0; i < empty_length; i++) {
         printf(" ");
     }
 
-    printf("%c\n", 'V');
+    printf("%c\n", accessories);
 }
 
-// TODO: switch from constant to variable for MAX_DISKS.
+// Module to print Hand
+void printHand(int currentPos, int hand, int lenArray, int biggest_disk) {
+    if (hand <= 0) {
+        printf("\n");
+        return;
+    }
+
+    int len = (lenArray * currentPos);
+    for (int i = 0 ; i < len; ++i) 
+        printf(" ");
+    
+    char stringHand[lenArray];
+
+    DiscToString(stringHand, hand, biggest_disk);
+
+    printf("%s\n", stringHand);
+
+}
+
 int main() { //placeholder main function
 
     scanf("%d %d", &MAX_DISKS, &MAX_TOWERS);
@@ -95,22 +113,40 @@ int main() { //placeholder main function
     do
     {
         system("cls");
-        printCursor(currentPosition, lenArray);
-        printf("\n");
+        printCursor(currentPosition, lenArray, 'V');
+        printHand(currentPosition, hand, lenArray, biggest_disk);
         printTower(towers, biggest_disk, stringDisk, stringEmpty);     
 
         switch (PlayerInput()) {
-            case 0: hand = pop(&towers[currentPosition]); break;
-            case 1: --currentPosition; break;
-            case 2: push(&towers[currentPosition], hand); hand = 0; break;
-            case 3: ++currentPosition; break;
+
+            // UP (POP)
+            case 0: 
+                if (hand != 0 || towers[currentPosition].top < 0) break; 
+                hand = pop(&towers[currentPosition]); 
+                break;
+
+            // LEFT    
+            case 1: 
+                if (currentPosition == 0) break;
+                --currentPosition; 
+                break;
+
+            // DOWN (PUSH)
+            case 2: 
+                if (hand == 0) break;
+                if (towers[currentPosition].top > -1 && (hand > towers[currentPosition].disks[towers[currentPosition].top])) break; //cancer
+                push(&towers[currentPosition], hand); 
+                hand = 0; 
+                break;
+
+            // RIGHT
+            case 3: 
+                if (currentPosition == MAX_TOWERS - 1) break;
+                ++currentPosition; 
+                break;
+
             default : break;
         }
-
-        if (currentPosition < 0) {
-            ++currentPosition;
-        } else if (currentPosition > MAX_TOWERS - 1) 
-            --currentPosition;
 
     } while (1);
     
