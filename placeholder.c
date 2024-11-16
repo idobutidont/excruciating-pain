@@ -34,11 +34,9 @@ void test() {
         // UP
         case 0:
 
+            if (selected == 0) break;
+
             --selected;
-            if (selected < 0) {
-                selected++;
-                break;
-            }
 
             Menu[selected] = '>';
             Menu[selected + 1] = '\0';
@@ -47,11 +45,9 @@ void test() {
         // DOWN
         case 2:
 
+            if (selected == 4) break;
+            
             ++selected;
-            if (selected > 4) {
-                selected--;
-                break;
-            }
 
             Menu[selected] = '>';
             Menu[selected - 1] = '\0';
