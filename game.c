@@ -1,7 +1,7 @@
 // BASIC IMPLEMENTATION, NO GAMEPLAY
 // TODO: GAME LOGIC, USER INTERACTION, PROPER CODE COMMENTS, REFACTOR (MAYBE)
 
-#include "helper.h"
+#include "helper.c"
 
 // try changing MAX_DISKS to other numbers and run the file
 // #define MAX_DISKS 9
@@ -18,6 +18,20 @@ void initializeTower(Tower *tower) {
     tower->top = -1; // Initialize the tower as empty
 }
 
+// Cases
+int TowerisFull(Tower* tower) {
+    return tower->top == MAX_DISKS - 1;
+}
+
+int TowerisEmpty(Tower* tower) {
+    return tower->top == -1;
+}
+
+int DiskcanMove(int fromDisk, int toDisk) {
+    return toDisk == -1 || fromDisk < toDisk;
+}
+// End of cases
+
 // Function to push a disk onto a tower
 void push(Tower *tower, int disk) {
     if (tower->top < MAX_DISKS - 1) {           // make sure the top isn't on the most upper slot
@@ -33,6 +47,18 @@ int pop(Tower *tower) {
     return -1; // Return -1 if tower is empty
 }
 
+// Function to move disks
+void moveDisk(Tower* from, Tower* to) {
+    if (!TowerisEmpty(from)) {
+        int disk = pop(from);
+        if (DiskcanMove(disk, to->top >= 0 ? to->disks[to->top] : -1)) {
+            push(to, disk);
+        } else {
+            push(from, disk); // Return the disc if the disk can't be moved (TheManWhoCan'tBeMoved.flac)
+        }
+    }
+}
+
 // Function to print the towers
 // added biggest_disk, string for empty disk and non-empty disk for repetitive print handling
 void printTower(Tower towers[], int biggest_disk, char* disk, char* empty_disk) {
@@ -44,7 +70,7 @@ void printTower(Tower towers[], int biggest_disk, char* disk, char* empty_disk) 
             if (i <= towers[j].top) {
 
                 current_disk = towers[j].disks[i];                  // temporarily put disk into a variable to avoid issues with iterator 'j'
-                DiscToString(disk, current_disk, biggest_disk); // harus pake variable dan gabisa di masukin langsung towers[j].disks[i] nya, nanti nge bug
+                DiskToString(disk, current_disk, biggest_disk); // harus pake variable dan gabisa di masukin langsung towers[j].disks[i] nya, nanti nge bug
 
                 printf("%s ", disk);
 
@@ -100,9 +126,9 @@ int main() { //placeholder main function
         printTower(towers, biggest_disk, stringDisk, stringEmpty);     
 
         switch (PlayerInput()) {
-            case 0: hand = pop(&towers[currentPosition]); break;
+            case 0: hand = currentPosition; break;
             case 1: --currentPosition; break;
-            case 2: push(&towers[currentPosition], hand); hand = 0; break;
+            case 2: moveDisk(&towers[hand], &towers[currentPosition]); hand = 0; break;
             case 3: ++currentPosition; break;
             default : break;
         }
