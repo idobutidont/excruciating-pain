@@ -2,6 +2,7 @@
 // TODO: GAME LOGIC, USER INTERACTION, PROPER CODE COMMENTS, REFACTOR (MAYBE)
 
 #include "helper.h"
+#include <string.h>
 
 // try changing MAX_DISKS to other numbers and run the file
 // #define MAX_DISKS 9
@@ -19,13 +20,8 @@ void initializeTower(Tower *tower) {
 }
 
 // Cases
-
-int DiskcanMove(int fromDisk, int toDisk) {
-    return toDisk == -1 || fromDisk < toDisk;
-}
-
-int TowerIsEmpty(Tower tower) {
-    return tower.top <= -1;
+int TowerIsEmpty(int top) {
+    return top <= -1;
 }
 
 int HandIsEmpty(int hand) {
@@ -34,6 +30,17 @@ int HandIsEmpty(int hand) {
 
 int HandIsBiggerThanTower(int hand, Tower tower) {
     return hand > tower.disks[tower.top];
+}
+
+int HasWon(Tower tower[]) {
+    for (int i = 1; i < MAX_TOWERS; ++i) 
+        if (tower[i].top == MAX_DISKS - 1) return 1;
+    
+    return 0;
+}
+
+int HasRanOutOfMoves(int moves, int max_moves) {
+    return (moves + 1) > max_moves;
 }
 
 // End of cases
@@ -103,7 +110,66 @@ void printHand(int currentPos, int hand, int lenArray, int biggest_disk) {
     printf("%s\n", stringHand);
 }
 
-// TODO: switch from constant to variable for MAX_DISKS.
+void printUI(int moves, int max_moves, char* message) {
+    printf("Moves: %d\n", moves);
+    printf("Moves Left: %d\n", (max_moves-moves));
+    PrintfColor(message, 12);
+}
+
+// void inGame(PlayerData *player) {
+
+// }
+
+void EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* message) {
+
+    switch (PlayerInput()) {
+
+        case 0: // UP (POP) Pick up disk to hand
+            if (!HandIsEmpty(*hand)) {
+                strcpy(message, "You already got disk on your hand big guy.\0");
+                return;
+            }
+            if (TowerIsEmpty(tower->top)) {
+                strcpy(message, "There's no disk there.\0");
+                return;
+            }
+
+            *hand = pop(&(*tower)); 
+            break;
+
+        case 1: // LEFT
+            if (*current_pos == 0) break;
+            --*(current_pos); 
+            break;
+            
+        case 2: // DOWN (PUSH) Put down disk from hand
+
+            if (HandIsEmpty(*hand)) {
+                strcpy(message, "Your hand is empty big guy.\0");
+                return;
+            }
+            if ((!TowerIsEmpty(tower->top) && HandIsBiggerThanTower(*hand, *tower))) {
+                strcpy(message, "The disk on your hand is bigger than the one on the tower.\0"); 
+                return;
+            }
+
+            ++*(moves);
+            push(&*tower, *hand);
+            *hand = 0; 
+            break;
+
+        case 3: // RIGHT
+            if (*current_pos == MAX_TOWERS - 1) break;
+            ++*(current_pos); 
+            break;
+
+        default : 
+            break;
+    }
+
+    strcpy(message, "\0");
+}
+
 int main() { //placeholder main function
 
     while (1){
@@ -128,46 +194,24 @@ int main() { //placeholder main function
 
     TowerToString(stringEmpty, biggest_disk, '|');   // put this here instead of them being put inside printTower for performance concern
     
-    int currentPosition = 0,hand = 0;
+    int currentPosition = 0,hand = 0, moves = 0;
 
-    // TODO: print UI (Moves, Scores, Move(s) Left)
+    char msg[100];
+
+    int max_moves = 10;
+
     do
     {
         system("cls");
         printCursor(currentPosition, lenArray, 'V');
         printHand(currentPosition, hand, lenArray, biggest_disk);
-        printTower(towers, biggest_disk, stringDisk, stringEmpty);     
+        printTower(towers, biggest_disk, stringDisk, stringEmpty);  
+        printUI(moves, max_moves, msg);
 
-        switch (PlayerInput()) {
+        if (HasWon(towers)) break;                      // print the last position before winning
+        if (HasRanOutOfMoves(moves, max_moves)) break;  // print the last position before taking the L
 
-            case 0: // UP (POP) Pick up disk to hand
-                if (!HandIsEmpty(hand) || TowerIsEmpty(towers[currentPosition]))
-                    break;
-
-                hand = pop(&towers[currentPosition]); 
-                break;
-
-            case 1: // LEFT
-                if (currentPosition == 0) break;
-                --currentPosition; 
-                break;
-                
-            case 2: // DOWN (PUSH) Put down disk from hand
-                if (HandIsEmpty(hand) || (!TowerIsEmpty(towers[currentPosition]) && HandIsBiggerThanTower(hand, towers[currentPosition])))
-                    break;
-
-                push(&towers[currentPosition], hand);
-                hand = 0; 
-                break;
-
-            case 3: // RIGHT
-                if (currentPosition == MAX_TOWERS - 1) break;
-                ++currentPosition; 
-                break;
-
-            default : 
-                break;
-        }
+        EventDetection(&towers[currentPosition], &hand, &currentPosition, &moves, msg);
 
     } while (1);
     
