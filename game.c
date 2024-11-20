@@ -2,27 +2,16 @@
 // TODO: GAME LOGIC, USER INTERACTION, PROPER CODE COMMENTS, REFACTOR (MAYBE)
 
 #include "helper.h"
+#include "tower.h"
 #include <string.h>
+#include <math.h>
 
 // try changing MAX_DISKS to other numbers and run the file
 // #define MAX_DISKS 9
 
 int MAX_DISKS, MAX_TOWERS;
 
-typedef struct {
-    int disks[16];  // set the maximum amount of disks possible is 16, user can only have less than 16 disks in a single game.
-    int top;        // Tracks the latest or topmost disk pushed onto a tower 
-} Tower;
-
-// Function to initialize tower
-void initializeTower(Tower *tower) {
-    tower->top = -1; // Initialize the tower as empty
-}
-
 // Cases
-int TowerIsEmpty(int top) {
-    return top <= -1;
-}
 
 int HandIsEmpty(int hand) {
     return hand <= 0;
@@ -45,25 +34,10 @@ int HasRanOutOfMoves(int moves, int max_moves) {
 
 // End of cases
 
-// Function to push a disk onto a tower
-void push(Tower *tower, int disk) {
-    if (tower->top < MAX_DISKS - 1) {           // make sure the top isn't on the most upper slot
-        tower->disks[++(tower->top)] = disk;    // tower.top++; tower.disks[tower.top] = disk;
-    }
-}
-
-// Function to "pop" a disk from a tower
-int pop(Tower *tower) {
-    if (tower->top >= 0) {                      
-        return tower->disks[(tower->top)--];    // return tower.disks[top]; top--;
-    }
-    return -1; // Return -1 if tower is empty
-}
-
 // Function to print the towers
 // added biggest_disk, string for empty disk and non-empty disk for repetitive print handling
 void printTower(Tower towers[], int biggest_disk, char* disk, char* empty_disk) {
-
+    
     int current_disk;
 
     for (int i = MAX_DISKS - 1; i >= 0; i--) {
@@ -154,7 +128,7 @@ void EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char*
             }
 
             ++*(moves);
-            push(&*tower, *hand);
+            push(&*tower, *hand, MAX_DISKS);
             *hand = 0; 
             break;
 
@@ -187,7 +161,7 @@ int main() { //placeholder main function
     
     // Initialize the starting tower with biggest_disk, odd number only
     for (int i = biggest_disk; i >= 1; i -= 2) {
-        push(&towers[0], i); // Put all disks onto the first tower
+        push(&towers[0], i, MAX_DISKS); // Put all disks onto the first tower
     }
 
     char stringDisk[lenArray], stringEmpty[lenArray];
@@ -196,9 +170,9 @@ int main() { //placeholder main function
     
     int currentPosition = 0,hand = 0, moves = 0;
 
-    char msg[100];
+    char msg[100] = {'\0'};
 
-    int max_moves = 10;
+    int max_moves = 50; //place holder max moves
 
     do
     {
@@ -208,8 +182,8 @@ int main() { //placeholder main function
         printTower(towers, biggest_disk, stringDisk, stringEmpty);  
         printUI(moves, max_moves, msg);
 
-        if (HasWon(towers)) break;                      // print the last position before winning
-        if (HasRanOutOfMoves(moves, max_moves)) break;  // print the last position before taking the L
+        if (HasWon(towers)) return 1;                      // print the last position before winning
+        if (HasRanOutOfMoves(moves, max_moves)) return 0;  // print the last position before taking the L
 
         EventDetection(&towers[currentPosition], &hand, &currentPosition, &moves, msg);
 

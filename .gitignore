@@ -9,3 +9,4 @@ game.exe
 build/Debug/game.o
 build/Debug/placeholder.o
 build/Debug/helper.o
+build/Debug/tower.o
