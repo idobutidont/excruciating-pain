@@ -143,6 +143,8 @@ int EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* 
 
     strcpy(message, "\0");
 
+    
+
     return 1;
 }
 
@@ -169,6 +171,7 @@ int inGame(PlayerData *player) {
         if (HasRanOutOfMoves(player->moves, player->max_moves)) return -1;  // print the last position before taking the L
 
         while (EventDetection(&(player->tower[player->currentPosition]), &player->hand, &player->currentPosition, &player->moves, msg) == -1); //reefrain the player from spamming or making unnecessary input
+        save(*player);      // autosave, performance is very awful now.
 
     } while (1);
 }
@@ -179,9 +182,6 @@ void initializePlayer (PlayerData *player) { //placeholder
         scanf("%d %d", &player->max_disks, &player->max_towers);
         if (player->max_disks <= 16 && player->max_towers <= 6) break;
     }
-
-    MAX_DISKS = player->max_disks;
-    MAX_TOWERS = player->max_towers;
 
     player->hand = 0;
     player->moves = 0;
@@ -201,7 +201,12 @@ int main() { // placeholder no.2 bruh
 
     PlayerData player;
 
-    initializePlayer(&player);
+    //initializePlayer(&player);
+    load(&player);              // kalo pertama kali main pake initializeplayer dulu
+
+    MAX_DISKS = player.max_disks;
+    MAX_TOWERS = player.max_towers;
+
     if (inGame(&player) == 1) {
         printf("\nYou Won!\n");
     } else {
