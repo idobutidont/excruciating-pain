@@ -1,4 +1,3 @@
-// BASIC IMPLEMENTATION, NO GAMEPLAY
 // TODO: GAME LOGIC, USER INTERACTION, PROPER CODE COMMENTS, REFACTOR (MAYBE)
 
 #include "helper.h"
@@ -9,13 +8,10 @@
 #include <windows.h>
 #include <stdio.h>
 
-// try changing MAX_DISKS to other numbers and run the file
-// #define MAX_DISKS 9
 
 int MAX_DISKS, MAX_TOWERS;
 
 // Cases
-
 int HandIsEmpty(int hand) {
     return hand <= 0;
 }
@@ -155,7 +151,7 @@ int inGame(PlayerData *player) {
     int lenArray = biggest_disk + 3;
 
     char stringDisk[lenArray], stringEmpty[lenArray];
-    char msg[128];
+    char msg[128] = {'\0'};
 
     TowerToString(stringEmpty, biggest_disk, '|');
 
@@ -192,8 +188,8 @@ void initializePlayer (PlayerData *player) { //placeholder
         initializeTower(&player->tower[i]);
     
 
-    for (int i = (MAX_DISKS * 2) - 1; i >= 1; i-=2 ) 
-        push(&player->tower[0], i, MAX_DISKS);
+    for (int i = (player->max_disks * 2) - 1; i >= 1; i-=2 ) 
+        push(&player->tower[0], i, player->max_disks);
 
 }
 
