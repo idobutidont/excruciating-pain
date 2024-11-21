@@ -1,12 +1,3 @@
-.vscode/c_cpp_properties.json
-.vscode/launch.json
-.vscode/settings.json
-.vscode/tasks.json
-build/Debug/main.o
-build/Debug/outDebug.exe
-main.exe
-game.exe
-build/Debug/game.o
-build/Debug/placeholder.o
-build/Debug/helper.o
-build/Debug/tower.o
+.vscode/*
+build/*
+*.exe
