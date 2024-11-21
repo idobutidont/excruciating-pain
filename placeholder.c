@@ -74,32 +74,32 @@ void KirimScore(int score) {
 
 }
 
-int Inputs(){
+// int Inputs(){
 
-    char a, b;
-    a = getch();
+//     int a, b;
+//     a = getch();
 
-    /*
-    TODO: customizable keybinding
-    Ketika user menekan tombol arrow keys, yang dibaca oleh console itu ada dua huruf, yaitu
-    huruf 'a' (-32) (cmd.exe) atau '\0' (0) (vsc terminal),
-    dan huruf keduanya 'H' untuk ARROW_UP, 'K' untuk 'ARROW_LEFT' dst.
-    */
-    if (a == -32 || a == 0) {
-        b = getch();
-        switch(b) {
-            case 'H': return 0; // UP
-            case 'K': return 1; // LEFT
-            case 'P': return 2; // DOWN
-            case 'M': return 3; // RIGHT
-            default : return -1;
-        }
-    } else if (a == '\r') { //TODO: ganti char enter dengan variabel yang bisa di customize
-        return 4;
-    } else {
-        return -1;
-    }
-}
+//     /*
+//     TODO: customizable keybinding
+//     Ketika user menekan tombol arrow keys, yang terbaca oleh console itu ada dua nilai, yaitu
+//     '0' atau '224' untuk special keypress (tergantung system dan terminalnya),
+//     dan huruf keduanya 'H' untuk ARROW_UP, 'K' untuk 'ARROW_LEFT' dst.
+//     */
+//     if (a == 0 || a == 224) {
+//         b = getch();
+//         switch(b) {
+//             case 'H': return 0; // UP
+//             case 'K': return 1; // LEFT
+//             case 'P': return 2; // DOWN
+//             case 'M': return 3; // RIGHT
+//             default : return -1;
+//         }
+//     } else if (a == '\r') { //TODO: ganti char enter dengan variabel yang bisa di customize
+//         return 4;
+//     } else {
+//         return -1;
+//     }
+// }
 
 void NewGame() {
 

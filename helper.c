@@ -2,7 +2,7 @@
 
 void setConsoleColor(int color) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole, color);
+    SetConsoleTextAttribute(hConsole, (WORD)color);
 }
 
 void PrintfColor(char* input, int color) {
