@@ -1,10 +1,6 @@
 #ifndef helper_h
 #define helper_h
 
-#include <conio.h>
-#include <windows.h>
-#include <stdio.h>
-
 void setConsoleColor(int color);
 
 void PrintfColor(char* input, int color);

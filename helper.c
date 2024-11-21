@@ -1,4 +1,9 @@
+
 #include "helper.h"
+
+#include <conio.h>
+#include <windows.h>
+#include <stdio.h>
 
 void setConsoleColor(int color) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);

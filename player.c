@@ -26,5 +26,5 @@ void load(PlayerData *player) {
     fread(&(*player), sizeof(PlayerData), 1, f);
 
     printf("\nFile has been loaded.");
-    exit(1);
+    fclose(f);
 }

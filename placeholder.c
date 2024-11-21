@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
-
-int Inputs();
+#include "helper.h"
 
 void NewGame();
 void Continue();
@@ -30,7 +29,7 @@ void test() {
             Menu[0], Menu[1], Menu[2], Menu[3], Menu[4]
             );
 
-        switch (Inputs()) {
+        switch (PlayerInput()) {
         // UP
         case 0:
 
@@ -68,10 +67,6 @@ void test() {
     } while (1);
     
     return;
-}
-
-void KirimScore(int score) {
-
 }
 
 // int Inputs(){
