@@ -4,7 +4,8 @@
 #include "helper.h"
 #include "tower.h"
 #include <string.h>
-#include <math.h>
+#include <windows.h>
+#include <stdio.h>
 
 // try changing MAX_DISKS to other numbers and run the file
 // #define MAX_DISKS 9
@@ -90,29 +91,30 @@ void printUI(int moves, int max_moves, char* message) {
     PrintfColor(message, 12);
 }
 
-// void inGame(PlayerData *player) {
+// return 1 if won, -1 otherwise
+// int inGame(PlayerData *player) {
 
 // }
 
-void EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* message) {
+int EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* message) {
 
     switch (PlayerInput()) {
 
         case 0: // UP (POP) Pick up disk to hand
             if (!HandIsEmpty(*hand)) {
                 strcpy(message, "You already got disk on your hand big guy.\0");
-                return;
+                return 1;
             }
             if (TowerIsEmpty(tower->top)) {
                 strcpy(message, "There's no disk there.\0");
-                return;
+                return 1;
             }
 
             *hand = pop(&(*tower)); 
             break;
 
         case 1: // LEFT
-            if (*current_pos == 0) break;
+            if (*current_pos == 0) return -1;
             --*(current_pos); 
             break;
             
@@ -120,11 +122,11 @@ void EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char*
 
             if (HandIsEmpty(*hand)) {
                 strcpy(message, "Your hand is empty big guy.\0");
-                return;
+                return 1;
             }
             if ((!TowerIsEmpty(tower->top) && HandIsBiggerThanTower(*hand, *tower))) {
                 strcpy(message, "The disk on your hand is bigger than the one on the tower.\0"); 
-                return;
+                return 1;
             }
 
             ++*(moves);
@@ -133,15 +135,17 @@ void EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char*
             break;
 
         case 3: // RIGHT
-            if (*current_pos == MAX_TOWERS - 1) break;
+            if (*current_pos == MAX_TOWERS - 1) return -1;
             ++*(current_pos); 
             break;
 
         default : 
-            break;
+            return -1;
     }
 
     strcpy(message, "\0");
+
+    return 1;
 }
 
 int main() { //placeholder main function
@@ -185,9 +189,9 @@ int main() { //placeholder main function
         if (HasWon(towers)) return 1;                      // print the last position before winning
         if (HasRanOutOfMoves(moves, max_moves)) return 0;  // print the last position before taking the L
 
-        EventDetection(&towers[currentPosition], &hand, &currentPosition, &moves, msg);
+        while (EventDetection(&towers[currentPosition], &hand, &currentPosition, &moves, msg) == -1); //reefrain the player from spamming or making unnecessary input
 
     } while (1);
     
     return 0;
-}
+}   
