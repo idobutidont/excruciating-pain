@@ -3,6 +3,8 @@
 
 #include "helper.h"
 #include "tower.h"
+#include "player.h"
+
 #include <string.h>
 #include <windows.h>
 #include <stdio.h>
@@ -91,10 +93,6 @@ void printUI(int moves, int max_moves, char* message) {
     PrintfColor(message, 12);
 }
 
-// return 1 if won, -1 otherwise
-// int inGame(PlayerData *player) {
-
-// }
 
 int EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* message) {
 
@@ -148,50 +146,115 @@ int EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* 
     return 1;
 }
 
-int main() { //placeholder main function
-
-    while (1){
-        scanf("%d %d", &MAX_DISKS, &MAX_TOWERS);
-        if (MAX_DISKS <= 16 && MAX_TOWERS <= 6) break; // Validate input (a 1920x1080 laptop display can fit about 6 towers max in fullscreen)
-    }
+// return 1 if won, -1 otherwise
+int inGame(PlayerData *player) {
 
     int biggest_disk = (MAX_DISKS * 2) - 1;
     int lenArray = biggest_disk + 3;
 
-    Tower towers[MAX_TOWERS];
-    for (int i = 0; i < MAX_TOWERS; i++) {
-        initializeTower(&towers[i]);
-    }
-    
-    // Initialize the starting tower with biggest_disk, odd number only
-    for (int i = biggest_disk; i >= 1; i -= 2) {
-        push(&towers[0], i, MAX_DISKS); // Put all disks onto the first tower
-    }
-
     char stringDisk[lenArray], stringEmpty[lenArray];
+    char msg[128];
 
-    TowerToString(stringEmpty, biggest_disk, '|');   // put this here instead of them being put inside printTower for performance concern
-    
-    int currentPosition = 0,hand = 0, moves = 0;
-
-    char msg[100] = {'\0'};
-
-    int max_moves = 50; //place holder max moves
+    TowerToString(stringEmpty, biggest_disk, '|');
 
     do
     {
         system("cls");
-        printCursor(currentPosition, lenArray, 'V');
-        printHand(currentPosition, hand, lenArray, biggest_disk);
-        printTower(towers, biggest_disk, stringDisk, stringEmpty);  
-        printUI(moves, max_moves, msg);
+        printCursor(player->currentPosition, lenArray, 'V');
+        printHand(player->currentPosition, player->hand, lenArray, biggest_disk);
+        printTower(player->tower, biggest_disk, stringDisk, stringEmpty);  
+        printUI(player->moves, player->max_moves, msg);
 
-        if (HasWon(towers)) return 1;                      // print the last position before winning
-        if (HasRanOutOfMoves(moves, max_moves)) return 0;  // print the last position before taking the L
+        if (HasWon(player->tower)) return 1;                                // print the last position before winning
+        if (HasRanOutOfMoves(player->moves, player->max_moves)) return -1;  // print the last position before taking the L
 
-        while (EventDetection(&towers[currentPosition], &hand, &currentPosition, &moves, msg) == -1); //reefrain the player from spamming or making unnecessary input
+        while (EventDetection(&(player->tower[player->currentPosition]), &player->hand, &player->currentPosition, &player->moves, msg) == -1); //reefrain the player from spamming or making unnecessary input
 
     } while (1);
+}
+
+void initializePlayer (PlayerData *player) { //placeholder
     
-    return 0;
-}   
+    while (1) {
+        scanf("%d %d", &player->max_disks, &player->max_towers);
+        if (player->max_disks <= 16 && player->max_towers <= 6) break;
+    }
+
+    MAX_DISKS = player->max_disks;
+    MAX_TOWERS = player->max_towers;
+
+    player->hand = 0;
+    player->moves = 0;
+    player->currentPosition = 0;
+    player->max_moves = 256;
+
+    for (int i = 0; i < player->max_towers; ++i) 
+        initializeTower(&player->tower[i]);
+    
+
+    for (int i = (MAX_DISKS * 2) - 1; i >= 1; i-=2 ) 
+        push(&player->tower[0], i, MAX_DISKS);
+
+}
+
+int main() { // placeholder no.2 bruh
+
+    PlayerData player;
+
+    initializePlayer(&player);
+    if (inGame(&player) == 1) {
+        printf("\nYou Won!\n");
+    } else {
+        printf("\nYou Lose!\n");
+    }
+
+
+}
+
+// int main() { //placeholder main function
+
+//     while (1){
+//         scanf("%d %d", &MAX_DISKS, &MAX_TOWERS);
+//         if (MAX_DISKS <= 16 && MAX_TOWERS <= 6) break; // Validate input (a 1920x1080 laptop display can fit about 6 towers max in fullscreen)
+//     }
+
+//     int biggest_disk = (MAX_DISKS * 2) - 1;
+//     int lenArray = biggest_disk + 3;
+
+//     Tower towers[MAX_TOWERS];
+//     for (int i = 0; i < MAX_TOWERS; i++) {
+//         initializeTower(&towers[i]);
+//     }
+    
+//     // Initialize the starting tower with biggest_disk, odd number only
+//     for (int i = biggest_disk; i >= 1; i -= 2) {
+//         push(&towers[0], i, MAX_DISKS); // Put all disks onto the first tower
+//     }
+
+//     char stringDisk[lenArray], stringEmpty[lenArray];
+
+//     TowerToString(stringEmpty, biggest_disk, '|');   // put this here instead of them being put inside printTower for performance concern
+    
+//     int currentPosition = 0,hand = 0, moves = 0;
+
+//     char msg[100] = {'\0'};
+
+//     int max_moves = 50; //place holder max moves
+
+//     do
+//     {
+//         system("cls");
+//         printCursor(currentPosition, lenArray, 'V');
+//         printHand(currentPosition, hand, lenArray, biggest_disk);
+//         printTower(towers, biggest_disk, stringDisk, stringEmpty);  
+//         printUI(moves, max_moves, msg);
+
+//         if (HasWon(towers)) return 1;                      // print the last position before winning
+//         if (HasRanOutOfMoves(moves, max_moves)) return 0;  // print the last position before taking the L
+
+//         while (EventDetection(&towers[currentPosition], &hand, &currentPosition, &moves, msg) == -1); //reefrain the player from spamming or making unnecessary input
+
+//     } while (1);
+    
+//     return 0;
+// }   

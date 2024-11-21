@@ -5,7 +5,8 @@
 
 typedef struct {
     char username[64];
-    int Moves;
+    int moves;
+    int max_moves;
     int difficulty;
     Tower tower[6];
     int hand;
