@@ -29,7 +29,6 @@ int HasWon(Tower tower[]) {
 int HasRanOutOfMoves(int moves, int max_moves) {
     return (moves + 1) > max_moves;
 }
-
 // End of cases
 
 // Function to print the towers
@@ -176,7 +175,7 @@ void initializePlayer (PlayerData *player) { //placeholder
     
     while (1) {
         scanf("%d %d", &player->max_disks, &player->max_towers);
-        if (player->max_disks <= 16 && player->max_towers <= 6) break;
+        if (player->max_disks <= 16 && player->max_disks >=5 && player->max_towers <= 6 && player->max_towers >= 3) break;
     }
 
     player->hand = 0;
