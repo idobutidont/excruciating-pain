@@ -15,8 +15,10 @@ typedef struct {
     int max_disks;
 } PlayerData;
 
-void save(PlayerData player);
+int save(PlayerData player);
 
-void load(PlayerData *player);
+int load(PlayerData *player);
+
+//void initializePlayer(PlayerData *player);
 
 #endif

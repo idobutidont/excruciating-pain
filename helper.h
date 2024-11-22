@@ -3,7 +3,7 @@
 
 void setConsoleColor(int color);
 
-void PrintfColor(char* input, int color);
+void PrintfColor(const char* input, int color);
 
 int PlayerInput();
 /*

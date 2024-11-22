@@ -10,7 +10,7 @@ void setConsoleColor(int color) {
     SetConsoleTextAttribute(hConsole, (WORD)color);
 }
 
-void PrintfColor(char* input, int color) {
+void PrintfColor(const char* input, int color) {
     setConsoleColor(color);
     printf("%s", input);
     setConsoleColor(15); //bright white supposedly
