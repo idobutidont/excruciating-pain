@@ -6,9 +6,10 @@
 ****************************************************************/
 
 #include "helper.h"
+#include "game.h"
 #include <stdio.h>
 #include <windows.h>
-#include "player.h"
+#include <conio.h>
 
 int Menu();
 /*
@@ -19,17 +20,22 @@ int Menu();
     return 4: exit app
 */
 
-void printMenu(char *Menu);
+void printMenu(char Menu[]);
 
-int MenuInput(int *selected, char* Menu);
+int MenuInput(int *selected, char Menu[]);
 
-int maintest() {
+void Continue();
+void NewGame();
+
+void startGame(PlayerData player);
+
+int main() {
 
     do
     {
         switch(Menu()) {
-            case 0: break;
-            case 1: break;
+            case 0: NewGame(); break;
+            case 1: Continue(); break;
             case 2: break;
             case 3: break;
             case 4: return 0;
@@ -39,19 +45,6 @@ int maintest() {
     // continously playing the game until user exited.
 
     return 0;
-}
-
-void printMenu(char *Menu) {
-    printf(
-        "   Tower Of Hanoi\n"
-        "   %c New Game\n"
-        "   %c Continue\n"
-        "   %c View Scores\n"
-        "   %c Settings\n\n"
-        "   %c Exit\n\n"
-        "Press Enter to Continue...",
-        Menu[0], Menu[1], Menu[2], Menu[3], Menu[4]
-        );
 }
 
 int Menu() {
@@ -67,7 +60,7 @@ int Menu() {
         system("cls");
         printMenu(Menu);
 
-        while ((result = MenuInput(&selected, Menu)) == -1);
+        while ((result = MenuInput(&selected, Menu)) == -1);    // refrain the player from making unnecessary input
         
         if (result >= 0) return result;
         
@@ -77,7 +70,70 @@ int Menu() {
 
 }
 
-int MenuInput(int *selected, char *Menu) {
+void NewGame() {
+    PlayerData player;
+
+    if (load(&player) == 1) {
+        printf("\nYou have an ongoing Progress. Do you want to proceed? [Y/N]: ");
+        
+        switch(toupper(getchar())) {
+            case 'Y': break;
+            default : getchar(); return;
+        }
+
+    }
+
+    //TODO: initialize based on difficulty, username input
+    initializePlayer(&player);
+
+    startGame(player);
+    return;
+}
+
+void Continue() {
+
+    PlayerData player;
+    if (load(&player) == -1) {
+        printf("\nYou do not have any recent progress. Please start a new game\n");
+        getch();    // hold this screen until player input something
+        return;
+    }
+
+    startGame(player);
+
+    return;
+
+}
+
+void startGame(PlayerData player) {
+    if (inGame(&player) == 1) {
+        printf("You Won!");
+        remove("save.dat");
+        // putDataToScore(player);
+
+    } else {
+        printf("You Lose!");
+        remove("save.dat");
+    }
+
+    return;
+}
+
+void printMenu(char Menu[]) {
+    printf(
+        "\n"
+        "   Tower Of Hanoi\n"
+        "   %c New Game\n"
+        "   %c Continue\n"
+        "   %c View Scores\n"
+        "   %c Settings\n\n"
+        "   %c Exit\n\n"
+        "   Press Enter to Continue...",
+        Menu[0], Menu[1], Menu[2], Menu[3], Menu[4]
+        );
+}
+
+int MenuInput(int *selected, char Menu[]) {
     
     switch (PlayerInput()) {
     // UP
@@ -102,15 +158,9 @@ int MenuInput(int *selected, char *Menu) {
         Menu[*selected - 1] = '\0';
         break;
     
+    // ENTER
     case 4: 
-    switch (*selected) {
-        case 0: return 0;
-        case 1: return 1;
-        case 2: return 2;
-        case 3: return 3;
-        case 4: return 4;
-        default: return -1;
-        }
+        return *selected;
 
     default: return -1;     // this means that player are making unnecessary input
     }

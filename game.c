@@ -145,6 +145,9 @@ int EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* 
 // return 1 if won, -1 otherwise
 int inGame(PlayerData *player) {
 
+    MAX_DISKS = player->max_disks;
+    MAX_TOWERS = player->max_towers;
+
     int biggest_disk = (MAX_DISKS * 2) - 1;
     int lenArray = biggest_disk + 3;
 
@@ -201,9 +204,6 @@ int maintest() { // placeholder no.2 bruh
 
     if (confirm == 1 || load(&player) == -1) 
         initializePlayer(&player);
-    
-    MAX_DISKS = player.max_disks;
-    MAX_TOWERS = player.max_towers;
 
     if (inGame(&player) == 1) {
         printf("\nYou Won!\n");

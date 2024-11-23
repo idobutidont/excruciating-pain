@@ -31,4 +31,7 @@ void printUI(int moves, int max_moves, const char* message);
 int EventDetection (Tower *tower, int *hand, int *current_pos, int *moves, char *message);
 
 
+//Placeholder module
+void initializePlayer(PlayerData *player);
+
 #endif
