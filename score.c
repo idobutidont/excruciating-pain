@@ -93,15 +93,17 @@ int Sort(int mode, int type) {
     fileSize = ftell(f);
 
     // get amount of structs from filesize / sizescore (might be broken idk)
+    // this is a temp variable to be used as score's element size.
     structAmount = fileSize / sizeScore;
 
     Score score[structAmount], temp;
 
     rewind(f);  // return f to start of file
 
-    // initialize array of scores for use in sorting
-    for (int i = 0; i < structAmount; ++i)
-        fread(&score[i], sizeScore, 1, f);
+    // use this instead of for loop to handle error when fileSize exceed the actual amount of structs.
+    int count = 0;
+    while (fread(&score[count++], sizeScore, 1, f) != NULL)
+        structAmount = count;
 
     // sort: selection sort.
     for (int i = 0; i < structAmount - 1; ++i) {
