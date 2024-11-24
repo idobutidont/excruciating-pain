@@ -100,7 +100,7 @@ int Sort(int mode, int type) {
 
     rewind(f);  // return f to start of file
 
-    // use this instead of for loop to handle error when fileSize exceed the actual amount of structs.
+    // use this instead of for loop to handle error when structAmount exceed the actual amount of structs.
     int count = 0;
     while (fread(&score[count++], sizeScore, 1, f) != NULL)
         structAmount = count;
