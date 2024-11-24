@@ -7,10 +7,13 @@
 
 #include "helper.h"
 #include "game.h"
+#include "score.h"
 #include <stdio.h>
 #include <windows.h>
 #include <conio.h>
 
+void printMenu(char Menu[]);
+int MenuInput(int *selected, char Menu[]);
 int Menu();
 /*
     return 0: newGame
@@ -19,10 +22,6 @@ int Menu();
     return 3: Setting
     return 4: exit app
 */
-
-void printMenu(char Menu[]);
-
-int MenuInput(int *selected, char Menu[]);
 
 void Continue();
 void NewGame();
@@ -36,7 +35,7 @@ int main() {
         switch(Menu()) {
             case 0: NewGame(); break;
             case 1: Continue(); break;
-            case 2: break;
+            case 2: printScoreMenu(); break;
             case 3: break;
             case 4: return 0;
         }
@@ -109,7 +108,7 @@ void startGame(PlayerData player) {
     if (inGame(&player) == 1) {
         printf("You Won!");
         remove("save.dat");
-        // putDataToScore(player);
+        PutPlayerToScore(player);
 
     } else {
         printf("You Lose!");

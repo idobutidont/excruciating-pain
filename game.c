@@ -181,6 +181,10 @@ void initializePlayer (PlayerData *player) { //placeholder
         if (player->max_disks <= 16 && player->max_disks >=5 && player->max_towers <= 6 && player->max_towers >= 3) break;
     }
 
+    getchar();
+
+    scanf("%[^\n]%*c", player->username);
+
     player->hand = 0;
     player->moves = 0;
     player->currentPosition = 0;

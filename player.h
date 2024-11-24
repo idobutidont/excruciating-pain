@@ -7,12 +7,13 @@ typedef struct {
     char username[64];
     int moves;
     int max_moves;
-    int difficulty;
     Tower tower[6];
     int hand;
     int currentPosition;
     int max_towers;
     int max_disks;
+    int score;
+    int difficulty;
 } PlayerData;
 
 int save(PlayerData player);
