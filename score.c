@@ -30,9 +30,9 @@ int printScores() {
     FILE *f;
     Score player;
 
-    if ( (f = fopen("score.dat", "r")) == NULL ) {
+    if ( (f = fopen("score.dat", "r")) == NULL )
         return -1;
-    }
+    
 
     while (fread(&player, sizeof(Score), 1, f)) 
         printf("%s %d %d/%d %d %d\n", player.username, player.score, player.moves, player.max_moves, player.max_disk, player.max_tower);
@@ -74,8 +74,7 @@ int PutScoreToFile(Score score) {
 
 }
 
-// Struct File sort based on bubble sort algorithm, yes, mental illness.
-// VERY BROKEN, MIGHT NUKE YOUR COMPUTER (REAL)
+// Struct File sort based on selection sort algorithm, yes, mental illness.
 int Sort(int mode, int type) {
 
     FILE *f;
@@ -87,36 +86,52 @@ int Sort(int mode, int type) {
 
     unsigned long long sizeScore = sizeof(Score);
 
+    //put f to eof of score.dat
     fseek(f, 0, SEEK_END);
+
+    //give f position (in long type) to fileSize
     fileSize = ftell(f);
+
+    // get amount of structs from filesize / sizescore (might be broken idk)
     structAmount = fileSize / sizeScore;
 
     Score score[structAmount], temp;
 
-    rewind(f);
+    rewind(f);  // return f to start of file
 
+    // initialize array of scores for use in sorting
     for (int i = 0; i < structAmount; ++i)
         fread(&score[i], sizeScore, 1, f);
 
+    // sort: selection sort.
     for (int i = 0; i < structAmount - 1; ++i) {
+
         sub = i;
+
         for (int j = i + 1; j < structAmount; ++j) {
+
+            // get the item that are based on the type player wanted.
+            // Type (0 score) (1 moves) (2 max_move) (3 disks) (4 towers)
             itemplayer = TypeToSort(type, score[sub]);
             itemtemp = TypeToSort(type, score[j]);
 
+            // compare either ascending or descending
             if (compare(mode, itemplayer, itemtemp))
                 sub = j;
 
         }
 
+        // swap sub with i th element
         temp = score[sub];
         score[sub] = score[i];
         score[i] = temp;
 
     }
 
+    // bring back f to start of file
     rewind(f);
 
+    // put sorted struct to file.
     for (int i = 0; i < structAmount; ++i)
         fwrite(&score[i], sizeScore, 1, f);
 

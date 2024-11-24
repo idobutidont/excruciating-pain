@@ -16,11 +16,6 @@ typedef struct
 
 
 void printScoreMenu();
-
-int printScores();
-
-int PutPlayerToScore(PlayerData player);
-int PutScoreToFile(Score score);
 /*
     VERY OPTIMISTIC DEMO
 
@@ -35,6 +30,11 @@ int PutScoreToFile(Score score);
 
     Press Enter to confirm....
 */
+
+int printScores();
+
+int PutPlayerToScore(PlayerData player);
+int PutScoreToFile(Score score);
 
 int Sort(int mode, int type);
 
