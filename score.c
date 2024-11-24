@@ -101,9 +101,8 @@ int Sort(int mode, int type) {
     rewind(f);  // return f to start of file
 
     // use this instead of for loop to handle error when structAmount exceed the actual amount of structs.
-    int count = 0;
-    while (fread(&score[count++], sizeScore, 1, f))
-        structAmount = count;
+    structAmount = -1;
+    while (fread(&score[++structAmount], sizeScore, 1, f));
 
     // sort: selection sort.
     for (int i = 0; i < structAmount - 1; ++i) {
