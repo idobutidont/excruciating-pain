@@ -1,31 +1,41 @@
 #include "score.h"
+#include <stdio.h>
 #include <windows.h>
+#include "helper.h"
 
 void printScoreMenu() {
 
     int type, mode;
 
-    system("cls");
+    do
+    {
+        system("cls");   
+        printScores();
 
-    printScores();
+        printf("Mode (0: Descending) / (1: Ascending): ");  scanf("%d", &mode);
+        printf("Type (0 score) (1 moves) (2 max_move) (3 disks) (4 towers): "); scanf("%d", &type);
 
+        switch(PlayerInput()) {
+            case 4: Sort(mode, type); break;
+            default: break;
+        }
 
-    getchar();
-    getchar();
-
+    } while (1);
+    
+    
 }
 
 int printScores() {
 
     FILE *f;
-    PlayerData player;
+    Score player;
 
     if ( (f = fopen("score.dat", "r")) == NULL ) {
         return -1;
     }
 
-    while (fread(&player, sizeof(PlayerData), 1, f)) 
-        printf("%s %d %d/%d %d %d\n", player.username, player.score, player.moves, player.max_moves, player.max_disks, player.max_towers);
+    while (fread(&player, sizeof(Score), 1, f)) 
+        printf("%s %d %d/%d %d %d\n", player.username, player.score, player.moves, player.max_moves, player.max_disk, player.max_tower);
     
     fclose(f);
 
@@ -33,16 +43,35 @@ int printScores() {
 }
 
 int PutPlayerToScore(PlayerData player) {
+    
+    Score score;
+
+    strcpy(score.username, player.username);
+    score.score = player.score;
+    score.moves = player.moves;
+    score.max_moves = player.max_moves;
+    score.max_disk = player.max_disks;
+    score.max_tower = player.max_towers;
+
+    PutScoreToFile(score);
+
+    return 1;
+}
+
+int PutScoreToFile(Score score) {
+
     FILE *f;
 
-    if ( (f = fopen("score.dat", "a")) == NULL) {
+    if ( (f = fopen("score.dat", "a")) == NULL ) {
         return -1;
     }
 
-    fwrite(&player, sizeof(PlayerData), 1, f);
+    fwrite(&score, sizeof(Score), 1, f);
 
     fclose(f);
+
     return 1;
+
 }
 
 // Struct File sort based on bubble sort algorithm, yes, mental illness.
@@ -50,52 +79,46 @@ int PutPlayerToScore(PlayerData player) {
 int Sort(int mode, int type) {
 
     FILE *f;
-    PlayerData player, temp;
-    int i, j, itemplayer, itemtemp;
-
-    unsigned long long sizePlayer = sizeof(PlayerData);
+    int itemplayer, itemtemp, fileSize, structAmount, sub;
 
     if ( (f = fopen("score.dat", "r+")) == NULL ) {
         return -1;
     }
 
-    i = 0;
+    unsigned long long sizeScore = sizeof(Score);
 
-    while (!feof(f)) {
+    fseek(f, 0, SEEK_END);
+    fileSize = ftell(f);
+    structAmount = fileSize / sizeScore;
 
-        fseek(f, i * sizeof(PlayerData), SEEK_SET);
-        fread(&player, sizeof(PlayerData), 1, f);
+    Score score[structAmount], temp;
 
-        j = i;
-        while (!feof(f)) {
+    rewind(f);
 
-            ++j;
+    for (int i = 0; i < structAmount; ++i)
+        fread(&score[i], sizeScore, 1, f);
 
-            fseek(f, j*sizePlayer, SEEK_SET);
-            fread(&temp, sizePlayer, 1, f);
+    for (int i = 0; i < structAmount - 1; ++i) {
+        sub = i;
+        for (int j = i + 1; j < structAmount; ++j) {
+            itemplayer = TypeToSort(type, score[sub]);
+            itemtemp = TypeToSort(type, score[j]);
 
-            itemplayer = TypeToSort(type, player);
-            itemtemp = TypeToSort(type, temp);
-
-            if (compare(mode, itemplayer, itemtemp)) {
-
-                fseek(f, i*sizePlayer, SEEK_SET);
-                fwrite(&temp, sizePlayer, 1, f);
-
-                fseek(f, j*sizePlayer, SEEK_SET);
-                fwrite(&player, sizePlayer, 1, f);
-
-                player = temp;
-
-            }
+            if (compare(mode, itemplayer, itemtemp))
+                sub = j;
 
         }
 
-        if ( i < j ) {  // if j hits eof then i would also hit eof, effectively leaving the loop
-            fseek(f, 0, SEEK_SET);
-            ++i;
-        }
+        temp = score[sub];
+        score[sub] = score[i];
+        score[i] = temp;
+
     }
+
+    rewind(f);
+
+    for (int i = 0; i < structAmount; ++i)
+        fwrite(&score[i], sizeScore, 1, f);
 
     fclose(f);
     printf("\nSorted.\n");
@@ -107,21 +130,22 @@ int Sort(int mode, int type) {
 int compare(int mode, int x, int y) {
 
     if (mode == 0) {
-        return x < y; // ascending
+        return x < y; // descending
     } else {
-        return x > y; // descending
+        return x > y; // ascending
     }
 
 }
 
-int TypeToSort(int type, PlayerData player) {
+int TypeToSort(int type, Score score) {
 
     switch (type) {
 
-        case 0: return player.score;
-        case 1: return player.moves;
-        case 2: return player.max_disks;
-        case 3: return player.max_towers;
+        case 0: return score.score;
+        case 1: return score.moves;
+        case 2: return score.max_moves;
+        case 3: return score.max_disk;
+        case 4: return score.max_tower;
 
         default: printf("error at sorting type"); getchar(); return -1;
     }
