@@ -94,7 +94,7 @@ int Sort(int mode, int type) {
 
     // get amount of structs from filesize / sizescore (might be broken idk)
     // this is a temp variable to be used as score's element size.
-    structAmount = fileSize / sizeScore;
+    structAmount = fileSize / (int) sizeScore;
 
     Score score[structAmount], temp;
 
@@ -102,7 +102,7 @@ int Sort(int mode, int type) {
 
     // use this instead of for loop to handle error when structAmount exceed the actual amount of structs.
     int count = 0;
-    while (fread(&score[count++], sizeScore, 1, f) != NULL)
+    while (fread(&score[count++], sizeScore, 1, f))
         structAmount = count;
 
     // sort: selection sort.
