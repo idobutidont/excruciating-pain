@@ -6,8 +6,8 @@ void initializeTower(Tower *tower) {
 }
 
 // Cases
-int TowerIsEmpty(int top) {
-    return top <= -1;
+int TowerIsEmpty(Tower tower) {
+    return tower.top <= -1;
 }
 
 // Function to push a disk onto a tower

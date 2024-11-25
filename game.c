@@ -33,7 +33,7 @@ int HasRanOutOfMoves(int moves, int max_moves) {
 
 // Function to print the towers
 // added biggest_disk, string for empty disk and non-empty disk for repetitive print handling
-void printTower(Tower towers[], int biggest_disk, char* disk, const char* empty_disk) {
+void printTower(char* stringDisk, const char* stringTower, Tower towers[], int biggest_disk) {
     
     int current_disk;
 
@@ -41,43 +41,43 @@ void printTower(Tower towers[], int biggest_disk, char* disk, const char* empty_
         for (int j = 0; j < MAX_TOWERS; j++) {
             if (i <= towers[j].top) {
 
-                current_disk = towers[j].disks[i];                  // temporarily put disk into a variable to avoid issues with iterator 'j'
-                DiskToString(disk, current_disk, biggest_disk); // harus pake variable dan gabisa di masukin langsung towers[j].disks[i] nya, nanti nge bug
+                current_disk = towers[j].disks[i];                      // temporarily put disk into a variable to avoid issues with iterator 'j'
+                DiskToString(stringDisk, current_disk, biggest_disk);   // harus pake variable dan gabisa di masukin langsung towers[j].disks[i] nya, nanti nge bug
 
-                printf("%s ", disk);
+                printf("%s ", stringDisk);
 
             } else 
-                printf("%s ", empty_disk);                        // handling empty disks
+                printf("%s ", stringTower);                        // handling empty disks
         }
         printf("\n");
     }
 }
 
+// Basically what this does is print spaces until before our actual current position.
+void printSpaces(int lenArray, int current_pos) {
+    printf("%*s", (lenArray * current_pos), "");
+}
+
 // Module to print Cursor
-void printCursor(int current_pos, int lenArray, char accessories) {
+void printCursor(const char* stringCursor, int current_pos, int lenArray) {
 
-    int empty_length = (lenArray * current_pos) + (lenArray / 2) - 1;
-    for (int i = 0; i < empty_length; i++) {
-        printf(" ");
-    }
+    printSpaces(lenArray, current_pos);
 
-    printf("%c\n", accessories);
+    printf("%s\n", stringCursor);
 }
 
 // Module to Print Hand
-void printHand(int currentPos, int hand, int lenArray, int biggest_disk) {
+void printHand(char* stringHand, int currentPos, int hand, int lenArray, int biggest_disk) {
 
-    if (hand <= 0) {
+    if (HandIsEmpty(hand)) {
         printf("\n");
         return;
     }
 
-    int len = (lenArray * currentPos);
-    for (int i = 0 ; i < len; ++i) 
-        printf(" ");
+    printSpaces(lenArray, currentPos);
     
-    char stringHand[lenArray];
     DiskToString(stringHand, hand, biggest_disk);
+
     printf("%s\n", stringHand);
 }
 
@@ -97,7 +97,7 @@ int EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* 
                 strcpy(message, "You already got disk on your hand big guy.\0");
                 return 1;
             }
-            if (TowerIsEmpty(tower->top)) {
+            if (TowerIsEmpty(*tower)) {
                 strcpy(message, "There's no disk there.\0");
                 return 1;
             }
@@ -116,7 +116,7 @@ int EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* 
                 strcpy(message, "Your hand is empty big guy.\0");
                 return 1;
             }
-            if ((!TowerIsEmpty(tower->top) && HandIsBiggerThanTower(*hand, *tower))) {
+            if ((!TowerIsEmpty(*tower) && HandIsBiggerThanTower(*hand, *tower))) {
                 strcpy(message, "The disk on your hand is bigger than the one on the tower.\0"); 
                 return 1;
             }
@@ -143,6 +143,7 @@ int EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* 
 }
 
 // return 1 if won, -1 otherwise
+// TODO: MORE REFACTOR.
 int inGame(PlayerData *player) {
 
     MAX_DISKS = player->max_disks;
@@ -151,17 +152,18 @@ int inGame(PlayerData *player) {
     int biggest_disk = (MAX_DISKS * 2) - 1;
     int lenArray = biggest_disk + 3;
 
-    char stringDisk[lenArray], stringEmpty[lenArray];
+    char stringDisk[lenArray], stringTower[lenArray], stringCursor[lenArray], stringHand[lenArray];
     char msg[128] = {'\0'};
 
-    TowerToString(stringEmpty, biggest_disk, '|');
+    TowerToString(stringCursor, biggest_disk, 'V');
+    TowerToString(stringTower, biggest_disk, '|');
 
     do
     {
         system("cls");
-        printCursor(player->currentPosition, lenArray, 'V');
-        printHand(player->currentPosition, player->hand, lenArray, biggest_disk);
-        printTower(player->tower, biggest_disk, stringDisk, stringEmpty);  
+        printCursor(stringCursor, player->currentPosition, lenArray);
+        printHand(stringHand, player->currentPosition, player->hand, lenArray, biggest_disk);
+        printTower(stringDisk, stringTower, player->tower, biggest_disk);  
         printUI(player->moves, player->max_moves, msg);
 
         save(*player);      // autosave, performance is very awful now.
@@ -169,7 +171,7 @@ int inGame(PlayerData *player) {
         if (HasWon(player->tower)) return 1;                                // print the last position before winning
         if (HasRanOutOfMoves(player->moves, player->max_moves)) return -1;  // print the last position before taking the L
 
-        while (EventDetection(&(player->tower[player->currentPosition]), &player->hand, &player->currentPosition, &player->moves, msg) == -1); //reefrain the player from spamming or making unnecessary input
+        while (EventDetection(&(player->tower[player->currentPosition]), &player->hand, &player->currentPosition, &player->moves, msg) == -1); //refrain the player from spamming or making unnecessary input
 
     } while (1);
 }
@@ -190,76 +192,7 @@ void initializePlayer (PlayerData *player) { //placeholder
         initializeTower(&player->tower[i]);
     
 
-    for (int i = (player->max_disks * 2) - 1; i >= 1; i-=2 ) 
+    for (int i = (player->max_disks * 2) - 1; i >= 1; i-= 2) 
         push(&player->tower[0], i, player->max_disks);
 
 }
-
-int maintest() { // placeholder no.2 bruh
-
-    PlayerData player;
-    int confirm;
-
-    printf("1 for new game, 2 for load: "); scanf("%d", &confirm);
-
-    if (confirm == 1 || load(&player) == -1) 
-        initializePlayer(&player);
-
-    if (inGame(&player) == 1) {
-        printf("\nYou Won!\n");
-    } else {
-        printf("\nYou Lose!\n");
-    }
-
-    return 0;
-}
-
-/*
-int main() { //placeholder main function
-
-    while (1){
-        scanf("%d %d", &MAX_DISKS, &MAX_TOWERS);
-        if (MAX_DISKS <= 16 && MAX_TOWERS <= 6) break; // Validate input (a 1920x1080 laptop display can fit about 6 towers max in fullscreen)
-    }
-
-    int biggest_disk = (MAX_DISKS * 2) - 1;
-    int lenArray = biggest_disk + 3;
-
-    Tower towers[MAX_TOWERS];
-    for (int i = 0; i < MAX_TOWERS; i++) {
-        initializeTower(&towers[i]);
-    }
-    
-    // Initialize the starting tower with biggest_disk, odd number only
-    for (int i = biggest_disk; i >= 1; i -= 2) {
-        push(&towers[0], i, MAX_DISKS); // Put all disks onto the first tower
-    }
-
-    char stringDisk[lenArray], stringEmpty[lenArray];
-
-    TowerToString(stringEmpty, biggest_disk, '|');   // put this here instead of them being put inside printTower for performance concern
-    
-    int currentPosition = 0,hand = 0, moves = 0;
-
-    char msg[100] = {'\0'};
-
-    int max_moves = 50; //place holder max moves
-
-    do
-    {
-        system("cls");
-        printCursor(currentPosition, lenArray, 'V');
-        printHand(currentPosition, hand, lenArray, biggest_disk);
-        printTower(towers, biggest_disk, stringDisk, stringEmpty);  
-        printUI(moves, max_moves, msg);
-
-        if (HasWon(towers)) return 1;                      // print the last position before winning
-        if (HasRanOutOfMoves(moves, max_moves)) return 0;  // print the last position before taking the L
-
-        while (EventDetection(&towers[currentPosition], &hand, &currentPosition, &moves, msg) == -1); //reefrain the player from spamming or making unnecessary input
-
-    } while (1);
-    
-    return 0;
-}   
-*/

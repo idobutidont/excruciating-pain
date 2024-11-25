@@ -24,6 +24,13 @@ void printMenu(char Menu[]);
 
 int MenuInput(int *selected, char Menu[]);
 
+void MoveCursor(char Menu[], int *selected, int UpOrDown);
+
+// Cases
+int CursorIsAtTop(int cursor);
+int CursorIsAtBottom(int cursor);
+
+
 void Continue();
 void NewGame();
 
@@ -126,11 +133,28 @@ void printMenu(char Menu[]) {
         "   %c New Game\n"
         "   %c Continue\n"
         "   %c View Scores\n"
-        "   %c Settings\n\n"
+        "   %c Tutorial\n\n"
         "   %c Exit\n\n"
         "   Press Enter to Continue...",
         Menu[0], Menu[1], Menu[2], Menu[3], Menu[4]
         );
+}
+
+// Up = -1, Down = 1
+void MoveCursor(char Menu[], int *selected, int UpOrDown) {
+
+    Menu[*selected] = '\0';
+    *selected += UpOrDown;
+    Menu[*selected] = '>';
+
+}
+
+int CursorIsAtTop(int cursor) {
+    return cursor == 0;
+}
+
+int CursorIsAtBottom(int cursor) {
+    return cursor == 4;
 }
 
 int MenuInput(int *selected, char Menu[]) {
@@ -139,23 +163,16 @@ int MenuInput(int *selected, char Menu[]) {
     // UP
     case 0:
 
-        if (*selected == 0) return -1;
-
-        --(*selected);
-
-        Menu[*selected] = '>';
-        Menu[*selected + 1] = '\0';
+        if (CursorIsAtTop(*selected)) return -1;
+        MoveCursor(Menu, &(*selected), -1);
 
         break;
     // DOWN
     case 2:
 
-        if (*selected == 4) return -1;
-        
-        ++(*selected);
+        if (CursorIsAtBottom(*selected)) return -1;
+        MoveCursor(Menu, &(*selected), 1);
 
-        Menu[*selected] = '>';
-        Menu[*selected - 1] = '\0';
         break;
     
     // ENTER

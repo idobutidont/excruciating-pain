@@ -18,11 +18,11 @@ int HasRanOutOfMoves(int moves, int max_moves);
 // end Cases
 
 // Print Modules
-void printTower(Tower towers[], int biggest_disk, char* disk, const char* empty_disk);
+void printTower(char* stringDisk, const char* stringTower, Tower towers[], int biggest_disk);
 
-void printCursor(int current_pos, int lenArray, char accessories);
+void printCursor(const char* stringCursor, int current_pos, int lenArray);
 
-void printHand(int current_pos, int hand, int lenArray, int biggest_disk);
+void printHand(char* stringHand, int current_pos, int hand, int lenArray, int biggest_disk);
 
 void printUI(int moves, int max_moves, const char* message);
 // End Print Modules

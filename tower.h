@@ -12,6 +12,6 @@ void push(Tower *tower, int disk, int MAX_DISKS);
 
 int pop(Tower *tower);
 
-int TowerIsEmpty (int top);
+int TowerIsEmpty (Tower tower);
 
 #endif
