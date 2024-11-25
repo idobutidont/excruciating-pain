@@ -12,15 +12,18 @@ int TowerIsEmpty(int top) {
 
 // Function to push a disk onto a tower
 void push(Tower *tower, int disk, int MAX_DISKS) {
-    if (tower->top < MAX_DISKS - 1) {           // make sure the top isn't on the most upper slot
-        tower->disks[++(tower->top)] = disk;    // tower.top++; tower.disks[tower.top] = disk;
+    if (tower->top < MAX_DISKS - 1) {   // make sure top isn't on the uppermost slot
+        tower->top++;                     // increment top
+        tower->disks[tower->top] = disk;  // add the disk to the new top position
     }
 }
 
 // Function to "pop" a disk from a tower
 int pop(Tower *tower) {
-    if (tower->top >= 0) {                      
-        return tower->disks[(tower->top)--];    // return tower.disks[top]; top--;
+    if (tower->top >= 0) {    // ensures the tower is not empty
+        int disk = tower->disks[tower->top];  // store top disk
+        tower->top--;                         // decrement top position
+        return disk;                          // return the removed disk (tower.disks[top]; top--;)
     }
-    return -1; // Return -1 if tower is empty
+    return -1; // return -1 if tower is empty
 }
