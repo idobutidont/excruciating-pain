@@ -24,6 +24,8 @@ void printCursor(const char* stringCursor, int current_pos, int lenArray);
 
 void printHand(char* stringHand, int current_pos, int hand, int lenArray, int biggest_disk);
 
+void printSpaces(int lenArray, int current_pos);
+
 void printUI(int moves, int max_moves, const char* message);
 // End Print Modules
 

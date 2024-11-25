@@ -67,14 +67,14 @@ void printCursor(const char* stringCursor, int current_pos, int lenArray) {
 }
 
 // Module to Print Hand
-void printHand(char* stringHand, int currentPos, int hand, int lenArray, int biggest_disk) {
+void printHand(char* stringHand, int current_pos, int hand, int lenArray, int biggest_disk) {
 
     if (HandIsEmpty(hand)) {
         printf("\n");
         return;
     }
 
-    printSpaces(lenArray, currentPos);
+    printSpaces(lenArray, current_pos);
     
     DiskToString(stringHand, hand, biggest_disk);
 
