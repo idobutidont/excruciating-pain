@@ -1,3 +1,10 @@
+/***************************************************************
+* FILENAME: main.c
+* DESCRIPTION: 
+* AUTHOR: 
+* DATE: 
+****************************************************************/
+
 // TODO: GAME LOGIC, USER INTERACTION, PROPER CODE COMMENTS, REFACTOR (MAYBE)
 
 #include "helper.h"

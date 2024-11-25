@@ -1,3 +1,10 @@
+/***************************************************************
+* FILENAME: main.c
+* DESCRIPTION: 
+* AUTHOR: 
+* DATE: 
+****************************************************************/
+
 #include "tower.h"
 
 // Function to initialize tower

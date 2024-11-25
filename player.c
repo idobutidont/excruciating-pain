@@ -1,3 +1,10 @@
+/***************************************************************
+* FILENAME: main.c
+* DESCRIPTION: 
+* AUTHOR: 
+* DATE: 
+****************************************************************/
+
 #include "player.h"
 #include <stdio.h>
 #include <stdlib.h>
