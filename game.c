@@ -60,28 +60,28 @@ void printTower(char* stringDisk, const char* stringTower, Tower towers[], int b
     }
 }
 
-// Basically what this does is print spaces until before our actual current position.
-void printSpaces(int lenArray, int current_pos) {
-    printf("%*s", (lenArray * current_pos), "");
+// Basically what this does is print spaces until before our actual hand position.
+void printSpaces(int lenArray, int hand_position) {
+    printf("%*s", (lenArray * hand_position), "");
 }
 
 // Module to print Cursor
-void printCursor(const char* stringCursor, int current_pos, int lenArray) {
+void printCursor(const char* stringCursor, int hand_position, int lenArray) {
 
-    printSpaces(lenArray, current_pos);
+    printSpaces(lenArray, hand_position);
 
     printf("%s\n", stringCursor);
 }
 
 // Module to Print Hand
-void printHand(char* stringHand, int current_pos, int hand, int lenArray, int biggest_disk) {
+void printHand(char* stringHand, int hand_position, int hand, int lenArray, int biggest_disk) {
 
     if (HandIsEmpty(hand)) {
         printf("\n");
         return;
     }
 
-    printSpaces(lenArray, current_pos);
+    printSpaces(lenArray, hand_position);
     
     DiskToString(stringHand, hand, biggest_disk);
 
@@ -97,7 +97,7 @@ void printUI(int moves, int max_moves, const char* message) {
 }
 
 
-int EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* message) {
+int EventDetection(Tower *tower, int *hand, int *hand_position, int *moves, char* message) {
 
     switch (PlayerInput()) {
 
@@ -115,8 +115,8 @@ int EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* 
             break;
 
         case 1: // LEFT
-            if (*current_pos == 0) return -1;
-            --*(current_pos); 
+            if (*hand_position == 0) return -1;
+            --*(hand_position); 
             break;
             
         case 2: // DOWN (PUSH) Put down disk from hand
@@ -136,8 +136,8 @@ int EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* 
             break;
 
         case 3: // RIGHT
-            if (*current_pos == MAX_TOWERS - 1) return -1;
-            ++*(current_pos); 
+            if (*hand_position == MAX_TOWERS - 1) return -1;
+            ++*(hand_position); 
             break;
 
         default : 
@@ -168,8 +168,8 @@ int inGame(PlayerData *player) {
     do
     {
         system("cls");
-        printCursor(stringCursor, player->currentPosition, lenArray);
-        printHand(stringHand, player->currentPosition, player->hand, lenArray, biggest_disk);
+        printCursor(stringCursor, player->handPosition, lenArray);
+        printHand(stringHand, player->handPosition, player->hand, lenArray, biggest_disk);
         printTower(stringDisk, stringTower, player->tower, biggest_disk);  
         printUI(player->moves, player->max_moves, msg);
 
@@ -178,7 +178,7 @@ int inGame(PlayerData *player) {
         if (HasWon(player->tower)) return 1;                                // print the last position before winning
         if (HasRanOutOfMoves(player->moves, player->max_moves)) return -1;  // print the last position before taking the L
 
-        while (EventDetection(&(player->tower[player->currentPosition]), &player->hand, &player->currentPosition, &player->moves, msg) == -1); //refrain the player from spamming or making unnecessary input
+        while (EventDetection(&(player->tower[player->handPosition]), &player->hand, &player->handPosition, &player->moves, msg) == -1); //refrain the player from spamming or making unnecessary input
 
     } while (1);
 }
@@ -192,7 +192,7 @@ void initializePlayer (PlayerData *player) { //placeholder
 
     player->hand = 0;
     player->moves = 0;
-    player->currentPosition = 0;
+    player->handPosition = 0;
     player->max_moves = 255;
 
     for (int i = 0; i < player->max_towers; ++i) 

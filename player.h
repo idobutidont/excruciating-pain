@@ -10,7 +10,7 @@ typedef struct {
     int difficulty;
     Tower tower[6];
     int hand;
-    int currentPosition;
+    int handPosition;
     int max_towers;
     int max_disks;
 } PlayerData;
