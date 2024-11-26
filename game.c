@@ -116,7 +116,7 @@ int CountMaxMove(int rods, int disks) {
         // Try splitting the disks into two parts
         for (int i = 1; i < disks; ++i) {
             // Recursively calculate moves for each part
-            int moves = 2 * hanoi(rods, i) + hanoi(rods - 1, disks - i);
+            int moves = 2 * CountMaxMove(rods, i) + CountMaxMove(rods - 1, disks - i);
             if (moves < min_moves) {
                 min_moves = moves;  // Track the minimum moves
             }
@@ -223,7 +223,7 @@ void initializePlayer (PlayerData *player) { //placeholder
     player->hand = 0;
     player->moves = 0;
     player->handPosition = 0;
-    player->max_moves = hanoi(player->max_towers, player->max_disks);
+    player->max_moves = CountMaxMove(player->max_towers, player->max_disks);
 
     for (int i = 0; i < player->max_towers; ++i) 
         initializeTower(&player->tower[i]);
