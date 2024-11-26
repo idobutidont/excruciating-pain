@@ -20,17 +20,17 @@ int HasRanOutOfMoves(int moves, int max_moves);
 // Print Modules
 void printTower(char* stringDisk, const char* stringTower, Tower towers[], int biggest_disk);
 
-void printCursor(const char* stringCursor, int current_pos, int lenArray);
+void printCursor(const char* stringCursor, int hand_position, int lenArray);
 
-void printHand(char* stringHand, int current_pos, int hand, int lenArray, int biggest_disk);
+void printHand(char* stringHand, int hand_position, int hand, int lenArray, int biggest_disk);
 
-void printSpaces(int lenArray, int current_pos);
+void printSpaces(int lenArray, int hand_position);
 
 void printUI(int moves, int max_moves, const char* message);
 // End Print Modules
 
 // Player Input
-int EventDetection (Tower *tower, int *hand, int *current_pos, int *moves, char *message);
+int EventDetection (Tower *tower, int *hand, int *hand_position, int *moves, char *message);
 
 
 //Placeholder module
