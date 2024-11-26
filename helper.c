@@ -22,6 +22,10 @@ void PrintfColor(const char* input, int color) {
     setConsoleColor(15); //bright white supposedly
 }
 
+int StringIsEmpty(const char* string) {
+    return string[0] == '\0';
+}
+
 int PlayerInput() {
 
     int firstInput = getch();
@@ -67,14 +71,6 @@ void DiskToString(char* disks, int current_disk, int biggest_disk) {
 }
 
 void TowerToString(char* disks, int biggest_disk, char accessories) {
-
-    //handling empty string.
-    if (accessories == ' ')  {
-        for (int i = biggest_disk + 2; i >= 0; --i) {
-            disks[i] = ' ';
-        }
-        return;
-    }
 
     int count = 0;
     int space = (biggest_disk / 2) + 1;

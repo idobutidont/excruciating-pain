@@ -83,9 +83,9 @@ void NewGame() {
     if (load(&player) == 1) {
         printf("\nYou have an ongoing Progress. Do you want to proceed? [Y/N]: ");
         
-        switch(toupper(getchar())) {
+        switch(toupper(getche())) {
             case 'Y': break;
-            default : getchar(); return;
+            default : return;
         }
 
     }

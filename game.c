@@ -91,7 +91,9 @@ void printHand(char* stringHand, int current_pos, int hand, int lenArray, int bi
 void printUI(int moves, int max_moves, const char* message) {
     printf("Moves: %d\n", moves);
     printf("Moves Left: %d\n", (max_moves-moves));
-    PrintfColor(message, 12);
+
+    if (!StringIsEmpty(message)) 
+        PrintfColor(message, 12);
 }
 
 
@@ -144,8 +146,6 @@ int EventDetection(Tower *tower, int *hand, int *current_pos, int *moves, char* 
 
     strcpy(message, "\0");
 
-    
-
     return 1;
 }
 
@@ -193,7 +193,7 @@ void initializePlayer (PlayerData *player) { //placeholder
     player->hand = 0;
     player->moves = 0;
     player->currentPosition = 0;
-    player->max_moves = 256;
+    player->max_moves = 255;
 
     for (int i = 0; i < player->max_towers; ++i) 
         initializeTower(&player->tower[i]);
