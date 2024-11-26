@@ -13,6 +13,7 @@
 #include <string.h>
 #include <windows.h>
 #include <stdio.h>
+#include <math.h>
 
 
 int MAX_DISKS, MAX_TOWERS;
@@ -96,6 +97,35 @@ void printUI(int moves, int max_moves, const char* message) {
         PrintfColor(message, 12);
 }
 
+// AUTHOR: CHATGPT
+// based on Frame Stewart Conjecture
+int CountMaxMove(int rods, int disks) {
+    // Base cases
+    if (disks == 0) return 0;  // No moves needed for 0 disks
+    if (disks == 1) return 1;  // Only 1 move needed for 1 disk
+
+    // If exactly 3 rods, we can use the optimal formula
+    if (rods == 3) {
+        // Using bit shifting to calculate 2^disks - 1 (equivalent to pow(2, disks) - 1)
+        return (1 << disks) - 1;  // 2^disks - 1
+    }
+
+    // If we have more than 3 rods, try different splits
+    if (rods > 3) {
+        int min_moves = INT_MAX;  // Initialize to maximum value
+        // Try splitting the disks into two parts
+        for (int i = 1; i < disks; ++i) {
+            // Recursively calculate moves for each part
+            int moves = 2 * hanoi(rods, i) + hanoi(rods - 1, disks - i);
+            if (moves < min_moves) {
+                min_moves = moves;  // Track the minimum moves
+            }
+        }
+        return min_moves;  // Return the minimum number of moves found
+    }
+
+    return INT_MAX;  // If rods <= 3 and disks > 1, fallback (invalid case)
+}
 
 int EventDetection(Tower *tower, int *hand, int *hand_position, int *moves, char* message) {
 
@@ -160,7 +190,7 @@ int inGame(PlayerData *player) {
     int lenArray = biggest_disk + 3;
 
     char stringDisk[lenArray], stringTower[lenArray], stringCursor[lenArray], stringHand[lenArray];
-    char msg[128] = {'\0'};
+    char msg[64] = {'\0'};
 
     TowerToString(stringCursor, biggest_disk, 'V');
     TowerToString(stringTower, biggest_disk, '|');
@@ -193,7 +223,7 @@ void initializePlayer (PlayerData *player) { //placeholder
     player->hand = 0;
     player->moves = 0;
     player->handPosition = 0;
-    player->max_moves = 255;
+    player->max_moves = hanoi(player->max_towers, player->max_disks);
 
     for (int i = 0; i < player->max_towers; ++i) 
         initializeTower(&player->tower[i]);
