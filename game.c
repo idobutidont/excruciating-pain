@@ -97,31 +97,44 @@ void printUI(int moves, int max_moves, const char* message) {
         PrintfColor(message, 12);
 }
 
+int moveMemo[16][6] = {0};
+
 // AUTHOR: CHATGPT
-// based on Frame Stewart Conjecture
-int CountMaxMove(int rods, int disks) {
+// Based on Frame Stewart Conjecture
+// T(disk, tower) = Min (1 <= i < disk) [2 * T(i, tower) + T(disk - i, tower - 1)]
+int CountMaxMove(int disk, int tower) {
     // Base cases
-    if (disks == 0) return 0;  // No moves needed for 0 disks
-    if (disks == 1) return 1;  // Only 1 move needed for 1 disk
+    if (disk == 0) return 0;  // No moves needed for 0 disks
+    if (disk == 1) return 1;  // Only 1 move needed for 1 disk
 
     // If exactly 3 rods, we can use the optimal formula
-    if (rods == 3) {
+    if (tower == 3) {
         // Using bit shifting to calculate 2^disks - 1 (equivalent to pow(2, disks) - 1)
-        return (1 << disks) - 1;  // 2^disks - 1
+        return (1 << disk) - 1;  // 2^disks - 1
+    }
+
+    // Check if the current iteration has already been saved into memo
+    if (moveMemo[disk][tower] != 0) {
+        return moveMemo[disk][tower];   // if it does exist, then early return
     }
 
     // If we have more than 3 rods, try different splits
-    if (rods > 3) {
+    if (tower > 3) {
         int min_moves = INT_MAX;  // Initialize to maximum value
         // Try splitting the disks into two parts
-        for (int i = 1; i < disks; ++i) {
-            // Recursively calculate moves for each part
-            int moves = 2 * CountMaxMove(rods, i) + CountMaxMove(rods - 1, disks - i);
+        for (int i = 1; i < disk; ++i) {
+            // Calculate the total moves for this split, memoize recursively
+            int moves = 2 * CountMaxMove(i, tower) + CountMaxMove(disk - i, tower - 1);
+
+            // Track the minimum moves
             if (moves < min_moves) {
-                min_moves = moves;  // Track the minimum moves
+                min_moves = moves;
             }
         }
-        return min_moves;  // Return the minimum number of moves found
+
+        // "Memorize" the result for the current disk and tower
+        moveMemo[disk][tower] = min_moves;
+        return min_moves;  
     }
 
     return INT_MAX;  // If rods <= 3 and disks > 1, fallback (invalid case)
@@ -223,7 +236,7 @@ void initializePlayer (PlayerData *player) { //placeholder
     player->hand = 0;
     player->moves = 0;
     player->handPosition = 0;
-    player->max_moves = CountMaxMove(player->max_towers, player->max_disks);
+    player->max_moves = CountMaxMove(player->max_disks, player->max_towers);
 
     for (int i = 0; i < player->max_towers; ++i) 
         initializeTower(&player->tower[i]);
