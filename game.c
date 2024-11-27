@@ -123,7 +123,7 @@ int CalculateMaxMove(int disk, int tower) {
     if (tower == 3) return (1 << disk) - 1;     // 2^disks - 1
     if (tower < 3) return INT_MAX;              // since there's no way to solve a 1 or 2 towers in tower of hanoi with more than 1 disk
 
-    // Check if the current iteration has already been saved into memo
+    // Check if the current calculation has already been saved into memo
     if (moveMemo[disk][tower] != 0) return moveMemo[disk][tower];
 
     int moves;
