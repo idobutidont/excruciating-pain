@@ -110,48 +110,38 @@ void printUI(int moves, int max_moves, const char* message) {
 }
 // end of Prints
 
-// Use a Memo to significantly reduce calculation time
+// Use a Memo to handle repeating T(disk, tower) calculation.
 int moveMemo[32][8] = {0};
 
 // AUTHOR: CHATGPT
 // Based on Frame Stewart Conjecture
-// T(disk, tower) = Min (1 <= i < disk) [2 * T(i, tower) + T(disk - i, tower - 1)]
 int CalculateMaxMove(int disk, int tower) {
-    // Base cases
-    if (disk == 0) return 0;  // No moves needed for 0 disks
-    if (disk == 1) return 1;  // Only 1 move needed for 1 disk
 
-    // If exactly 3 towers, we can use the optimal formula
-    if (tower == 3) {
-        // Using bit shifting to calculate 2^disks - 1 (equivalent to pow(2, disks) - 1)
-        return (1 << disk) - 1;  // 2^disks - 1
-    }
+    // base cases
+    if (disk == 0) return 0;
+    if (disk == 1) return 1;
+    if (tower == 3) return (1 << disk) - 1;     // 2^disks - 1
+    if (tower < 3) return INT_MAX;              // since there's no way to solve a 1 or 2 towers in tower of hanoi with more than 1 disk
 
     // Check if the current iteration has already been saved into memo
-    if (moveMemo[disk][tower] != 0) {
-        return moveMemo[disk][tower];   // if it does exist, then early return
-    }
+    if (moveMemo[disk][tower] != 0) return moveMemo[disk][tower];
 
-    // If we have more than 3 towers, try different splits
-    if (tower > 3) {
-        int min_moves = INT_MAX;  // Initialize to maximum value
-        // Try splitting the disks into two parts
-        for (int i = 1; i < disk; ++i) {
-            // Calculate the total moves for this split, memoize recursively
-            int moves = 2 * CalculateMaxMove(i, tower) + CalculateMaxMove(disk - i, tower - 1);
+    int moves;
+    int min_moves = INT_MAX;
 
-            // Track the minimum moves
-            if (moves < min_moves) {
-                min_moves = moves;
-            }
+    // T(disk, tower) = Min (1 <= i < disk) [2 * T(i, tower) + T(disk - i, tower - 1)]
+    for (int i = 1; i < disk; ++i) {
+        moves = 2 * CalculateMaxMove(i, tower) + CalculateMaxMove(disk - i, tower - 1);
+
+        if (moves < min_moves) {
+            min_moves = moves;
         }
-
-        // "Memorize" the result for the current disk and tower
-        moveMemo[disk][tower] = min_moves;
-        return min_moves;  
     }
 
-    return INT_MAX;  // If towers <= 3 and disks > 1, fallback (invalid case)
+    // "Memorize" the result for the current disk and tower
+    moveMemo[disk][tower] = min_moves; 
+
+    return min_moves;  // If towers <= 3 and disks > 1, fallback (invalid case)
 }
 
 // Gameplay Modules
