@@ -2,3 +2,7 @@
 build/*
 *.exe
 *.dat
+*.o
+*.win
+*.dev
+*.layout

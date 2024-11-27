@@ -1,5 +1,5 @@
 /***************************************************************
-* FILENAME: main.c
+* FILENAME: tower.c
 * DESCRIPTION: 
 * AUTHOR: 
 * DATE: 

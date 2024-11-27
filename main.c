@@ -11,28 +11,21 @@
 #include <windows.h>
 #include <conio.h>
 
+#define MOVE_CURSOR -4
+
+// Main Menu Modules
 int Menu();
-/*
-    return 0: newGame
-    return 1: Continue from last saved state
-    return 2: View Score
-    return 3: Setting
-    return 4: exit app
-*/
-
 void printMenu(char Menu[]);
-
 int MenuInput(int *selected, char Menu[]);
-
-void MoveCursor(char Menu[], int *selected, int UpOrDown);
+void MoveMenuCursor(char Menu[], int *selected, int UpOrDown);
 
 // Cases
 int CursorIsAtTop(int cursor);
 int CursorIsAtBottom(int cursor);
+// end Main Menu
 
-
-void Continue();
 void NewGame();
+void Continue();
 
 void startGame(PlayerData player);
 
@@ -62,23 +55,75 @@ int Menu() {
     int selected = 0;
     Menu[selected] = '>';
 
-    //system("mode 64,12");
-
     SetConsoleSize(64, 12);
 
     do
     {
-        system("cls");
+        clear_screen();
         printMenu(Menu);
 
-        while ((result = MenuInput(&selected, Menu)) == -1);    // refrain the player from making unnecessary input
+        while ((result = MenuInput(&selected, Menu)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
         
-        if (result >= 0) return result;
+        if (result != MOVE_CURSOR) return result;
         
     } while (1);
     
     return -1;
 
+}
+
+void printMenu(char Menu[]) {
+    printf(
+        "\n   Tower Of Hanoi\n"
+        "   %c New Game\n"
+        "   %c Continue\n"
+        "   %c View Scores\n"
+        "   %c Tutorial\n\n"
+        "   %c Exit\n\n"
+        "   Press Enter to Continue...",
+        Menu[0], Menu[1], Menu[2], Menu[3], Menu[4]
+        );
+}
+
+int MenuInput(int *selected, char Menu[]) {
+    
+    switch (PlayerInput()) {
+    case UP:
+
+        if (CursorIsAtTop(*selected)) return UNNECESSARY_INPUT;
+        MoveMenuCursor(Menu, &(*selected), -1);
+
+        break;
+    case DOWN:
+
+        if (CursorIsAtBottom(*selected)) return UNNECESSARY_INPUT;
+        MoveMenuCursor(Menu, &(*selected), 1);
+
+        break;
+    case PROCEED: 
+        return *selected;
+
+    default: return UNNECESSARY_INPUT;     // this means that player are making unnecessary input
+    }
+
+    return MOVE_CURSOR;  // this means that player actually presses up / down
+}
+
+// Up = -1, Down = 1
+void MoveMenuCursor(char Menu[], int *selected, int UpOrDown) {
+
+    Menu[*selected] = '\0';
+    *selected += UpOrDown;
+    Menu[*selected] = '>';
+
+}
+
+int CursorIsAtTop(int cursor) {
+    return cursor == 0;
+}
+
+int CursorIsAtBottom(int cursor) {
+    return cursor == 4;
 }
 
 void NewGame() {
@@ -128,63 +173,4 @@ void startGame(PlayerData player) {
     }
 
     return;
-}
-
-void printMenu(char Menu[]) {
-    printf(
-        "\n"
-        "   Tower Of Hanoi\n"
-        "   %c New Game\n"
-        "   %c Continue\n"
-        "   %c View Scores\n"
-        "   %c Tutorial\n\n"
-        "   %c Exit\n\n"
-        "   Press Enter to Continue...",
-        Menu[0], Menu[1], Menu[2], Menu[3], Menu[4]
-        );
-}
-
-// Up = -1, Down = 1
-void MoveCursor(char Menu[], int *selected, int UpOrDown) {
-
-    Menu[*selected] = '\0';
-    *selected += UpOrDown;
-    Menu[*selected] = '>';
-
-}
-
-int CursorIsAtTop(int cursor) {
-    return cursor == 0;
-}
-
-int CursorIsAtBottom(int cursor) {
-    return cursor == 4;
-}
-
-int MenuInput(int *selected, char Menu[]) {
-    
-    switch (PlayerInput()) {
-    // UP
-    case 0:
-
-        if (CursorIsAtTop(*selected)) return -1;
-        MoveCursor(Menu, &(*selected), -1);
-
-        break;
-    // DOWN
-    case 2:
-
-        if (CursorIsAtBottom(*selected)) return -1;
-        MoveCursor(Menu, &(*selected), 1);
-
-        break;
-    
-    // ENTER
-    case 4: 
-        return *selected;
-
-    default: return -1;     // this means that player are making unnecessary input
-    }
-
-    return -2;  // this means that player actually presses up / down
 }

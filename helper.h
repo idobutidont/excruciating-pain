@@ -1,11 +1,18 @@
 #ifndef helper_h
 #define helper_h
 
+#define UP 0
+#define LEFT 1
+#define DOWN 2
+#define RIGHT 3
+#define PROCEED 4
+#define UNNECESSARY_INPUT -1
+
 void setConsoleColor(int color);
+void SetConsoleSize(int width, int height);
+void clear_screen();
 
 void PrintfColor(const char* input, int color);
-
-void SetConsoleSize(int width, int height);
 
 int StringIsEmpty(const char* string);
 

@@ -1,5 +1,5 @@
 /***************************************************************
-* FILENAME: main.c
+* FILENAME: helper.c
 * DESCRIPTION: 
 * AUTHOR: 
 * DATE: 
@@ -14,6 +14,25 @@
 void setConsoleColor(int color) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, (WORD)color);
+}
+
+// AUTHOR: CHATGPT
+// Significantly more efficient clear screen function
+void clear_screen() {
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD coordScreen = { 0, 0 };
+    DWORD dwCharsWritten;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(hStdOut, &csbi);
+    DWORD dwSize = (DWORD) (csbi.dwSize.X * csbi.dwSize.Y);
+    FillConsoleOutputCharacter(hStdOut, ' ', dwSize, coordScreen, &dwCharsWritten);
+    SetConsoleCursorPosition(hStdOut, coordScreen);
+}
+
+void SetConsoleSize(int width, int height) {
+    char stringCommand[16];
+    sprintf(stringCommand, "mode %d,%d", width, height);
+    system(stringCommand);
 }
 
 void PrintfColor(const char* input, int color) {
@@ -33,24 +52,18 @@ int PlayerInput() {
     if (firstInput == 224 || firstInput == 0) {
     
         switch(getch()) {
-            case 'H': return 0; // UP
-            case 'K': return 1; // LEFT
-            case 'P': return 2; // DOWN
-            case 'M': return 3; // RIGHT
-            default : return -1;
+            case 'H': return UP; // UP
+            case 'K': return LEFT; // LEFT
+            case 'P': return DOWN; // DOWN
+            case 'M': return RIGHT; // RIGHT
+            default : return UNNECESSARY_INPUT;
         }
 
     } else if (firstInput == '\r') { // ENTER
-        return 4; // Proceed, Interact
+        return PROCEED; // Proceed, Interact
     } else {
-        return -1;
+        return UNNECESSARY_INPUT;
     }
-}
-
-void SetConsoleSize(int width, int height) {
-    char stringCommand[16];
-    sprintf(stringCommand, "mode %d,%d", width, height);
-    system(stringCommand);
 }
 
 //PRECONDITION besar_disks pasti lebih dari 0.
@@ -69,7 +82,7 @@ void DiskToString(char* disks, int current_disk, int biggest_disk) {
 
     disks[count++] = '>';
 
-    for (int i = 0; i < space + 1; ++i)
+    for (int i = 0; i < space; ++i)
         disks[count++] = ' ';
 
     disks[count] = '\0'; 
@@ -86,7 +99,7 @@ void TowerToString(char* disks, int biggest_disk, char accessories) {
     
     disks[count++] = accessories;
 
-    for (int i = 0; i < space + 1; ++i)
+    for (int i = 0; i < space; ++i)
         disks[count++] = ' ';
 
     disks[count] = '\0';

@@ -1,6 +1,8 @@
 #ifndef game_h
 #define game_h
 
+#define WRONG_MOVE -2
+
 #include "player.h"
 
 // Main Module
@@ -10,11 +12,15 @@ int inGame(PlayerData *player);
 // Cases
 int HandIsEmpty(int hand);
 
-int HandIsBigerThanTower(int hand, Tower tower);
+int HandIsBiggerThanTower(int hand, Tower tower);
 
 int HasWon(Tower tower[]);
 
 int HasRanOutOfMoves(int moves, int max_moves);
+
+int HandAtRight(int hand);
+
+int HandAtLeft(int hand);
 // end Cases
 
 // Print Modules
@@ -28,6 +34,16 @@ void printSpaces(int lenArray, int hand_position);
 
 void printUI(int moves, int max_moves, const char* message);
 // End Print Modules
+
+// Gameplay Modules
+int MoveCursor(int LeftOrRight, int *hand_position);
+
+int PickUpDisk(Tower *tower, int *hand, char* message);
+
+int PutDownDisk(Tower *tower, int *hand, char* message);
+
+void IncrementMove(int *moves);
+// End Gameplay Modules
 
 // Player Input
 int EventDetection (Tower *tower, int *hand, int *hand_position, int *moves, char *message);

@@ -1,5 +1,5 @@
 /***************************************************************
-* FILENAME: main.c
+* FILENAME: score.c
 * DESCRIPTION: 
 * AUTHOR: 
 * DATE: 
