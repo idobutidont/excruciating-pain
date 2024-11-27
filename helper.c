@@ -47,6 +47,12 @@ int PlayerInput() {
     }
 }
 
+void SetConsoleSize(int width, int height) {
+    char stringCommand[16];
+    sprintf(stringCommand, "mode %d,%d", width, height);
+    system(stringCommand);
+}
+
 //PRECONDITION besar_disks pasti lebih dari 0.
 void DiskToString(char* disks, int current_disk, int biggest_disk) {
 
@@ -63,7 +69,7 @@ void DiskToString(char* disks, int current_disk, int biggest_disk) {
 
     disks[count++] = '>';
 
-    for (int i = 0; i < space; ++i)
+    for (int i = 0; i < space + 1; ++i)
         disks[count++] = ' ';
 
     disks[count] = '\0'; 
@@ -80,7 +86,7 @@ void TowerToString(char* disks, int biggest_disk, char accessories) {
     
     disks[count++] = accessories;
 
-    for (int i = 0; i < space; ++i)
+    for (int i = 0; i < space + 1; ++i)
         disks[count++] = ' ';
 
     disks[count] = '\0';

@@ -43,6 +43,7 @@ int HasRanOutOfMoves(int moves, int max_moves) {
 // added biggest_disk, string for empty disk and non-empty disk for repetitive print handling
 void printTower(char* stringDisk, const char* stringTower, Tower towers[], int biggest_disk) {
     
+    char stringDiskTower[4096] = "";
     int current_disk;
 
     for (int i = MAX_DISKS - 1; i >= 0; i--) {
@@ -52,13 +53,19 @@ void printTower(char* stringDisk, const char* stringTower, Tower towers[], int b
                 current_disk = towers[j].disks[i];                      // temporarily put disk into a variable to avoid issues with iterator 'j'
                 DiskToString(stringDisk, current_disk, biggest_disk);   // harus pake variable dan gabisa di masukin langsung towers[j].disks[i] nya, nanti nge bug
 
-                printf("%s ", stringDisk);
+                strcat(stringDiskTower, stringDisk);
+                //printf("%s", stringDisk);
 
-            } else 
-                printf("%s ", stringTower);                        // handling empty disks
+            } else {
+                strcat(stringDiskTower, stringTower);
+                //printf("%s", stringTower);                        // handling empty disks
+            }
         }
-        printf("\n");
+        strcat(stringDiskTower, "\n");
+        //printf("\n");
     }
+
+    printf("%s", stringDiskTower);
 }
 
 // Basically what this does is print spaces until before our actual hand position.
@@ -90,24 +97,27 @@ void printHand(char* stringHand, int hand_position, int hand, int lenArray, int 
 }
 
 void printUI(int moves, int max_moves, const char* message) {
-    printf("Moves: %d\n", moves);
-    printf("Moves Left: %d\n", (max_moves-moves));
+    printf("\nMoves: %d", moves);
+    printf("\nMoves Left: %d", (max_moves-moves));
 
+    // Changing console color reduces performance by alot
+    // so we need to check if the string is empty to increase performance on non-wrong move
     if (!StringIsEmpty(message)) 
         PrintfColor(message, 12);
 }
 
-int moveMemo[16][6] = {0};
+// Use a Memo to significantly reduce calculation time
+int moveMemo[32][8] = {0};
 
 // AUTHOR: CHATGPT
 // Based on Frame Stewart Conjecture
 // T(disk, tower) = Min (1 <= i < disk) [2 * T(i, tower) + T(disk - i, tower - 1)]
-int CountMaxMove(int disk, int tower) {
+int CalculateMaxMove(int disk, int tower) {
     // Base cases
     if (disk == 0) return 0;  // No moves needed for 0 disks
     if (disk == 1) return 1;  // Only 1 move needed for 1 disk
 
-    // If exactly 3 rods, we can use the optimal formula
+    // If exactly 3 towers, we can use the optimal formula
     if (tower == 3) {
         // Using bit shifting to calculate 2^disks - 1 (equivalent to pow(2, disks) - 1)
         return (1 << disk) - 1;  // 2^disks - 1
@@ -118,13 +128,13 @@ int CountMaxMove(int disk, int tower) {
         return moveMemo[disk][tower];   // if it does exist, then early return
     }
 
-    // If we have more than 3 rods, try different splits
+    // If we have more than 3 towers, try different splits
     if (tower > 3) {
         int min_moves = INT_MAX;  // Initialize to maximum value
         // Try splitting the disks into two parts
         for (int i = 1; i < disk; ++i) {
             // Calculate the total moves for this split, memoize recursively
-            int moves = 2 * CountMaxMove(i, tower) + CountMaxMove(disk - i, tower - 1);
+            int moves = 2 * CalculateMaxMove(i, tower) + CalculateMaxMove(disk - i, tower - 1);
 
             // Track the minimum moves
             if (moves < min_moves) {
@@ -137,7 +147,7 @@ int CountMaxMove(int disk, int tower) {
         return min_moves;  
     }
 
-    return INT_MAX;  // If rods <= 3 and disks > 1, fallback (invalid case)
+    return INT_MAX;  // If towers <= 3 and disks > 1, fallback (invalid case)
 }
 
 int EventDetection(Tower *tower, int *hand, int *hand_position, int *moves, char* message) {
@@ -146,11 +156,11 @@ int EventDetection(Tower *tower, int *hand, int *hand_position, int *moves, char
 
         case 0: // UP (POP) Pick up disk to hand
             if (!HandIsEmpty(*hand)) {
-                strcpy(message, "You already got disk on your hand big guy.\0");
+                strcpy(message, "\nYou already got disk on your hand.\0");
                 return 1;
             }
             if (TowerIsEmpty(*tower)) {
-                strcpy(message, "There's no disk there.\0");
+                strcpy(message, "\nThere's no disk there.\0");
                 return 1;
             }
 
@@ -165,11 +175,11 @@ int EventDetection(Tower *tower, int *hand, int *hand_position, int *moves, char
         case 2: // DOWN (PUSH) Put down disk from hand
 
             if (HandIsEmpty(*hand)) {
-                strcpy(message, "Your hand is empty big guy.\0");
+                strcpy(message, "\nYour hand is empty.\0");
                 return 1;
             }
             if ((!TowerIsEmpty(*tower) && HandIsBiggerThanTower(*hand, *tower))) {
-                strcpy(message, "The disk on your hand is bigger than the one on the tower.\0"); 
+                strcpy(message, "\nThe disk on your hand is bigger than the one on the tower.\0"); 
                 return 1;
             }
 
@@ -208,6 +218,8 @@ int inGame(PlayerData *player) {
     TowerToString(stringCursor, biggest_disk, 'V');
     TowerToString(stringTower, biggest_disk, '|');
 
+    SetConsoleSize(lenArray * MAX_TOWERS, MAX_DISKS + 10);
+
     do
     {
         system("cls");
@@ -236,7 +248,7 @@ void initializePlayer (PlayerData *player) { //placeholder
     player->hand = 0;
     player->moves = 0;
     player->handPosition = 0;
-    player->max_moves = CountMaxMove(player->max_disks, player->max_towers);
+    player->max_moves = CalculateMaxMove(player->max_disks, player->max_towers);
 
     for (int i = 0; i < player->max_towers; ++i) 
         initializeTower(&player->tower[i]);

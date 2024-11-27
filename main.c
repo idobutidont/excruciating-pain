@@ -62,6 +62,10 @@ int Menu() {
     int selected = 0;
     Menu[selected] = '>';
 
+    //system("mode 64,12");
+
+    SetConsoleSize(64, 12);
+
     do
     {
         system("cls");
@@ -101,7 +105,7 @@ void Continue() {
 
     PlayerData player;
     if (load(&player) == -1) {
-        printf("\nYou do not have any recent progress. Please start a new game\n");
+        printf("\nYou do not have any recent progress. Please start a new game");
         getch();    // hold this screen until player input something
         return;
     }

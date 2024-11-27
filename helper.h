@@ -5,6 +5,8 @@ void setConsoleColor(int color);
 
 void PrintfColor(const char* input, int color);
 
+void SetConsoleSize(int width, int height);
+
 int StringIsEmpty(const char* string);
 
 int PlayerInput();
