@@ -143,7 +143,7 @@ int CalculateMaxMove(int disk, int tower) {
     // "Memorize" the result for the current disk and tower
     moveMemo[disk][tower] = min_moves; 
 
-    return min_moves;  // If towers <= 3 and disks > 1, fallback (invalid case)
+    return min_moves;
 }
 
 // Gameplay Modules
