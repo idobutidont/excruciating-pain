@@ -54,13 +54,15 @@ int HandAtLeftEdge(int hand) {
 
 int MoveIsValid(int move) {
     switch(move) {
-        case WM_DISK_AT_HAND: return 0;
-        case WM_TOWER_IS_EMPTY: return 0;
-        case WM_HAND_IS_EMPTY: return 0;
-        case WM_HAND_IS_BIGGER_THAN_TOWER: return 0;
-        case UNNECESSARY_INPUT: return 0;
-        default: return 1;
+        case DISK_PUT_DOWN: return 1;
+        case DISK_PICK_UP: return 1;
+        case CURSOR_MOVE: return 1;
+        default: return 0;
     }
+}
+
+int PlayerPutDownDisk(int input) {
+    return input == DISK_PUT_DOWN;
 }
 // End of cases
 
@@ -123,8 +125,8 @@ void printUI(int moves, int max_moves, int input) {
     printWrongMove(input);
 }
 
-void printWrongMove(int move) {
-    switch(move) {
+void printWrongMove(int input) {
+    switch(input) {
     case WM_DISK_AT_HAND: 
         PrintfColor("\nYou already got disk on your hand.", 12);
         break;
@@ -145,42 +147,6 @@ void printWrongMove(int move) {
 }
 // end of Prints
 
-// Use a Memo to handle repeating T(disk, tower) calculation.
-int moveMemo[32][8] = {0};
-
-// AUTHOR: CHATGPT
-// Based on Frame Stewart Conjecture
-int CalculateMaxMove(int disk, int tower) {
-
-    // base cases
-    if (disk == 0) return 0;
-    if (disk == 1) return 1;
-    if (tower == 3) return (1 << disk) - 1;     // 2^disks - 1
-    if (tower < 3) return INT_MAX;              // since there's no way to solve a 1 or 2 towers in tower of hanoi with more than 1 disk
-    if (disk < tower) return (2 * disk) - 1;
-    if (disk == tower) return (2 * disk) + 1;
-
-    // Check if the current calculation has already been saved into memo
-    if (moveMemo[disk][tower] != 0) return moveMemo[disk][tower];
-
-    int moves;
-    int min_moves = INT_MAX;
-
-    // T(disk, tower) = Min (1 <= i < disk) [2 * T(i, tower) + T(disk - i, tower - 1)]
-    for (int i = 1; i < disk; ++i) {
-        moves = 2 * CalculateMaxMove(i, tower) + CalculateMaxMove(disk - i, tower - 1);
-
-        if (moves < min_moves) {
-            min_moves = moves;
-        }
-    }
-
-    // "Memorize" the result for the current disk and tower
-    moveMemo[disk][tower] = min_moves; 
-
-    return min_moves;
-}
-
 // Gameplay Modules
 int MoveCursor(int LeftOrRight, int *hand_position, int MAX_TOWERS) {
 
@@ -194,7 +160,7 @@ int MoveCursor(int LeftOrRight, int *hand_position, int MAX_TOWERS) {
         ++(*hand_position);
     }
 
-    return 1;
+    return CURSOR_MOVE;
 }
 
 int PickUpDisk(Tower *tower, int *hand) {
@@ -207,10 +173,10 @@ int PickUpDisk(Tower *tower, int *hand) {
     }
 
     *hand = pop(&(*tower));
-    return 1;
+    return DISK_PICK_UP;
 }
 
-int PutDownDisk(Tower *tower, int *hand, int *moves) {
+int PutDownDisk(Tower *tower, int *hand) {
 
     if (HandIsEmpty(*hand)) {
         return WM_HAND_IS_EMPTY;
@@ -222,9 +188,7 @@ int PutDownDisk(Tower *tower, int *hand, int *moves) {
     push(&(*tower), *hand);
     *hand = 0;
 
-    IncrementMove(&(*moves)); 
-
-    return 1;
+    return DISK_PUT_DOWN;
 }
 
 void IncrementMove(int *moves) {
@@ -241,7 +205,7 @@ int PlayerEvent(PlayerData *player) {
         return PickUpDisk(&player->tower[player->handPosition], &player->hand);
         
     case DOWN:
-        return PutDownDisk(&player->tower[player->handPosition], &player->hand, &player->moves);
+        return PutDownDisk(&player->tower[player->handPosition], &player->hand);
 
     case LEFT:
         return MoveCursor(LEFT, &player->handPosition, player->max_towers); 
@@ -288,6 +252,8 @@ int inGame(PlayerData *player) {
 
         //refrain the player from spamming or making unnecessary input
         while ((input = PlayerEvent(&*player)) == UNNECESSARY_INPUT);
+
+        if (PlayerPutDownDisk(input)) IncrementMove(&player->moves);
 
     } while (1);
 }

@@ -74,4 +74,6 @@ void TowerToString(char* disks, int biggest_disk, char accessories);
     return those strings to disks
 */
 
+int CalculateMaxMove(int disk, int tower);
+
 #endif

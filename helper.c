@@ -109,3 +109,39 @@ void TowerToString(char* disks, int biggest_disk, char accessories) {
     disks[count] = '\0';
 
 }
+
+// Use a Memo to handle repeating T(disk, tower) calculation.
+int moveMemo[32][8] = {0};
+
+// AUTHOR: CHATGPT
+// Based on Frame Stewart Conjecture
+int CalculateMaxMove(int disk, int tower) {
+
+    // base cases
+    if (disk == 0) return 0;
+    if (disk == 1) return 1;
+    if (tower == 3) return (1 << disk) - 1;     // 2^disks - 1
+    if (tower < 3) return INT_MAX;              // since there's no way to solve a 1 or 2 towers in tower of hanoi with more than 1 disk
+    if (disk < tower) return (2 * disk) - 1;
+    if (disk == tower) return (2 * disk) + 1;
+
+    // Check if the current calculation has already been saved into memo
+    if (moveMemo[disk][tower] != 0) return moveMemo[disk][tower];
+
+    int moves;
+    int min_moves = INT_MAX;
+
+    // T(disk, tower) = Min (1 <= i < disk) [2 * T(i, tower) + T(disk - i, tower - 1)]
+    for (int i = 1; i < disk; ++i) {
+        moves = 2 * CalculateMaxMove(i, tower) + CalculateMaxMove(disk - i, tower - 1);
+
+        if (moves < min_moves) {
+            min_moves = moves;
+        }
+    }
+
+    // "Memorize" the result for the current disk and tower
+    moveMemo[disk][tower] = min_moves; 
+
+    return min_moves;
+}
