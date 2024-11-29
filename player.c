@@ -7,7 +7,6 @@
 
 #include "player.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 int save(PlayerData *player) {
     FILE *f;
