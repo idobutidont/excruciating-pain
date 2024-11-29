@@ -15,6 +15,7 @@ void clear_screen();
 void PrintfColor(const char* input, int color);
 
 int StringIsEmpty(const char* string);
+void DeleteString(char* string);
 
 int PlayerInput();
 /*

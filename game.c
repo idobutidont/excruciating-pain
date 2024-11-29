@@ -14,19 +14,16 @@
 #include <windows.h>
 #include <stdio.h>
 
-
-int MAX_DISKS, MAX_TOWERS;
-
 // Cases
 int HandIsEmpty(int hand) {
     return hand <= 0;
 }
 
 int HandIsBiggerThanTower(int hand, Tower tower) {
-    return hand > tower.disks[tower.top];
+    return hand >= tower.disks[tower.top];
 }
 
-int HasWon(Tower tower[]) {
+int HasDiskStacked(Tower tower[], int MAX_DISKS, int MAX_TOWERS) {
 
     for (int i = 1; i < MAX_TOWERS; ++i) 
         if (tower[i].top == MAX_DISKS - 1) return 1;
@@ -34,32 +31,40 @@ int HasWon(Tower tower[]) {
     return 0;
 }
 
+int HasWon(PlayerData *player) {
+    return HasDiskStacked(player->tower, player->max_disks, player->max_towers);
+}
+
+int HasLose(PlayerData *player) {
+    return HasRanOutOfMoves(player->moves, player->max_moves);
+}
+
 int HasRanOutOfMoves(int moves, int max_moves) {
     return (moves + 1) > max_moves;
 }
 
-int HandAtRight(int hand) {
+int HandAtRightEdge(int hand, int MAX_TOWERS) {
     return hand == MAX_TOWERS - 1;
 }
 
-int HandAtLeft(int hand) {
+int HandAtLeftEdge(int hand) {
     return hand == 0;
 }
 // End of cases
 
 // Prints
 // Module to print the towers
-void printTower(char* stringDisk, const char* stringTower, Tower towers[], int biggest_disk) {
+void printTower(char* stringDisk, const char* stringTower, Tower towers[], int biggest_disk, int MAX_DISKS, int MAX_TOWERS) {
     
-    // use a combined string for batching print, much faster compared to (tower * disk) amount of prints
+    // use a combined string for batching print, faster compared to (tower * disk) amount of prints
     char stringDiskTower[4096] = "";
     int current_disk;
 
-    for (int i = MAX_DISKS - 1; i >= 0; i--) {
-        for (int j = 0; j < MAX_TOWERS; j++) {
-            if (i <= towers[j].top) {                                   // Check if disk were available on tower 'j', done by tracking if the top of tower 'j' is above disk at level 'i'
+    for (int height = MAX_DISKS - 1; height >= 0; --height) {
+        for (int tower = 0; tower < MAX_TOWERS; ++tower) {
+            if (height <= towers[tower].top) {                          // check if there's a disk on the tower, done by checking if the top is higher than current height level
 
-                current_disk = towers[j].disks[i];                      // temporarily put disk into a variable to avoid issues with iterator 'j'
+                current_disk = towers[tower].disks[height];             // temporarily put disk into a variable to avoid issues with iterator
                 DiskToString(stringDisk, current_disk, biggest_disk);   // convert current_disk into a stringDisk.
 
                 strcat(stringDiskTower, stringDisk);                    // concatenate (tambahin string) stringDisk onto stringDiskTower
@@ -75,38 +80,38 @@ void printTower(char* stringDisk, const char* stringTower, Tower towers[], int b
 }
 
 // Basically what this does is print spaces until before our actual hand position.
-void printSpaces(int lenArray, int hand_position) {
-    printf("%*s", (lenArray * hand_position), "");
+void printSpaces(int stringDiskLen, int hand_position) {
+    printf("%*s", (stringDiskLen * hand_position), "");
 }
 
 // Module to print Cursor
-void printCursor(const char* stringCursor, int hand_position, int lenArray) {
-    printSpaces(lenArray, hand_position);
+void printCursor(const char* stringCursor, int hand_position, int stringDiskLen) {
+    printSpaces(stringDiskLen, hand_position);
     printf("%s\n", stringCursor);
 }
 
 // Module to Print Hand
-void printHand(char* stringHand, int hand_position, int hand, int lenArray, int biggest_disk) {
+void printHand(char* stringHand, int hand_position, int hand, int stringDiskLen, int biggest_disk) {
 
     if (HandIsEmpty(hand)) {
         printf("\n");
         return;
     }
 
-    printSpaces(lenArray, hand_position);
+    printSpaces(stringDiskLen, hand_position);
     DiskToString(stringHand, hand, biggest_disk);
     printf("%s\n", stringHand);
 }
 
-void printUI(int moves, int max_moves, const char* message) {
+void printUI(int moves, int max_moves, char* message) {
 
     printf("\nMoves: %d", moves);
     printf("\tMoves Left: %d", (max_moves-moves));
 
-    // Changing console color reduces performance by alot
-    // so we need to check if the string is empty to increase performance on non-wrong move
-    if (!StringIsEmpty(message)) 
+    if (!StringIsEmpty(message)) {
         PrintfColor(message, 12);
+        DeleteString(message);
+    }
 }
 // end of Prints
 
@@ -147,13 +152,15 @@ int CalculateMaxMove(int disk, int tower) {
 }
 
 // Gameplay Modules
-int MoveCursor(int LeftOrRight, int *hand_position) {
+int MoveCursor(int LeftOrRight, int *hand_position, int MAX_TOWERS) {
 
     if (LeftOrRight == LEFT) {
-        if (HandAtLeft(*hand_position)) return UNNECESSARY_INPUT;
+        if (HandAtLeftEdge(*hand_position)) return UNNECESSARY_INPUT;
         --(*hand_position);
-    } else {
-        if (HandAtRight(*hand_position)) return UNNECESSARY_INPUT;
+    }
+    
+    if (LeftOrRight == RIGHT) {
+        if (HandAtRightEdge(*hand_position, MAX_TOWERS)) return UNNECESSARY_INPUT;
         ++(*hand_position);
     }
 
@@ -175,7 +182,7 @@ int PickUpDisk(Tower *tower, int *hand, char* message) {
     return 1;
 }
 
-int PutDownDisk(Tower *tower, int *hand, char* message) {
+int PutDownDisk(Tower *tower, int *hand, int *moves, char* message) {
 
     if (HandIsEmpty(*hand)) {
         strcpy(message, "\nYour hand is empty.\0");
@@ -186,8 +193,10 @@ int PutDownDisk(Tower *tower, int *hand, char* message) {
         return WRONG_MOVE;
     }
 
-    push(&(*tower), *hand, MAX_DISKS);
-    *hand = 0; 
+    push(&(*tower), *hand);
+    *hand = 0;
+
+    IncrementMove(&(*moves)); 
 
     return 1;
 }
@@ -198,74 +207,62 @@ void IncrementMove(int *moves) {
 // End Gameplay
 
 // Player Input Events. POP, PUSH, disk movement
-int EventDetection(Tower *tower, int *hand, int *hand_position, int *moves, char* message) {
+int PlayerEvent(PlayerData *player, char* message) {
 
     switch (PlayerInput()) {
 
-        case UP: // UP (POP) Pick up disk to hand
-            if (PickUpDisk(&(*tower), &(*hand), message) == WRONG_MOVE) return WRONG_MOVE;
-            break;
-            
-        case DOWN: // DOWN (PUSH) Put down disk from hand
-            if (PutDownDisk(&(*tower), &(*hand), message) == WRONG_MOVE) return WRONG_MOVE;
-            
-            IncrementMove(&(*moves));
-            break;
+    case UP:
+        return PickUpDisk(&player->tower[player->handPosition], &player->hand, message);
+        
+    case DOWN:
+        return PutDownDisk(&player->tower[player->handPosition], &player->hand, &player->moves, message);
 
-        case LEFT: // LEFT
-            if (MoveCursor(LEFT, &(*hand_position)) == UNNECESSARY_INPUT) return UNNECESSARY_INPUT;
-            break;
+    case LEFT:
+        return MoveCursor(LEFT, &player->handPosition, player->max_towers); 
 
-        case RIGHT: // RIGHT
-            if (MoveCursor(RIGHT, &(*hand_position)) == UNNECESSARY_INPUT) return UNNECESSARY_INPUT;
-            break;
+    case RIGHT:
+        return MoveCursor(RIGHT, &player->handPosition, player->max_towers);
 
-        default :
-            return UNNECESSARY_INPUT;
+    default :
+        return UNNECESSARY_INPUT;
+        
     }
-
-    strcpy(message, "\0");
-
-    return 1;
 }
 
-// return 1 if won, -1 otherwise
+// return WON if won, LOSE if lose
 // TODO: MORE REFACTOR.
 int inGame(PlayerData *player) {
 
-    MAX_DISKS = player->max_disks;
-    MAX_TOWERS = player->max_towers;
-
-    int biggest_disk = (MAX_DISKS * 2) - 1;
+    int biggest_disk = (player->max_disks * 2) - 1;
 
     // biggest_disk + '<' + '>'
-    int lenArray = biggest_disk + 2;
+    int stringDiskLen = biggest_disk + 2;
 
     int input = 0;
 
-    char stringDisk[lenArray], stringTower[lenArray], stringCursor[lenArray], stringHand[lenArray];
-    char msg[64] = {'\0'};
+    char stringDisk[stringDiskLen], stringTower[stringDiskLen], stringCursor[stringDiskLen], stringHand[stringDiskLen];
+    char moveMessage[64] = {'\0'};
 
     TowerToString(stringCursor, biggest_disk, 'V');
     TowerToString(stringTower, biggest_disk, '|');
 
-    SetConsoleSize(lenArray * MAX_TOWERS, MAX_DISKS + 6);
+    SetConsoleSize(stringDiskLen * player->max_towers, player->max_disks + 6);
 
     do
     {
         clear_screen();
-        printCursor(stringCursor, player->handPosition, lenArray);
-        printHand(stringHand, player->handPosition, player->hand, lenArray, biggest_disk);
-        printTower(stringDisk, stringTower, player->tower, biggest_disk);  
-        printUI(player->moves, player->max_moves, msg);
+        printCursor(stringCursor, player->handPosition, stringDiskLen);
+        printHand(stringHand, player->handPosition, player->hand, stringDiskLen, biggest_disk);
+        printTower(stringDisk, stringTower, player->tower, biggest_disk, player->max_disks, player->max_towers);  
+        printUI(player->moves, player->max_moves, moveMessage);
 
-        if (input != WRONG_MOVE) save(*player);                              // autosave, performance is very awful now.
+        if (input != WRONG_MOVE) save(&*player);        // autosave, performance is very awful now.
 
-        if (HasWon(player->tower)) return 1;                                // print the last position before winning
-        if (HasRanOutOfMoves(player->moves, player->max_moves)) return -1;  // print the last position before taking the L
+        if (HasWon(&*player)) return WON;               // print the last position before winning
+        if (HasLose(&*player)) return LOSE;             // print the last position before taking the L
 
         //refrain the player from spamming or making unnecessary input
-        while ((input = EventDetection(&(player->tower[player->handPosition]), &player->hand, &player->handPosition, &player->moves, msg)) == UNNECESSARY_INPUT);
+        while ((input = PlayerEvent(&(*player), moveMessage)) == UNNECESSARY_INPUT);
 
     } while (1);
 }
@@ -287,6 +284,6 @@ void initializePlayer (PlayerData *player) { //placeholder
     
     // Initialize Disk onto starting Tower
     for (int i = (player->max_disks * 2) - 1; i >= 1; i -= 2) 
-        push(&player->tower[0], i, player->max_disks);
+        push(&player->tower[0], i);
 
 }

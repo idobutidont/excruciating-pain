@@ -8,10 +8,12 @@ typedef struct {
 
 void initializeTower(Tower *tower);
 
-void push(Tower *tower, int disk, int MAX_DISKS);
+void push(Tower *tower, int disk);
 
 int pop(Tower *tower);
 
 int TowerIsEmpty (Tower tower);
+
+int TowerIsFull(Tower tower, int MAX_DISKS);
 
 #endif

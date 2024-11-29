@@ -38,11 +38,15 @@ void SetConsoleSize(int width, int height) {
 void PrintfColor(const char* input, int color) {
     setConsoleColor(color);
     printf("%s", input);
-    setConsoleColor(15); //bright white supposedly
+    setConsoleColor(15); //default console color
 }
 
 int StringIsEmpty(const char* string) {
     return string[0] == '\0';
+}
+
+void DeleteString(char* string) {
+    string[0] = '\0';
 }
 
 int PlayerInput() {
@@ -52,15 +56,15 @@ int PlayerInput() {
     if (firstInput == 224 || firstInput == 0) {
     
         switch(getch()) {
-            case 'H': return UP; // UP
-            case 'K': return LEFT; // LEFT
-            case 'P': return DOWN; // DOWN
-            case 'M': return RIGHT; // RIGHT
+            case 'H': return UP;
+            case 'K': return LEFT;
+            case 'P': return DOWN;
+            case 'M': return RIGHT;
             default : return UNNECESSARY_INPUT;
         }
 
     } else if (firstInput == '\r') { // ENTER
-        return PROCEED; // Proceed, Interact
+        return PROCEED;
     } else {
         return UNNECESSARY_INPUT;
     }

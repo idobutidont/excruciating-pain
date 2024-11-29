@@ -91,30 +91,34 @@ int MenuInput(int *selected, char Menu[]) {
     case UP:
 
         if (CursorIsAtTop(*selected)) return UNNECESSARY_INPUT;
-        MoveMenuCursor(Menu, &(*selected), -1);
+        MoveMenuCursor(Menu, &(*selected), UP);
 
         break;
     case DOWN:
 
         if (CursorIsAtBottom(*selected)) return UNNECESSARY_INPUT;
-        MoveMenuCursor(Menu, &(*selected), 1);
+        MoveMenuCursor(Menu, &(*selected), DOWN);
 
         break;
     case PROCEED: 
         return *selected;
 
-    default: return UNNECESSARY_INPUT;     // this means that player are making unnecessary input
+    default: 
+        return UNNECESSARY_INPUT;
     }
 
-    return MOVE_CURSOR;  // this means that player actually presses up / down
+    return MOVE_CURSOR;
 }
 
-// Up = -1, Down = 1
-void MoveMenuCursor(char Menu[], int *selected, int UpOrDown) {
+void MoveMenuCursor(char Menu[], int *cursor, int UpOrDown) {
 
-    Menu[*selected] = '\0';
-    *selected += UpOrDown;
-    Menu[*selected] = '>';
+    Menu[*cursor] = '\0';
+    
+    if (UpOrDown == UP) --*(cursor);
+
+    if (UpOrDown == DOWN) ++*(cursor);
+
+    Menu[*cursor] = '>';
 
 }
 
@@ -131,12 +135,7 @@ void NewGame() {
 
     if (load(&player) == 1) {
         printf("\nYou have an ongoing Progress. Do you want to proceed? [Y/N]: ");
-        
-        switch(toupper(getche())) {
-            case 'Y': break;
-            default : return;
-        }
-
+        if (toupper(getche()) != 'Y') return;
     }
 
     //TODO: initialize based on difficulty, username input
@@ -162,14 +161,26 @@ void Continue() {
 }
 
 void startGame(PlayerData player) {
-    if (inGame(&player) == 1) {
-        printf("You Won!");
-        remove("save.dat");
-        // putDataToScore(player);
 
-    } else {
+    switch (inGame(&player)) {
+
+    case WON:
+
+        printf("You Won!");
+
+        // PutPlayerDataToScore();
+
+        remove(SAVE_FILE);
+        break;
+
+    case LOSE:
+    
         printf("You Lose!");
-        remove("save.dat");
+        remove(SAVE_FILE);
+        break;
+
+    default:
+        return;
     }
 
     return;

@@ -9,14 +9,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int save(PlayerData player) {
+int save(PlayerData *player) {
     FILE *f;
 
-    if ( (f = fopen("save.dat", "w")) == NULL ) {
+    if ( (f = fopen(SAVE_FILE, "w")) == NULL ) {
         return -1;
     }
 
-    fwrite(&player, sizeof(PlayerData), 1, f);
+    fwrite(&*player, sizeof(PlayerData), 1, f);
     fclose(f);
     return 1;
 }
@@ -24,12 +24,11 @@ int save(PlayerData player) {
 int load(PlayerData *player) {
     FILE *f;
 
-    if ( (f = fopen("save.dat", "r")) == NULL ) {
+    if ( (f = fopen(SAVE_FILE, "r")) == NULL ) {
         return -1;
     }
 
     fread(&(*player), sizeof(PlayerData), 1, f);
-
     fclose(f);
     return 1;
 }

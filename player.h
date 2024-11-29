@@ -3,6 +3,8 @@
 
 #include "tower.h"
 
+#define SAVE_FILE "save.dat"
+
 typedef struct {
     char username[64];
     int moves;
@@ -15,7 +17,7 @@ typedef struct {
     int max_disks;
 } PlayerData;
 
-int save(PlayerData player);
+int save(PlayerData *player);
 
 int load(PlayerData *player);
 

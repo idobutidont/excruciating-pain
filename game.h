@@ -3,6 +3,9 @@
 
 #define WRONG_MOVE -2
 
+#define WON 1
+#define LOSE -1
+
 #include "player.h"
 
 // Main Module
@@ -14,17 +17,23 @@ int HandIsEmpty(int hand);
 
 int HandIsBiggerThanTower(int hand, Tower tower);
 
-int HasWon(Tower tower[]);
+int HasWon(PlayerData *player);
+
+int HasLose(PlayerData *player);
+
+int HasDiskStacked(Tower tower[], int MAX_DISKS, int MAX_TOWERS);
 
 int HasRanOutOfMoves(int moves, int max_moves);
 
-int HandAtRight(int hand);
+int HandAtRightEdge(int hand, int MAX_TOWERS);
 
-int HandAtLeft(int hand);
+int HandAtLeftEdge(int hand);
 // end Cases
 
 // Print Modules
-void printTower(char* stringDisk, const char* stringTower, Tower towers[], int biggest_disk);
+void printTower(char *stringDisk, const char *stringTower, Tower towers[], int biggest_disk, int MAX_DISKS, int MAX_TOWERS);
+
+void PutDiskTowerToString(int height, Tower towers[], int tower, char *stringDisk, int biggest_disk, char stringDiskTower[4096], const char *stringTower);
 
 void printCursor(const char* stringCursor, int hand_position, int lenArray);
 
@@ -32,21 +41,21 @@ void printHand(char* stringHand, int hand_position, int hand, int lenArray, int 
 
 void printSpaces(int lenArray, int hand_position);
 
-void printUI(int moves, int max_moves, const char* message);
+void printUI(int moves, int max_moves, char* message);
 // End Print Modules
 
 // Gameplay Modules
-int MoveCursor(int LeftOrRight, int *hand_position);
+int MoveCursor(int LeftOrRight, int *hand_position, int MAX_TOWERS);
 
 int PickUpDisk(Tower *tower, int *hand, char* message);
 
-int PutDownDisk(Tower *tower, int *hand, char* message);
+int PutDownDisk(Tower *tower, int *hand, int *moves, char* message);
 
 void IncrementMove(int *moves);
 // End Gameplay Modules
 
 // Player Input
-int EventDetection (Tower *tower, int *hand, int *hand_position, int *moves, char *message);
+int PlayerEvent(PlayerData *player, char* message);
 
 
 //Placeholder module
