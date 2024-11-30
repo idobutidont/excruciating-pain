@@ -17,10 +17,6 @@ int TowerIsEmpty(Tower tower) {
     return tower.top <= -1;
 }
 
-int TowerIsFull(Tower tower, int MAX_DISKS) {
-    return tower.top >= MAX_DISKS - 1;
-}
-
 // Function to push a disk onto a tower
 // Precondition Tower is not full
 void push(Tower *tower, int disk) {

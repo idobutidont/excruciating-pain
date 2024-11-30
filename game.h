@@ -31,11 +31,11 @@ int HasWon(PlayerData *player);
 
 int HasLose(PlayerData *player);
 
-int HasDiskStacked(Tower tower[], int MAX_DISKS, int MAX_TOWERS);
+int HasDiskStacked(Tower tower[]);
 
 int HasRanOutOfMoves(int moves, int max_moves);
 
-int HandAtRightEdge(int hand, int MAX_TOWERS);
+int HandAtRightEdge(int hand);
 
 int HandAtLeftEdge(int hand);
 
@@ -45,13 +45,11 @@ int PlayerPutDownDisk(int input);
 // end Cases
 
 // Print Modules
-void printTower(char *stringDisk, const char *stringTower, Tower towers[], int biggest_disk, int MAX_DISKS, int MAX_TOWERS);
+void printTower(Tower towers[]);
 
-void printCursor(const char* stringCursor, int hand_position, int stringDiskLen);
+void printCursor(int hand_position);
 
-void printHand(char* stringHand, int hand_position, int hand, int stringDiskLen, int biggest_disk);
-
-void printSpaces(int stringDiskLen, int hand_position);
+void printHand(int hand_position, int hand);
 
 void printUI(int moves, int max_moves, int input);
 
@@ -59,7 +57,7 @@ void printWrongMove(int input);
 // End Print Modules
 
 // Gameplay Modules
-int MoveCursor(int LeftOrRight, int *hand_position, int MAX_TOWERS);
+int MoveCursor(int LeftOrRight, int *hand_position);
 
 int PickUpDisk(Tower *tower, int *hand);
 

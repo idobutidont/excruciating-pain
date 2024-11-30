@@ -15,9 +15,11 @@ void SetConsoleSize(int width, int height);
 void clear_screen();
 
 void PrintfColor(const char* input, int color);
+void printSpaces(int length);
 
 int StringIsEmpty(const char* string);
 void DeleteString(char* string);
+void EmptyString(char* string, int size);
 
 int PlayerInput();
 /*
@@ -31,7 +33,7 @@ int PlayerInput();
     more keybind can be easily added
 */
 
-void DiskToString(char* disks, int current_disk, int biggest_disk);
+void DiskToString(char* stringDisk,int current_disk, int biggest_disk);
 /*
     Convert Disk length to String, e.g:
     besar_disk = 5     biggest_disk = 7
@@ -59,7 +61,7 @@ void DiskToString(char* disks, int current_disk, int biggest_disk);
     return all those strings to disks
 */
 
-void TowerToString(char* disks, int biggest_disk, char accessories);
+void TowerToString(char* stringTower,int biggest_disk, char accessories);
 /*
     same as above except
     e.g: biggest_disk = 7
@@ -78,11 +80,11 @@ void TowerToString(char* disks, int biggest_disk, char accessories);
 
 int CalculateMaxMove(int disk, int tower);
 
-int MenuInput(int *selected, char Menu[]);
+int MenuInput(int *selected, char Menu[], int MenuLength);
 void MoveMenuCursor(char Menu[], int *selected, int UpOrDown);
 
 // Cases
 int CursorIsAtTop(int cursor);
-int CursorIsAtBottom(int cursor);
+int CursorIsAtBottom(int cursor, int MenuLength);
 
 #endif

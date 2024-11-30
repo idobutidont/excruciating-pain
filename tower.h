@@ -14,6 +14,4 @@ int pop(Tower *tower);
 
 int TowerIsEmpty (Tower tower);
 
-int TowerIsFull(Tower tower, int MAX_DISKS);
-
 #endif

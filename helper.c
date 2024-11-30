@@ -41,12 +41,22 @@ void PrintfColor(const char* input, int color) {
     setConsoleColor(15); //default console color
 }
 
+// Basically what this does is print spaces for length time
+void printSpaces(int length) {
+    printf("%*s", length, "");
+}
+
 int StringIsEmpty(const char* string) {
     return string[0] == '\0';
 }
 
 void DeleteString(char* string) {
     string[0] = '\0';
+}
+
+void EmptyString(char* string, int size) {
+    for (int i = 0 ; i < size; ++i)
+        string[i] = 0;
 }
 
 int PlayerInput() {
@@ -71,43 +81,41 @@ int PlayerInput() {
 }
 
 //PRECONDITION besar_disks pasti lebih dari 0.
-void DiskToString(char* disks, int current_disk, int biggest_disk) {
-
+void DiskToString(char* stringDisk, int current_disk, int biggest_disk) {
+    
     int count = 0;
     int space = (biggest_disk - current_disk) / 2;
 
     for (int i = 0; i < space; ++i)
-        disks[count++] = ' ';
+        stringDisk[count++] = ' ';
 
-    disks[count++] = '<';
+    stringDisk[count++] = '<';
 
     for (int i = 0; i < current_disk; ++i)
-        disks[count++] = '=';
+        stringDisk[count++] = '=';
 
-    disks[count++] = '>';
+    stringDisk[count++] = '>';
 
     for (int i = 0; i < space; ++i)
-        disks[count++] = ' ';
+        stringDisk[count++] = ' ';
 
-    disks[count] = '\0'; 
-
+    stringDisk[count] = '\0';
 }
 
-void TowerToString(char* disks, int biggest_disk, char accessories) {
+void TowerToString(char* stringTower, int biggest_disk, char accessories) {
 
     int count = 0;
     int space = (biggest_disk / 2) + 1;
 
     for (int i = 0; i < space; ++i)
-        disks[count++] = ' ';
+        stringTower[count++] = ' ';
     
-    disks[count++] = accessories;
+    stringTower[count++] = accessories;
 
     for (int i = 0; i < space; ++i)
-        disks[count++] = ' ';
+        stringTower[count++] = ' ';
 
-    disks[count] = '\0';
-
+    stringTower[count] = '\0';
 }
 
 // Use a Memo to handle repeating T(disk, tower) calculation.
@@ -146,7 +154,7 @@ int CalculateMaxMove(int disk, int tower) {
     return min_moves;
 }
 
-int MenuInput(int *selected, char Menu[]) {
+int MenuInput(int *selected, char Menu[], int MenuLength) {
     
     switch (PlayerInput()) {
     case UP:
@@ -157,7 +165,7 @@ int MenuInput(int *selected, char Menu[]) {
         break;
     case DOWN:
 
-        if (CursorIsAtBottom(*selected)) return UNNECESSARY_INPUT;
+        if (CursorIsAtBottom(*selected, MenuLength)) return UNNECESSARY_INPUT;
         MoveMenuCursor(Menu, &(*selected), DOWN);
 
         break;
@@ -187,6 +195,6 @@ int CursorIsAtTop(int cursor) {
     return cursor == 0;
 }
 
-int CursorIsAtBottom(int cursor) {
-    return cursor == 4;
+int CursorIsAtBottom(int cursor, int MenuLength) {
+    return cursor == MenuLength - 1;
 }

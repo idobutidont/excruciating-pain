@@ -42,9 +42,12 @@ int main() {
 
 int Menu() {
 
-    char Menu[5] = {'\0'};
+    int MenuLength = 5;
+    char Menu[MenuLength];
 
-    int result;
+    EmptyString(Menu, MenuLength);
+
+    int input;
     int selected = 0;
     Menu[selected] = '>';
 
@@ -55,9 +58,9 @@ int Menu() {
         clear_screen();
         printMenu(Menu);
 
-        while ((result = MenuInput(&selected, Menu)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
+        while ((input = MenuInput(&selected, Menu, MenuLength)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
         
-        if (result != MOVE_CURSOR) return result;
+        if (input != MOVE_CURSOR) return input;
         
     } while (1);
     
@@ -73,6 +76,7 @@ void printMenu(char Menu[]) {
         "   %c View Scores\n"
         "   %c Tutorial\n\n"
         "   %c Exit\n\n"
+
         "   Press Enter to Continue...",
         Menu[0], Menu[1], Menu[2], Menu[3], Menu[4]
         );
@@ -86,7 +90,6 @@ void NewGame() {
         if (toupper(getche()) != 'Y') return;
     }
 
-    //TODO: initialize based on difficulty, username input
     initializePlayer(&player);
 
     startGame(player);
