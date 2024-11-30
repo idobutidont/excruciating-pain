@@ -261,7 +261,13 @@ int inGame(PlayerData *player) {
 void initializePlayer (PlayerData *player) { //placeholder
     
     while (1) {
-        scanf("%d %d", &player->max_disks, &player->max_towers);
+        switch(DiffSelect()){
+            case 0: player->max_disks = 16; player->max_towers = 3; break;
+            case 1: player->max_disks = 10; player->max_towers = 3; break;
+            case 2: player->max_disks = 7; player->max_towers = 3; break;
+            case 3: player->max_disks = 5; player->max_towers = 3; break;
+            case 4: player->max_disks = 5; player->max_towers = 4; break;
+        }
         if (player->max_disks <= 16 && player->max_disks >=5 && player->max_towers <= 6 && player->max_towers >= 3) break;
     }
 
@@ -277,4 +283,43 @@ void initializePlayer (PlayerData *player) { //placeholder
     for (int i = (player->max_disks * 2) - 1; i >= 1; i -= 2) 
         push(&player->tower[0], i);
 
+}
+
+int DiffSelect() {
+
+    char Diff[5] = {'\0'};
+
+    int result;
+    int selected = 0;
+    Diff[selected] = '>';
+
+    SetConsoleSize(64, 12);
+
+    do
+    {
+        clear_screen();
+        printDiffSelect(Diff);
+
+        while ((result = MenuInput(&selected, Diff)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
+        
+        if (result != MOVE_CURSOR) return result;
+        
+    } while (1);
+    
+    return -1;
+
+}
+
+void printDiffSelect(char Diff[]) {
+    printf(
+        "\n   Select Difficulty\n"
+        "   %c Extra Hard\n"
+        "   %c Hard\n"
+        "   %c Medium\n"
+        "   %c Normal\n"
+        "   %c Easy\n\n"
+
+        "   Press Enter to Continue...",
+        Diff[0], Diff[1], Diff[2], Diff[3], Diff[4]
+        );
 }

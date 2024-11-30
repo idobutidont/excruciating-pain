@@ -75,4 +75,9 @@ int PlayerEvent(PlayerData *player);
 //Placeholder module
 void initializePlayer(PlayerData *player);
 
+// Diff select module
+
+int DiffSelect();
+void printDiffSelect(char Diff[]);
+
 #endif
