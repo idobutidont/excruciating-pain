@@ -145,3 +145,48 @@ int CalculateMaxMove(int disk, int tower) {
 
     return min_moves;
 }
+
+int MenuInput(int *selected, char Menu[]) {
+    
+    switch (PlayerInput()) {
+    case UP:
+
+        if (CursorIsAtTop(*selected)) return UNNECESSARY_INPUT;
+        MoveMenuCursor(Menu, &(*selected), UP);
+
+        break;
+    case DOWN:
+
+        if (CursorIsAtBottom(*selected)) return UNNECESSARY_INPUT;
+        MoveMenuCursor(Menu, &(*selected), DOWN);
+
+        break;
+    case PROCEED: 
+        return *selected;
+
+    default: 
+        return UNNECESSARY_INPUT;
+    }
+
+    return MOVE_CURSOR;
+}
+
+void MoveMenuCursor(char Menu[], int *cursor, int UpOrDown) {
+
+    Menu[*cursor] = '\0';
+    
+    if (UpOrDown == UP) --*(cursor);
+
+    if (UpOrDown == DOWN) ++*(cursor);
+
+    Menu[*cursor] = '>';
+
+}
+
+int CursorIsAtTop(int cursor) {
+    return cursor == 0;
+}
+
+int CursorIsAtBottom(int cursor) {
+    return cursor == 4;
+}

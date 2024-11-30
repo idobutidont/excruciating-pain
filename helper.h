@@ -8,6 +8,8 @@
 #define PROCEED 4
 #define UNNECESSARY_INPUT -1
 
+#define MOVE_CURSOR -4
+
 void setConsoleColor(int color);
 void SetConsoleSize(int width, int height);
 void clear_screen();
@@ -75,5 +77,12 @@ void TowerToString(char* disks, int biggest_disk, char accessories);
 */
 
 int CalculateMaxMove(int disk, int tower);
+
+int MenuInput(int *selected, char Menu[]);
+void MoveMenuCursor(char Menu[], int *selected, int UpOrDown);
+
+// Cases
+int CursorIsAtTop(int cursor);
+int CursorIsAtBottom(int cursor);
 
 #endif

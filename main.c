@@ -11,17 +11,10 @@
 #include <windows.h>
 #include <conio.h>
 
-#define MOVE_CURSOR -4
 
 // Main Menu Modules
 int Menu();
 void printMenu(char Menu[]);
-int MenuInput(int *selected, char Menu[]);
-void MoveMenuCursor(char Menu[], int *selected, int UpOrDown);
-
-// Cases
-int CursorIsAtTop(int cursor);
-int CursorIsAtBottom(int cursor);
 // end Main Menu
 
 void NewGame();
@@ -83,51 +76,6 @@ void printMenu(char Menu[]) {
         "   Press Enter to Continue...",
         Menu[0], Menu[1], Menu[2], Menu[3], Menu[4]
         );
-}
-
-int MenuInput(int *selected, char Menu[]) {
-    
-    switch (PlayerInput()) {
-    case UP:
-
-        if (CursorIsAtTop(*selected)) return UNNECESSARY_INPUT;
-        MoveMenuCursor(Menu, &(*selected), UP);
-
-        break;
-    case DOWN:
-
-        if (CursorIsAtBottom(*selected)) return UNNECESSARY_INPUT;
-        MoveMenuCursor(Menu, &(*selected), DOWN);
-
-        break;
-    case PROCEED: 
-        return *selected;
-
-    default: 
-        return UNNECESSARY_INPUT;
-    }
-
-    return MOVE_CURSOR;
-}
-
-void MoveMenuCursor(char Menu[], int *cursor, int UpOrDown) {
-
-    Menu[*cursor] = '\0';
-    
-    if (UpOrDown == UP) --*(cursor);
-
-    if (UpOrDown == DOWN) ++*(cursor);
-
-    Menu[*cursor] = '>';
-
-}
-
-int CursorIsAtTop(int cursor) {
-    return cursor == 0;
-}
-
-int CursorIsAtBottom(int cursor) {
-    return cursor == 4;
 }
 
 void NewGame() {
