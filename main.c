@@ -23,17 +23,17 @@ void Continue();
 void startGame(PlayerData player);
 
 int main() {
-    
-    const char* MenuHeader =  "Tower Of Hanoi";
-    const char* MenuItems[] = {
-                        "New Game",
-                        "Continue",
-                        "View Scores",
-                        "Tutorial\n",
 
-                        "Exit"
+    const char* MenuHeader =    "Tower Of Hanoi\n";
+    const char* MenuItems[] = {
+                                "New Game\n",
+                                "Continue\n",
+                                "View Scores\n",
+                                "Tutorial\n\n",
+
+                                "Exit\n\n"
     };
-    const char* MenuFooter =  "Press Enter to Continue...";
+    const char* MenuFooter =    "Press Enter to Continue...\n";
     int ItemsCount = 5;
 
     do

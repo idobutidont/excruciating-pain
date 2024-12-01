@@ -160,14 +160,14 @@ int Menu(int ItemsCount, const char* MenuItems[], const char* MenuHeader, const 
     int input;
     int selected = 0;
 
-    SetConsoleSize(64, 12);
+    SetConsoleSize((ItemsCount + 2) * 12, (ItemsCount + 2) * 2);
 
     do
     {
         clear_screen();
-        printf("\n\t%s\n", MenuHeader);
+        printf("\n\t%s", MenuHeader);
         PrintMenuItems(ItemsCount, MenuItems, selected);
-        printf("\n\t%s\n", MenuFooter);
+        printf("\t%s", MenuFooter);
 
         while ((input = MenuInput(&selected, ItemsCount)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
         
@@ -184,9 +184,9 @@ void PrintMenuItems(int ItemsCount, const char* MenuItems[], int Cursor) {
 
     for (int i = 0; i < ItemsCount; ++i) {
         if (i == Cursor) {
-            printf("\t> %s\n", MenuItems[i]);
+            printf("\t> %s", MenuItems[i]);
         } else {
-            printf("\t %s\n", MenuItems[i]);
+            printf("\t %s", MenuItems[i]);
         }
     }
 
