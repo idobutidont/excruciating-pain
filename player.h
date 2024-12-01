@@ -15,6 +15,7 @@ typedef struct {
     int handPosition;
     int max_towers;
     int max_disks;
+    int startTower;
 } PlayerData;
 
 int save(PlayerData *player);

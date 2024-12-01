@@ -59,6 +59,13 @@ void EmptyString(char* string, int size) {
         string[i] = 0;
 }
 
+// this require the string to have a NULL at the end of the element.
+int sizeArrStr(const char* string[]) {
+    int i = -1;
+    while (string[++i] != NULL);
+    return i;
+}
+
 int PlayerInput() {
 
     int firstInput = getch();
@@ -155,8 +162,9 @@ int CalculateMaxMove(int disk, int tower) {
 }
 
 // Ini bakal nge return nilai yang ada di antara MenuItems, contoh bisa liat di main main.c
-int Menu(int ItemsCount, const char* MenuItems[], const char* MenuHeader, const char* MenuFooter) {
+int Menu(const char* MenuHeader, const char* MenuItems[], const char* MenuFooter) {
 
+    int ItemsCount = sizeArrStr(MenuItems);
     int input;
     int selected = 0;
 

@@ -17,6 +17,7 @@ void clear_screen();
 void PrintfColor(const char* input, int color);
 void printSpaces(int length);
 
+int sizeArrStr(const char* string[]);
 int StringIsEmpty(const char* string);
 void DeleteString(char* string);
 void EmptyString(char* string, int size);
@@ -81,7 +82,8 @@ void TowerToString(char* stringTower,int biggest_disk, char accessories);
 int CalculateMaxMove(int disk, int tower);
 
 // Menu Modules
-int Menu(int ItemsCount, const char* MenuItems[], const char* MenuHeader, const char* MenuExtras);
+// MenuItems[] require a NULL at the end of the array as a breakpoint.
+int Menu(const char* MenuHeader, const char* MenuItems[], const char* MenuExtras);
 void PrintMenuItems(int ItemsCount, const char* MenuItems[], int Cursor);
 int MenuInput(int *selected, int ItemsCount);
 void MoveMenuCursor(int *selected, int UpOrDown);

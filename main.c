@@ -31,14 +31,13 @@ int main() {
                                 "View Scores\n",
                                 "Tutorial\n\n",
 
-                                "Exit\n\n"
+                                "Exit\n\n", NULL
     };
     const char* MenuFooter =    "Press Enter to Continue...\n";
-    int ItemsCount = 5;
 
     do
     {
-        switch(Menu(ItemsCount, MenuItems, MenuHeader, MenuFooter)) {
+        switch(Menu(MenuHeader, MenuItems, MenuFooter)) {
             case 0: NewGame(); break;
             case 1: Continue(); break;
             case 2: break;

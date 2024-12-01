@@ -26,16 +26,16 @@ int HandIsBiggerThanTower(int hand, Tower tower) {
     return hand >= tower.disks[tower.top];
 }
 
-int HasDiskStacked(Tower tower[]) {
+int HasDiskStacked(Tower tower[], int start_pos) {
 
-    for (int i = 1; i < MAX_TOWERS; ++i) 
-        if (tower[i].top == MAX_DISKS - 1) return 1;
+    for (int i = 0; i < MAX_TOWERS; ++i) 
+        if (i != start_pos && tower[i].top == MAX_DISKS - 1) return 1;
     
     return 0;
 }
 
 int HasWon(PlayerData *player) {
-    return HasDiskStacked(player->tower);
+    return HasDiskStacked(player->tower, player->startTower);
 }
 
 int HasLose(PlayerData *player) {
@@ -108,7 +108,7 @@ void printCursor(int hand_position) {
     int biggest_disk = 2 * MAX_DISKS - 1;
     int diskStringLength = biggest_disk + 2;
 
-    char stringCursor[diskStringLength];
+    char stringCursor[diskStringLength];    
     TowerToString(stringCursor, biggest_disk, 'V');
 
     printSpaces(diskStringLength * hand_position);
@@ -281,6 +281,7 @@ void initializePlayer (PlayerData *player) { //placeholder
         case 4: player->max_disks = 5; player->max_towers = 4; break;
     }
 
+    player->startTower = 0;
     player->hand = 0;
     player->moves = 0;
     player->handPosition = 0;
@@ -291,7 +292,7 @@ void initializePlayer (PlayerData *player) { //placeholder
     
     // Initialize Disk onto starting Tower
     for (int i = (player->max_disks * 2) - 1; i >= 1; i -= 2) 
-        push(&player->tower[0], i);
+        push(&player->tower[player->startTower], i);
 
 }
 
