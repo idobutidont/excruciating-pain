@@ -68,23 +68,25 @@ int sizeArrStr(const char* string[]) {
 
 int PlayerInput() {
 
-    int firstInput = getch();
+    switch (getch()) {
 
-    if (firstInput == 224 || firstInput == 0) {
-    
-        switch(getch()) {
-            case 'H': return UP;
-            case 'K': return LEFT;
-            case 'P': return DOWN;
-            case 'M': return RIGHT;
-            default : return UNNECESSARY_INPUT;
-        }
+        // case 224 || 0
+        case 224:
+        case 0:
+            switch(getch()) {
+                case 72: return UP;
+                case 75: return LEFT;  
+                case 80: return DOWN;
+                case 77: return RIGHT;
+                default : return UNNECESSARY_INPUT;
+            }
 
-    } else if (firstInput == '\r') { // ENTER
-        return PROCEED;
-    } else {
-        return UNNECESSARY_INPUT;
+        case 13: return PROCEED
+
+        default: return UNNECESSARY_INPUT;
     }
+
+
 }
 
 //PRECONDITION besar_disks pasti lebih dari 0.
@@ -204,12 +206,14 @@ void PrintMenuItems(int ItemsCount, const char* MenuItems[], int Cursor) {
 int MenuInput(int *selected, int ItemsCount) {
     
     switch (PlayerInput()) {
+    case LEFT:
     case UP:
 
         if (CursorIsAtTop(*selected)) return UNNECESSARY_INPUT;
         MoveMenuCursor(&(*selected), UP);
 
         break;
+    case RIGHT:
     case DOWN:
 
         if (CursorIsAtBottom(*selected, ItemsCount)) return UNNECESSARY_INPUT;

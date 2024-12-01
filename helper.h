@@ -23,16 +23,7 @@ void DeleteString(char* string);
 void EmptyString(char* string, int size);
 
 int PlayerInput();
-/*
-    return the following
-    0 : UP_ARROW_KEY (UP)
-    1 : LEFT_ARROW_KEY (LEFT)
-    2 : DOWN_ARROW_KEY (DOWN)
-    3 : RIGHT_ARROW_KEY (RIGHT)
-    4 : Proceed, Interact
-
-    more keybind can be easily added
-*/
+// return UP LEFT DOWN RIGHT PROCEED (ENTER)
 
 void DiskToString(char* stringDisk,int current_disk, int biggest_disk);
 /*
