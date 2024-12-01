@@ -46,12 +46,12 @@ int HasRanOutOfMoves(int moves, int max_moves) {
     return (moves + 1) > max_moves;
 }
 
-int HandAtRightEdge(int hand) {
-    return hand == MAX_TOWERS - 1;
+int HandAtRightEdge(int hand_position) {
+    return hand_position == MAX_TOWERS - 1;
 }
 
-int HandAtLeftEdge(int hand) {
-    return hand == 0;
+int HandAtLeftEdge(int hand_position) {
+    return hand_position == 0;
 }   
 
 int MoveIsValid(int move) {
@@ -271,7 +271,7 @@ int inGame(PlayerData *player) {
 
 void initializePlayer (PlayerData *player) { //placeholder
 
-    player->difficulty = DiffSelect();
+    // player->difficulty = DiffSelect();
     
     switch(player->difficulty){
         case 0: player->max_disks = 16; player->max_towers = 3; break;
@@ -295,32 +295,32 @@ void initializePlayer (PlayerData *player) { //placeholder
 
 }
 
-int DiffSelect() {
+// int DiffSelect() {
 
-    int DiffLength = 5;
-    char Diff[DiffLength];
+//     int DiffLength = 5;
+//     char Diff[DiffLength];
 
-    EmptyString(Diff, DiffLength);
+//     EmptyString(Diff, DiffLength);
 
-    int result;
-    int selected = 0;
-    Diff[selected] = '>';
+//     int result;
+//     int selected = 0;
+//     Diff[selected] = '>';
 
-    SetConsoleSize(32, 10);
-    do
-    {
-        clear_screen();
-        printDiffSelect(Diff);
+//     SetConsoleSize(32, 10);
+//     do
+//     {
+//         clear_screen();
+//         printDiffSelect(Diff);
 
-        while ((result = MenuInput(&selected, Diff, DiffLength)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
+//         while ((result = MenuInput(&selected, Diff, DiffLength)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
         
-        if (result != MOVE_CURSOR) return result;
+//         if (result != MOVE_CURSOR) return result;
         
-    } while (1);
+//     } while (1);
     
-    return -1;
+//     return -1;
 
-}
+// }
 
 void printDiffSelect(char Diff[]) {
     printf(

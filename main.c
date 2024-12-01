@@ -23,10 +23,22 @@ void Continue();
 void startGame(PlayerData player);
 
 int main() {
+    
+    const char* MenuHeader =  "Tower Of Hanoi";
+    const char* MenuItems[] = {
+                        "New Game",
+                        "Continue",
+                        "View Scores",
+                        "Tutorial\n",
+
+                        "Exit"
+    };
+    const char* MenuFooter =  "Press Enter to Continue...";
+    int ItemsCount = 5;
 
     do
     {
-        switch(Menu()) {
+        switch(Menu(ItemsCount, MenuItems, MenuHeader, MenuFooter)) {
             case 0: NewGame(); break;
             case 1: Continue(); break;
             case 2: break;
@@ -38,48 +50,6 @@ int main() {
     // continously playing the game until user exited.
 
     return 0;
-}
-
-int Menu() {
-
-    int MenuLength = 5;
-    char Menu[MenuLength];
-
-    EmptyString(Menu, MenuLength);
-
-    int input;
-    int selected = 0;
-    Menu[selected] = '>';
-
-    SetConsoleSize(64, 12);
-
-    do
-    {
-        clear_screen();
-        printMenu(Menu);
-
-        while ((input = MenuInput(&selected, Menu, MenuLength)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
-        
-        if (input != MOVE_CURSOR) return input;
-        
-    } while (1);
-    
-    return -1;
-
-}
-
-void printMenu(char Menu[]) {
-    printf(
-        "\n   Tower Of Hanoi\n"
-        "   %c New Game\n"
-        "   %c Continue\n"
-        "   %c View Scores\n"
-        "   %c Tutorial\n\n"
-        "   %c Exit\n\n"
-
-        "   Press Enter to Continue...",
-        Menu[0], Menu[1], Menu[2], Menu[3], Menu[4]
-        );
 }
 
 void NewGame() {

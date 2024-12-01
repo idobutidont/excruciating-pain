@@ -80,11 +80,16 @@ void TowerToString(char* stringTower,int biggest_disk, char accessories);
 
 int CalculateMaxMove(int disk, int tower);
 
-int MenuInput(int *selected, char Menu[], int MenuLength);
-void MoveMenuCursor(char Menu[], int *selected, int UpOrDown);
+// Menu Modules
+int Menu(int ItemsCount, const char* MenuItems[], const char* MenuHeader, const char* MenuExtras);
+void PrintMenuItems(int ItemsCount, const char* MenuItems[], int Cursor);
+int MenuInput(int *selected, int ItemsCount);
+void MoveMenuCursor(int *selected, int UpOrDown);
 
 // Cases
 int CursorIsAtTop(int cursor);
-int CursorIsAtBottom(int cursor, int MenuLength);
+int CursorIsAtBottom(int cursor, int ItemsCount);
+
+// End Menu Modules
 
 #endif

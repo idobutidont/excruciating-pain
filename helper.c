@@ -154,19 +154,58 @@ int CalculateMaxMove(int disk, int tower) {
     return min_moves;
 }
 
-int MenuInput(int *selected, char Menu[], int MenuLength) {
+// Ini bakal nge return nilai yang ada di antara MenuItems, contoh bisa liat di main main.c
+int Menu(int ItemsCount, const char* MenuItems[], const char* MenuHeader, const char* MenuFooter) {
+
+    int input;
+    int selected = 0;
+
+    SetConsoleSize(64, 12);
+
+    do
+    {
+        clear_screen();
+        printf("\n\t%s\n", MenuHeader);
+        PrintMenuItems(ItemsCount, MenuItems, selected);
+        printf("\n\t%s\n", MenuFooter);
+
+        while ((input = MenuInput(&selected, ItemsCount)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
+        
+        if (input != MOVE_CURSOR) return input;
+        
+    } while (1);
+    
+    return -1;
+
+}
+
+
+void PrintMenuItems(int ItemsCount, const char* MenuItems[], int Cursor) {
+
+    for (int i = 0; i < ItemsCount; ++i) {
+        if (i == Cursor) {
+            printf("\t> %s\n", MenuItems[i]);
+        } else {
+            printf("\t %s\n", MenuItems[i]);
+        }
+    }
+
+}
+
+
+int MenuInput(int *selected, int ItemsCount) {
     
     switch (PlayerInput()) {
     case UP:
 
         if (CursorIsAtTop(*selected)) return UNNECESSARY_INPUT;
-        MoveMenuCursor(Menu, &(*selected), UP);
+        MoveMenuCursor(&(*selected), UP);
 
         break;
     case DOWN:
 
-        if (CursorIsAtBottom(*selected, MenuLength)) return UNNECESSARY_INPUT;
-        MoveMenuCursor(Menu, &(*selected), DOWN);
+        if (CursorIsAtBottom(*selected, ItemsCount)) return UNNECESSARY_INPUT;
+        MoveMenuCursor(&(*selected), DOWN);
 
         break;
     case PROCEED: 
@@ -179,15 +218,11 @@ int MenuInput(int *selected, char Menu[], int MenuLength) {
     return MOVE_CURSOR;
 }
 
-void MoveMenuCursor(char Menu[], int *cursor, int UpOrDown) {
-
-    Menu[*cursor] = '\0';
+void MoveMenuCursor(int *cursor, int UpOrDown) {
     
     if (UpOrDown == UP) --*(cursor);
 
     if (UpOrDown == DOWN) ++*(cursor);
-
-    Menu[*cursor] = '>';
 
 }
 
@@ -195,6 +230,6 @@ int CursorIsAtTop(int cursor) {
     return cursor == 0;
 }
 
-int CursorIsAtBottom(int cursor, int MenuLength) {
-    return cursor == MenuLength - 1;
+int CursorIsAtBottom(int cursor, int ItemsCount) {
+    return cursor == ItemsCount - 1;
 }
