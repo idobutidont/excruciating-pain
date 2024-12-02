@@ -81,7 +81,7 @@ int PlayerInput() {
                 default : return UNNECESSARY_INPUT;
             }
 
-        case 13: return PROCEED
+        case 13: return PROCEED;
 
         default: return UNNECESSARY_INPUT;
     }
@@ -163,10 +163,13 @@ int CalculateMaxMove(int disk, int tower) {
     return min_moves;
 }
 
-// Ini bakal nge return nilai yang ada di antara MenuItems, contoh bisa liat di main main.c
-int Menu(const char* MenuHeader, const char* MenuItems[], const char* MenuFooter) {
+int Menu(const char* MenuHeader, const char* MenuItems[], const char* MenuFooter){
+    return MenuItem(sizeArrStr(MenuItems), MenuHeader, MenuItems, MenuFooter);
+}
 
-    int ItemsCount = sizeArrStr(MenuItems);
+// Ini bakal nge return nilai yang ada di antara MenuItems, contoh bisa liat di main main.c
+int MenuItem(int ItemsCount, const char* MenuHeader, const char* MenuItems[], const char* MenuFooter) {
+
     int input;
     int selected = 0;
 

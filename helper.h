@@ -74,6 +74,7 @@ int CalculateMaxMove(int disk, int tower);
 
 // Menu Modules
 // MenuItems[] require a NULL at the end of the array as a breakpoint.
+int MenuItem(int ItemsCount, const char* MenuHeader, const char* MenuItems[], const char* MenuFooter);
 int Menu(const char* MenuHeader, const char* MenuItems[], const char* MenuExtras);
 void PrintMenuItems(int ItemsCount, const char* MenuItems[], int Cursor);
 int MenuInput(int *selected, int ItemsCount);
