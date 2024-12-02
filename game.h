@@ -31,7 +31,7 @@ int HasWon(PlayerData *player);
 
 int HasLose(PlayerData *player);
 
-int HasDiskStacked(Tower tower[]);
+int HasDiskStacked(Tower tower[], int start_pos);
 
 int HasRanOutOfMoves(int moves, int max_moves);
 

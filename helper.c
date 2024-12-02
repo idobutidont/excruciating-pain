@@ -59,25 +59,34 @@ void EmptyString(char* string, int size) {
         string[i] = 0;
 }
 
+// this require the string to have a NULL at the end of the element.
+int sizeArrStr(const char* string[]) {
+    int i = -1;
+    while (string[++i] != NULL);
+    return i;
+}
+
 int PlayerInput() {
 
-    int firstInput = getch();
+    switch (getch()) {
 
-    if (firstInput == 224 || firstInput == 0) {
-    
-        switch(getch()) {
-            case 'H': return UP;
-            case 'K': return LEFT;
-            case 'P': return DOWN;
-            case 'M': return RIGHT;
-            default : return UNNECESSARY_INPUT;
-        }
+        // case 224 || 0
+        case 224:
+        case 0:
+            switch(getch()) {
+                case 72: return UP;
+                case 75: return LEFT;  
+                case 80: return DOWN;
+                case 77: return RIGHT;
+                default : return UNNECESSARY_INPUT;
+            }
 
-    } else if (firstInput == '\r') { // ENTER
-        return PROCEED;
-    } else {
-        return UNNECESSARY_INPUT;
+        case 13: return PROCEED
+
+        default: return UNNECESSARY_INPUT;
     }
+
+
 }
 
 //PRECONDITION besar_disks pasti lebih dari 0.
@@ -154,19 +163,61 @@ int CalculateMaxMove(int disk, int tower) {
     return min_moves;
 }
 
-int MenuInput(int *selected, char Menu[], int MenuLength) {
+// Ini bakal nge return nilai yang ada di antara MenuItems, contoh bisa liat di main main.c
+int Menu(const char* MenuHeader, const char* MenuItems[], const char* MenuFooter) {
+
+    int ItemsCount = sizeArrStr(MenuItems);
+    int input;
+    int selected = 0;
+
+    SetConsoleSize((ItemsCount + 2) * 12, (ItemsCount + 2) * 2);
+
+    do
+    {
+        clear_screen();
+        printf("\n\t%s", MenuHeader);
+        PrintMenuItems(ItemsCount, MenuItems, selected);
+        printf("\t%s", MenuFooter);
+
+        while ((input = MenuInput(&selected, ItemsCount)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
+        
+        if (input != MOVE_CURSOR) return input;
+        
+    } while (1);
+    
+    return -1;
+
+}
+
+
+void PrintMenuItems(int ItemsCount, const char* MenuItems[], int Cursor) {
+
+    for (int i = 0; i < ItemsCount; ++i) {
+        if (i == Cursor) {
+            printf("\t> %s", MenuItems[i]);
+        } else {
+            printf("\t %s", MenuItems[i]);
+        }
+    }
+
+}
+
+
+int MenuInput(int *selected, int ItemsCount) {
     
     switch (PlayerInput()) {
+    case LEFT:
     case UP:
 
         if (CursorIsAtTop(*selected)) return UNNECESSARY_INPUT;
-        MoveMenuCursor(Menu, &(*selected), UP);
+        MoveMenuCursor(&(*selected), UP);
 
         break;
+    case RIGHT:
     case DOWN:
 
-        if (CursorIsAtBottom(*selected, MenuLength)) return UNNECESSARY_INPUT;
-        MoveMenuCursor(Menu, &(*selected), DOWN);
+        if (CursorIsAtBottom(*selected, ItemsCount)) return UNNECESSARY_INPUT;
+        MoveMenuCursor(&(*selected), DOWN);
 
         break;
     case PROCEED: 
@@ -179,15 +230,11 @@ int MenuInput(int *selected, char Menu[], int MenuLength) {
     return MOVE_CURSOR;
 }
 
-void MoveMenuCursor(char Menu[], int *cursor, int UpOrDown) {
-
-    Menu[*cursor] = '\0';
+void MoveMenuCursor(int *cursor, int UpOrDown) {
     
     if (UpOrDown == UP) --*(cursor);
 
     if (UpOrDown == DOWN) ++*(cursor);
-
-    Menu[*cursor] = '>';
 
 }
 
@@ -195,6 +242,6 @@ int CursorIsAtTop(int cursor) {
     return cursor == 0;
 }
 
-int CursorIsAtBottom(int cursor, int MenuLength) {
-    return cursor == MenuLength - 1;
+int CursorIsAtBottom(int cursor, int ItemsCount) {
+    return cursor == ItemsCount - 1;
 }

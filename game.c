@@ -26,16 +26,16 @@ int HandIsBiggerThanTower(int hand, Tower tower) {
     return hand >= tower.disks[tower.top];
 }
 
-int HasDiskStacked(Tower tower[]) {
+int HasDiskStacked(Tower tower[], int start_pos) {
 
-    for (int i = 1; i < MAX_TOWERS; ++i) 
-        if (tower[i].top == MAX_DISKS - 1) return 1;
+    for (int i = 0; i < MAX_TOWERS; ++i) 
+        if (i != start_pos && tower[i].top == MAX_DISKS - 1) return 1;
     
     return 0;
 }
 
 int HasWon(PlayerData *player) {
-    return HasDiskStacked(player->tower);
+    return HasDiskStacked(player->tower, player->startTower);
 }
 
 int HasLose(PlayerData *player) {
@@ -46,12 +46,12 @@ int HasRanOutOfMoves(int moves, int max_moves) {
     return (moves + 1) > max_moves;
 }
 
-int HandAtRightEdge(int hand) {
-    return hand == MAX_TOWERS - 1;
+int HandAtRightEdge(int hand_position) {
+    return hand_position == MAX_TOWERS - 1;
 }
 
-int HandAtLeftEdge(int hand) {
-    return hand == 0;
+int HandAtLeftEdge(int hand_position) {
+    return hand_position == 0;
 }   
 
 int MoveIsValid(int move) {
@@ -108,7 +108,7 @@ void printCursor(int hand_position) {
     int biggest_disk = 2 * MAX_DISKS - 1;
     int diskStringLength = biggest_disk + 2;
 
-    char stringCursor[diskStringLength];
+    char stringCursor[diskStringLength];    
     TowerToString(stringCursor, biggest_disk, 'V');
 
     printSpaces(diskStringLength * hand_position);
@@ -271,7 +271,7 @@ int inGame(PlayerData *player) {
 
 void initializePlayer (PlayerData *player) { //placeholder
 
-    player->difficulty = DiffSelect();
+    // player->difficulty = DiffSelect();
     
     switch(player->difficulty){
         case 0: player->max_disks = 16; player->max_towers = 3; break;
@@ -281,6 +281,7 @@ void initializePlayer (PlayerData *player) { //placeholder
         case 4: player->max_disks = 5; player->max_towers = 4; break;
     }
 
+    player->startTower = 0;
     player->hand = 0;
     player->moves = 0;
     player->handPosition = 0;
@@ -291,36 +292,36 @@ void initializePlayer (PlayerData *player) { //placeholder
     
     // Initialize Disk onto starting Tower
     for (int i = (player->max_disks * 2) - 1; i >= 1; i -= 2) 
-        push(&player->tower[0], i);
+        push(&player->tower[player->startTower], i);
 
 }
 
-int DiffSelect() {
+// int DiffSelect() {
 
-    int DiffLength = 5;
-    char Diff[DiffLength];
+//     int DiffLength = 5;
+//     char Diff[DiffLength];
 
-    EmptyString(Diff, DiffLength);
+//     EmptyString(Diff, DiffLength);
 
-    int result;
-    int selected = 0;
-    Diff[selected] = '>';
+//     int result;
+//     int selected = 0;
+//     Diff[selected] = '>';
 
-    SetConsoleSize(32, 10);
-    do
-    {
-        clear_screen();
-        printDiffSelect(Diff);
+//     SetConsoleSize(32, 10);
+//     do
+//     {
+//         clear_screen();
+//         printDiffSelect(Diff);
 
-        while ((result = MenuInput(&selected, Diff, DiffLength)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
+//         while ((result = MenuInput(&selected, Diff, DiffLength)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
         
-        if (result != MOVE_CURSOR) return result;
+//         if (result != MOVE_CURSOR) return result;
         
-    } while (1);
+//     } while (1);
     
-    return -1;
+//     return -1;
 
-}
+// }
 
 void printDiffSelect(char Diff[]) {
     printf(

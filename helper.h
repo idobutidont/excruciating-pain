@@ -17,21 +17,13 @@ void clear_screen();
 void PrintfColor(const char* input, int color);
 void printSpaces(int length);
 
+int sizeArrStr(const char* string[]);
 int StringIsEmpty(const char* string);
 void DeleteString(char* string);
 void EmptyString(char* string, int size);
 
 int PlayerInput();
-/*
-    return the following
-    0 : UP_ARROW_KEY (UP)
-    1 : LEFT_ARROW_KEY (LEFT)
-    2 : DOWN_ARROW_KEY (DOWN)
-    3 : RIGHT_ARROW_KEY (RIGHT)
-    4 : Proceed, Interact
-
-    more keybind can be easily added
-*/
+// return UP LEFT DOWN RIGHT PROCEED (ENTER)
 
 void DiskToString(char* stringDisk,int current_disk, int biggest_disk);
 /*
@@ -80,11 +72,17 @@ void TowerToString(char* stringTower,int biggest_disk, char accessories);
 
 int CalculateMaxMove(int disk, int tower);
 
-int MenuInput(int *selected, char Menu[], int MenuLength);
-void MoveMenuCursor(char Menu[], int *selected, int UpOrDown);
+// Menu Modules
+// MenuItems[] require a NULL at the end of the array as a breakpoint.
+int Menu(const char* MenuHeader, const char* MenuItems[], const char* MenuExtras);
+void PrintMenuItems(int ItemsCount, const char* MenuItems[], int Cursor);
+int MenuInput(int *selected, int ItemsCount);
+void MoveMenuCursor(int *selected, int UpOrDown);
 
 // Cases
 int CursorIsAtTop(int cursor);
-int CursorIsAtBottom(int cursor, int MenuLength);
+int CursorIsAtBottom(int cursor, int ItemsCount);
+
+// End Menu Modules
 
 #endif
