@@ -271,15 +271,7 @@ int inGame(PlayerData *player) {
 
 void initializePlayer (PlayerData *player) { //placeholder
 
-    // player->difficulty = DiffSelect();
-    
-    switch(player->difficulty){
-        case 0: player->max_disks = 16; player->max_towers = 3; break;
-        case 1: player->max_disks = 16; player->max_towers = 4; break;
-        case 2: player->max_disks = 7; player->max_towers = 3; break;
-        case 3: player->max_disks = 5; player->max_towers = 3; break;
-        case 4: player->max_disks = 5; player->max_towers = 4; break;
-    }
+    DiffSelect(player);
 
     player->startTower = 0;
     player->hand = 0;
@@ -296,43 +288,20 @@ void initializePlayer (PlayerData *player) { //placeholder
 
 }
 
-// int DiffSelect() {
+void DiffSelect(PlayerData *player) {
+    const char* MenuHeader =    "Select Difficulty\n";
+    const char* MenuItems[] = {
+                                "Very Hard\n",
+                                "Hard\n",
+                                "Medium\n",
+                                "Easy\n\n", NULL
+    };
+    const char* MenuFooter =    "Press Enter to Start...\n";
 
-//     int DiffLength = 5;
-//     char Diff[DiffLength];
-
-//     EmptyString(Diff, DiffLength);
-
-//     int result;
-//     int selected = 0;
-//     Diff[selected] = '>';
-
-//     SetConsoleSize(32, 10);
-//     do
-//     {
-//         clear_screen();
-//         printDiffSelect(Diff);
-
-//         while ((result = MenuInput(&selected, Diff, DiffLength)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
-        
-//         if (result != MOVE_CURSOR) return result;
-        
-//     } while (1);
-    
-//     return -1;
-
-// }
-
-void printDiffSelect(char Diff[]) {
-    printf(
-        "\n   Select Difficulty\n"
-        "   %c Extra Hard\n"
-        "   %c Hard\n"
-        "   %c Medium\n"
-        "   %c Normal\n"
-        "   %c Easy\n\n"
-
-        "   Press Enter to Continue...",
-        Diff[0], Diff[1], Diff[2], Diff[3], Diff[4]
-        );
+    switch(Menu(MenuHeader, MenuItems, MenuFooter)){
+        case 0: player->max_disks = 16; player->max_towers = 3; break;
+        case 1: player->max_disks = 16; player->max_towers = 4; break;
+        case 2: player->max_disks = 7; player->max_towers = 3; break;
+        case 3: player->max_disks = 5; player->max_towers = 3; break;
+    }
 }

@@ -75,7 +75,6 @@ void initializePlayer(PlayerData *player);
 
 // Diff select module
 
-int DiffSelect();
-void printDiffSelect(char Diff[]);
+void DiffSelect(PlayerData *player);
 
 #endif
