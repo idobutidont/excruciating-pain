@@ -62,4 +62,7 @@ void DiffSelect(PlayerData *player);
 // Username input
 void InputUsername(PlayerData *player);
 
+// Escape menu
+int EscapeMenu(PlayerData *player);
+
 #endif

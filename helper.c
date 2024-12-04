@@ -238,6 +238,9 @@ int CursorIsAtBottom(int cursor, int ItemsCount) {
 int PlayerInput() {
 
     switch (getch()) {
+        
+        // escape key
+        case 27: return ESC;
 
         // case 224 || 0
         case 224: case 0:

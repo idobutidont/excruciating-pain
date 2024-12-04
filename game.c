@@ -233,6 +233,9 @@ int PlayerEvent(PlayerData *player) {
     case RIGHT:
         return MoveCursor(RIGHT, &player->handPosition);
 
+    case ESC:
+        return EscapeMenu(player);
+
     default :
         return UNNECESSARY_INPUT;
         
@@ -313,4 +316,19 @@ void DiffSelect(PlayerData *player) {
 void InputUsername(PlayerData *player){
     printf("\tInput your username (16): ");
     scanf("%[^\n]%*c", player->username);
+}
+
+int EscapeMenu(PlayerData *player){
+    const char* MenuHeader =    "Pause Menu\n\n\tQuit and abandon progress?\n";
+    const char* MenuItems[] = {
+                                "Yes\n",
+                                "No!\n\n", NULL
+    };
+    const char* MenuFooter =    "Press Enter to Select...\n";
+
+    switch(Menu(MenuHeader, MenuItems, MenuFooter)){
+    case 0: return HasLose(&*player); break;
+    case 1: return 4; break;
+    }
+    return UNNECESSARY_INPUT;
 }

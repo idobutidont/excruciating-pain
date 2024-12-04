@@ -6,6 +6,7 @@
 #define DOWN                2
 #define RIGHT               3
 #define PROCEED             4
+#define ESC                 5
 #define UNNECESSARY_INPUT   -1
 
 #define MOVE_CURSOR -4
