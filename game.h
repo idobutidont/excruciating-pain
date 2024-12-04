@@ -32,7 +32,7 @@ int HasRanOutOfMoves(int moves, int max_moves);
 int HandAtRightEdge(int hand);
 int HandAtLeftEdge(int hand);
 int MoveIsValid(int move);
-int PlayerPutDownDisk(int input);
+int HasPutDownDisk(int input);
 // end Cases
 
 // Print Modules

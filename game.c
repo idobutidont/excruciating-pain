@@ -55,15 +55,19 @@ int HandAtLeftEdge(int hand_position) {
 }   
 
 int MoveIsValid(int move) {
+
     switch(move) {
-        case DISK_PUT_DOWN: return 1;
-        case DISK_PICK_UP: return 1;
-        case CURSOR_MOVE: return 1;
-        default: return 0;
+
+    case DISK_PUT_DOWN: case DISK_PICK_UP: case CURSOR_MOVE: 
+        return 1;
+
+    default:
+        return 0;
     }
+
 }
 
-int PlayerPutDownDisk(int input) {
+int HasPutDownDisk(int input) {
     return input == DISK_PUT_DOWN;
 }
 // End of cases
@@ -262,7 +266,7 @@ int inGame(PlayerData *player) {
         //refrain the player from spamming or making unnecessary input
         while ((input = PlayerEvent(&*player)) == UNNECESSARY_INPUT);
 
-        if (PlayerPutDownDisk(input)) IncrementMove(&player->moves);
+        if (HasPutDownDisk(input)) IncrementMove(&player->moves);
 
     } while (1);
 }
