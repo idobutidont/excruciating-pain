@@ -235,8 +235,6 @@ int PlayerEvent(PlayerData *player) {
     }
 }
 
-// return WON if won, LOSE if lose
-// TODO: MORE REFACTOR.
 int inGame(PlayerData *player) {
 
     MAX_DISKS = player->max_disks;
@@ -256,10 +254,10 @@ int inGame(PlayerData *player) {
         printTower(player->tower);  
         printUI(player->moves, player->max_moves, input);
 
-        if (MoveIsValid(input)) save(&*player);        // autosave, performance is very awful now.
+        if (MoveIsValid(input)) save(&*player);
 
-        if (HasWon(&*player)) return WON;               // print the last position before winning
-        if (HasLose(&*player)) return LOSE;             // print the last position before taking the L
+        if (HasWon(&*player)) return WON;
+        if (HasLose(&*player)) return LOSE;
 
         //refrain the player from spamming or making unnecessary input
         while ((input = PlayerEvent(&*player)) == UNNECESSARY_INPUT);
@@ -277,6 +275,7 @@ void initializePlayer (PlayerData *player) { //placeholder
     player->hand = 0;
     player->moves = 0;
     player->handPosition = 0;
+    player->score = 0;
     player->max_moves = CalculateMaxMove(player->max_disks, player->max_towers);
 
     for (int i = 0; i < player->max_towers; ++i) 
