@@ -13,8 +13,8 @@
 
 void printScoreMenu() {
 
-    
-    system("cls");
+    clear_screen();
+    SetConsoleSize(128, 128);
 
     printf("SCOREBOARD\n");
     printf("Username           Scores\n");
@@ -82,12 +82,12 @@ int Sort() {
     
     while (!feof(f)) {
         fseek (f, (i*(sizeof(Score)+1)) + i, SEEK_SET);
-        fscanf (f, "%s %d", &player.username, &player.score);
+        fscanf (f, "%s %d", player.username, &player.score);
         j = i;
         while (!feof(f)) {
             j++;
             fseek (f, (j*(sizeof(Score)+1))+j, SEEK_SET);
-            fscanf(f, "%s %d", &temp.username, &temp.score);
+            fscanf(f, "%s %d", temp.username, &temp.score);
             
             if (player.score > temp.score) {
                 fseek (f, i*(sizeof(Score)+1)+i, SEEK_SET);
