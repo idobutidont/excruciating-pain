@@ -77,4 +77,7 @@ void initializePlayer(PlayerData *player);
 
 void DiffSelect(PlayerData *player);
 
+// Username input
+void InputUsername(PlayerData *player);
+
 #endif

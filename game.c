@@ -272,6 +272,7 @@ int inGame(PlayerData *player) {
 void initializePlayer (PlayerData *player) { //placeholder
 
     DiffSelect(player);
+    InputUsername(player);
 
     player->startTower = 0;
     player->hand = 0;
@@ -304,4 +305,9 @@ void DiffSelect(PlayerData *player) {
         case 2: player->max_disks = 7; player->max_towers = 3; break;
         case 3: player->max_disks = 5; player->max_towers = 3; break;
     }
+}
+
+void InputUsername(PlayerData *player){
+    printf("        Input your username: ");
+    while (strlen(player->username) < 1) fgets(player->username, 64, stdin);
 }
