@@ -308,5 +308,5 @@ void DiffSelect(PlayerData *player) {
 
 void InputUsername(PlayerData *player){
     printf("        Input your username: ");
-    while (strlen(player->username) < 1) fgets(player->username, 64, stdin);
+    fgets(player->username, 64, stdin);
 }
