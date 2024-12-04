@@ -13,14 +13,15 @@
 
 void printScoreMenu() {
 
-    do {
-        system("cls");
+    
+    system("cls");
 
-        printf("SCOREBOARD\n");
-        printf("Username           Scores\n");
-        printScores();
+    printf("SCOREBOARD\n");
+    printf("Username           Scores\n");
+    printScores();
 
-    }
+    getchar();
+    
 }
 
 
@@ -48,7 +49,6 @@ int PutPlayerToScore(PlayerData player) {
     Score score;
     
     strcpy(score.username, player.username);
-    score.username = player.username;
     score.score = player.score;
 
     PutScoreToFile(score);
@@ -60,7 +60,7 @@ int PutScoreToFile(Score score) {
 
     FILE *f;
 
-    if ((f = fopen("score.dat", "r")) == NULL) {
+    if ((f = fopen("score.dat", "a")) == NULL) {
         return -1;
     }
 
@@ -82,21 +82,21 @@ int Sort() {
     
     while (!feof(f)) {
         fseek (f, (i*(sizeof(Score)+1)) + i, SEEK_SET);
-        fscanf (f, "%s $d", &player.username, &player.score);
+        fscanf (f, "%s %d", &player.username, &player.score);
         j = i;
         while (!feof(f)) {
             j++;
             fseek (f, (j*(sizeof(Score)+1))+j, SEEK_SET);
             fscanf(f, "%s %d", &temp.username, &temp.score);
             
-            if (strcmp (player.score, temp.score) > 0) || (strcmp (player.score, temp.score) == 0) {
+            if (player.score > temp.score) {
                 fseek (f, i*(sizeof(Score)+1)+i, SEEK_SET);
                 fprintf(f, "%s %d", temp.username, temp.score);
                 fseek (f, j*(sizeof(Score)+1)+j, SEEK_SET);
                 fprintf(f, "%s %d", player.username, player.score);
 
-                strcpy(player.score, temp.score);
-                player.username = temp.username;
+                strcpy(player.username , temp.username);
+                player.score = temp.score;
             }
         }
         if (i < j) {

@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include <conio.h>
-
+#include "score.h"
 
 // Main Menu Modules
 int Menu();
@@ -40,7 +40,7 @@ int main() {
         switch(Menu(MenuHeader, MenuItems, MenuFooter)) {
             case 0: NewGame(); break;
             case 1: Continue(); break;
-            case 2: break;
+            case 2: printScoreMenu(); break;
             case 3: break;
             case 4: return 0;
         }
