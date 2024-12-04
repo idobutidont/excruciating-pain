@@ -19,6 +19,7 @@ void clear_screen();
 // Print Handling
 void PrintfColor(const char* input, int color);
 void printSpaces(int length);
+void printEqualIndent(int input_length, int max_length);
 // End Print Handling
 
 // String Handling

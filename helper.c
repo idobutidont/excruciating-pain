@@ -46,6 +46,16 @@ void printSpaces(int length) {
     printf("%*s", length, "");
 }
 
+// tab adds 8 spaces, jadi ini teh kayak ngurangin 1 tab tiap 8 karakter pada usernamenya
+void printEqualIndent(int input_length, int max_length) {
+
+    int current_indent = input_length / 8;
+    int max_indent = max_length / 8;
+    
+    for (int i = current_indent; i < max_indent; ++i)
+        printf("\t");
+}
+
 // this require the string to have a NULL at the end of the element.
 int sizeArrStr(const char* string[]) {
     int i = -1;
@@ -198,6 +208,7 @@ int MenuInput(int *cursor, int ItemsCount) {
         MoveMenuCursor(&(*cursor), DOWN);
 
         break;
+        
     case PROCEED: 
         return *cursor;
 
@@ -230,12 +241,13 @@ int PlayerInput() {
 
         // case 224 || 0
         case 224: case 0:
+        
             switch(getch()) {
                 case 72: return UP;
                 case 75: return LEFT;  
                 case 80: return DOWN;
                 case 77: return RIGHT;
-                default : return UNNECESSARY_INPUT;
+                default: return UNNECESSARY_INPUT;
             }
 
         case 13: return PROCEED;

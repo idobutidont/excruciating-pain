@@ -299,14 +299,14 @@ void DiffSelect(PlayerData *player) {
     const char* MenuFooter =    "Press Enter to Start...\n";
 
     switch(Menu(MenuHeader, MenuItems, MenuFooter)){
-        case 0: player->max_disks = 16; player->max_towers = 3; break;
+        case 0: player->max_disks = 10; player->max_towers = 3; break;
         case 1: player->max_disks = 16; player->max_towers = 4; break;
-        case 2: player->max_disks = 7; player->max_towers = 3; break;
-        case 3: player->max_disks = 5; player->max_towers = 3; break;
+        case 2: player->max_disks = 5; player->max_towers = 3; break;
+        case 3: player->max_disks = 5; player->max_towers = 4; break;
     }
 }
 
 void InputUsername(PlayerData *player){
-    printf("        Input your username: ");
-    fgets(player->username, 64, stdin);
+    printf("\tInput your username (16): ");
+    scanf("%[^\n]%*c", player->username);
 }
