@@ -14,7 +14,7 @@
 
 void NewGame();
 void Continue();
-int HowToPlay();
+void HowToPlay();
 
 void startGame(PlayerData player);
 
@@ -92,6 +92,14 @@ void startGame(PlayerData player) {
     case LOSE:
     
         printf("You Lose!");
+
+        PutPlayerToScore(player);
+
+        remove(SAVE_FILE);
+        break;
+
+    case FORFEIT:
+        
         remove(SAVE_FILE);
         break;
 
@@ -102,14 +110,21 @@ void startGame(PlayerData player) {
     return;
 }
 
-int HowToPlay() {
-    printf("How To Play? \n");
-    printf("\n1. Pilih tingkat kesulitan yang Anda inginkan. \n");
-    printf("2. Pindahkan seluruh disk dari tower yang satu ke tower lainnya sehingga disk tertumpuk sesuai ukurannya. \n");
-    printf("3. Tekan up arrow pada keyboard untuk mengangkat disk dan down arrow untuk menurunkan disk. \n");
-    printf("4. Disk yang diambil adalah disk yang berada di paling atas tower. \n");
-    printf("5. Hanya satu disk yang boleh dipindahkan dalam satu waktu. \n");
-    printf("6. Tidak boleh meletakkan disk di atas disk lain yang lebih kecil. \n");
-    printf("7. Anda akan memenangkan game jika disk sudah tertumpuk dalam satu tower selain tower awal. \n");
-    printf("8. Anda akan kalah apabila Anda kehabisan jatah pergerakan. \n");
+void HowToPlay() {
+
+    clear_screen();
+    setConsoleSize(128, 14);
+    printf( "\n\tHow To Play? \n\n"
+            "\t1. Pilih tingkat kesulitan yang Anda inginkan. \n"
+            "\t2. Pindahkan seluruh disk dari tower yang satu ke tower lainnya sehingga disk tertumpuk sesuai ukurannya. \n"
+            "\t3. Tekan UP_ARROW pada keyboard untuk mengangkat disk dan DOWN_ARROW untuk menurunkan disk. \n"
+            "\t4. Disk yang diambil adalah disk yang berada di paling atas tower. \n"
+            "\t5. Hanya satu disk yang boleh dipindahkan dalam satu waktu. \n"
+            "\t6. Tidak boleh meletakkan disk di atas disk lain yang lebih kecil. \n"
+            "\t7. Anda akan memenangkan game jika disk sudah tertumpuk dalam satu tower selain tower awal. \n"
+            "\t8. Anda akan kalah apabila Anda kehabisan jatah pergerakan. \n\n"
+            "\tTekan tombol apapun untuk kembali ke menu awal..."
+    );
+
+    getch();
 }

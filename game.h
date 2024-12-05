@@ -3,18 +3,19 @@
 
 // WM = WRONG MOVE
 // Invalid Player Moves
-#define WM_DISK_AT_HAND                -5
-#define WM_TOWER_IS_EMPTY              -6
-#define WM_HAND_IS_EMPTY               -7
-#define WM_HAND_IS_BIGGER_THAN_TOWER   -8
+#define WM_DISK_AT_HAND                -50
+#define WM_TOWER_IS_EMPTY              -51
+#define WM_HAND_IS_EMPTY               -52
+#define WM_HAND_IS_BIGGER_THAN_TOWER   -53
 
 // Valid Player Moves
-#define DISK_PUT_DOWN   1
-#define DISK_PICK_UP    2
-#define CURSOR_MOVE     3
+#define DISK_PUT_DOWN   111
+#define DISK_PICK_UP    112
+#define CURSOR_MOVE     113
 
-#define WON 1
-#define LOSE -1
+#define WON 101
+#define LOSE -101
+#define FORFEIT -100
 
 #include "player.h"
 
@@ -26,21 +27,22 @@ int inGame(PlayerData *player);
 int HandIsEmpty(int hand);
 int HandIsBiggerThanTower(int hand, Tower tower);
 int HasWon(PlayerData *player);
-int HasLose(PlayerData *player);
+int HasLost(PlayerData *player);
+int HasGivenUp(int input_result);
 int HasDiskStacked(Tower tower[], int start_pos);
 int HasRanOutOfMoves(int moves, int max_moves);
 int HandAtRightEdge(int hand);
 int HandAtLeftEdge(int hand);
 int MoveIsValid(int move);
-int HasPutDownDisk(int input);
+int HasPutDownDisk(int input_result);
 // end Cases
 
 // Print Modules
 void printTower(Tower towers[]);
 void printCursor(int hand_position);
 void printHand(int hand_position, int hand);
-void printUI(int moves, int max_moves, int input);
-void printWrongMove(int input);
+void printUI(int moves, int max_moves, int input_result);
+void printWrongMove(int input_result);
 // End Print Modules
 
 // Gameplay Modules
@@ -63,6 +65,6 @@ void DiffSelect(PlayerData *player);
 void InputUsername(PlayerData *player);
 
 // Escape menu
-int EscapeMenu(PlayerData *player);
+int EscapeMenu();
 
 #endif

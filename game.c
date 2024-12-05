@@ -38,8 +38,12 @@ int HasWon(PlayerData *player) {
     return HasDiskStacked(player->tower, player->startTower);
 }
 
-int HasLose(PlayerData *player) {
+int HasLost(PlayerData *player) {
     return HasRanOutOfMoves(player->moves, player->max_moves);
+}
+
+int HasGivenUp(int input_result) {
+    return input_result == FORFEIT;
 }
 
 int HasRanOutOfMoves(int moves, int max_moves) {
@@ -67,8 +71,8 @@ int MoveIsValid(int move) {
 
 }
 
-int HasPutDownDisk(int input) {
-    return input == DISK_PUT_DOWN;
+int HasPutDownDisk(int input_result) {
+    return input_result == DISK_PUT_DOWN;
 }
 // End of cases
 
@@ -137,30 +141,30 @@ void printHand(int hand_position, int hand) {
     printf("%s\n", stringHand);
 }
 
-void printUI(int moves, int max_moves, int input) {
+void printUI(int moves, int max_moves, int input_result) {
 
     printf("\nMoves: %d", moves);
     printf("\tMoves Left: %d", (max_moves-moves));
 
-    printWrongMove(input);
+    printWrongMove(input_result);
 }
 
-void printWrongMove(int input) {
-    switch(input) {
+void printWrongMove(int input_result) {
+    switch(input_result) {
     case WM_DISK_AT_HAND: 
-        PrintfColor("\nYou already got disk on your hand.", 12);
+        printfColor("\nYou already got disk on your hand.", 12);
         break;
 
     case WM_TOWER_IS_EMPTY: 
-        PrintfColor("\nThere's no disk there.", 12);
+        printfColor("\nThere's no disk there.", 12);
         break;
 
     case WM_HAND_IS_EMPTY: 
-        PrintfColor("\nYour hand is empty.", 12);
+        printfColor("\nYour hand is empty.", 12);
         break;
 
     case WM_HAND_IS_BIGGER_THAN_TOWER: 
-        PrintfColor("\nThe disk on your hand is bigger than the one on the tower.", 12);
+        printfColor("\nThe disk on your hand is bigger than the one on the tower.", 12);
         break;
 
     }
@@ -234,7 +238,7 @@ int PlayerEvent(PlayerData *player) {
         return MoveCursor(RIGHT, &player->handPosition);
 
     case ESC:
-        return EscapeMenu(player);
+        return EscapeMenu();
 
     default :
         return UNNECESSARY_INPUT;
@@ -249,27 +253,29 @@ int inGame(PlayerData *player) {
 
     // biggest_disk + '<' + '>'
     int diskStringLength = 2 * MAX_DISKS + 1;
-    int input = 0;
+    int input_result = 0;
 
-    SetConsoleSize(diskStringLength * MAX_TOWERS, player->max_disks + 6);
 
     do
     {
+        if (input_result == 0) setConsoleSize(diskStringLength * MAX_TOWERS, player->max_disks + 6);
         clear_screen();
+
         printCursor(player->handPosition);
         printHand(player->handPosition, player->hand);
         printTower(player->tower);  
-        printUI(player->moves, player->max_moves, input);
-
-        if (MoveIsValid(input)) save(&*player);
+        printUI(player->moves, player->max_moves, input_result);
 
         if (HasWon(&*player)) return WON;
-        if (HasLose(&*player)) return LOSE;
+        if (HasLost(&*player)) return LOSE;
 
         //refrain the player from spamming or making unnecessary input
-        while ((input = PlayerEvent(&*player)) == UNNECESSARY_INPUT);
+        while ((input_result = PlayerEvent(&*player)) == UNNECESSARY_INPUT);
 
-        if (HasPutDownDisk(input)) IncrementMove(&player->moves);
+        if (MoveIsValid(input_result)) save(&*player);
+
+        if (input_result == FORFEIT) return LOSE;
+        if (HasPutDownDisk(input_result)) IncrementMove(&player->moves);
 
     } while (1);
 }
@@ -284,7 +290,7 @@ void initializePlayer (PlayerData *player) { //placeholder
     player->moves = 0;
     player->handPosition = 0;
     player->score = 0;
-    player->max_moves = CalculateMaxMove(player->max_disks, player->max_towers);
+    player->max_moves = CalculateMinMove(player->max_disks, player->max_towers);
 
     for (int i = 0; i < player->max_towers; ++i) 
         initializeTower(&player->tower[i]);
@@ -318,8 +324,11 @@ void InputUsername(PlayerData *player){
     scanf("%[^\n]%*c", player->username);
 }
 
-int EscapeMenu(PlayerData *player){
-    const char* MenuHeader =    "Pause Menu\n\n\tQuit and abandon progress?\n";
+int EscapeMenu(){
+
+    const char* MenuHeader =    "Pause Menu\n\n"
+
+                                "\tQuit and abandon progress?\n";
     const char* MenuItems[] = {
                                 "Yes\n",
                                 "No!\n\n", NULL
@@ -327,8 +336,9 @@ int EscapeMenu(PlayerData *player){
     const char* MenuFooter =    "Press Enter to Select...\n";
 
     switch(Menu(MenuHeader, MenuItems, MenuFooter)){
-    case 0: return HasLose(&*player); break;
-    case 1: return 4; break;
+    case 0: return FORFEIT;
+    case 1: return 0;
     }
+
     return UNNECESSARY_INPUT;
 }

@@ -7,18 +7,18 @@
 #define RIGHT               3
 #define PROCEED             4
 #define ESC                 5
-#define UNNECESSARY_INPUT   -1
+#define UNNECESSARY_INPUT   -505
 
-#define MOVE_CURSOR -4
+#define MOVE_CURSOR 101
 
 // Console Handling
 void setConsoleColor(int color);
-void SetConsoleSize(int width, int height);
+void setConsoleSize(int width, int height);
 void clear_screen();
 // End Console Handling
 
 // Print Handling
-void PrintfColor(const char* input, int color);
+void printfColor(const char* input, int color);
 void printSpaces(int length);
 void printEqualIndent(int input_length, int max_length);
 // End Print Handling
@@ -33,7 +33,7 @@ void EmptyString(char* string, int size);
 // Game Handling
 void DiskToString(char* stringDisk,int current_disk, int biggest_disk);
 void TowerToString(char* stringTower,int biggest_disk, char accessories);
-int CalculateMaxMove(int disk, int tower);
+int CalculateMinMove(int disk, int tower);
 // End Game Handling
 
 // Menu Modules

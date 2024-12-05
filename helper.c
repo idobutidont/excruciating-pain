@@ -16,7 +16,7 @@ void setConsoleColor(int color) {
     SetConsoleTextAttribute(hConsole, (WORD)color);
 }
 
-void SetConsoleSize(int width, int height) {
+void setConsoleSize(int width, int height) {
     char stringCommand[16];
     sprintf(stringCommand, "mode %d,%d", width, height);
     system(stringCommand);
@@ -35,7 +35,7 @@ void clear_screen() {
     SetConsoleCursorPosition(hStdOut, coordScreen);
 }
 
-void PrintfColor(const char* input, int color) {
+void printfColor(const char* input, int color) {
     setConsoleColor(color);
     printf("%s", input);
     setConsoleColor(15); //default console color
@@ -119,7 +119,7 @@ int moveMemo[32][8] = {0};
 
 // AUTHOR: CHATGPT
 // Based on Frame Stewart Conjecture
-int CalculateMaxMove(int disk, int tower) {
+int CalculateMinMove(int disk, int tower) {
 
     // base cases
     if (disk == 0) return 0;
@@ -137,7 +137,7 @@ int CalculateMaxMove(int disk, int tower) {
 
     // T(disk, tower) = Min (1 <= i < disk) [2 * T(i, tower) + T(disk - i, tower - 1)]
     for (int i = 1; i < disk; ++i) {
-        moves = 2 * CalculateMaxMove(i, tower) + CalculateMaxMove(disk - i, tower - 1);
+        moves = 2 * CalculateMinMove(i, tower) + CalculateMinMove(disk - i, tower - 1);
 
         if (moves < min_moves) {
             min_moves = moves;
@@ -160,7 +160,7 @@ int MenuItem(int ItemsCount, const char* MenuHeader, const char* MenuItems[], co
     int input;
     int cursor = 0;
 
-    SetConsoleSize((ItemsCount + 2) * 12, (ItemsCount + 2) * 2);
+    setConsoleSize((ItemsCount + 2) * 12, (ItemsCount + 2) * 2);
 
     do
     {

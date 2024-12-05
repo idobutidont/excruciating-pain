@@ -15,7 +15,9 @@
 void ViewScore() {
 
     clear_screen();
-    SetConsoleSize(64, 32);
+    setConsoleSize(64, 32);
+
+    Sort();
 
     printf("SCOREBOARD\n");
     printf("Username\t\tScores\n");
@@ -110,12 +112,11 @@ int Sort() {
     }
     fclose(f);
 
-    printf("\nSorted.\n");
     return 1;
 }
 
 int HitungScore(int difficulty, int moves) {
     int score_difficulty;
-     score_difficulty = (10000*difficulty)/moves;
-     return score_difficulty;
+    score_difficulty = (10000*difficulty)/moves;
+    return score_difficulty;
 }
