@@ -10,7 +10,7 @@ typedef struct
 } Score;
 
 void ViewScore();
-/*
+/*  Example print:
     SCOREBOARD
 
     Username                Scores              

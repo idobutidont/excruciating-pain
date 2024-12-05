@@ -5,7 +5,6 @@
 * DATE: 
 ****************************************************************/
 
-// TODO: GAME LOGIC, USER INTERACTION, PROPER CODE COMMENTS, REFACTOR (MAYBE)
 
 #include "helper.h"
 #include "game.h"
@@ -280,7 +279,7 @@ int inGame(PlayerData *player) {
     } while (1);
 }
 
-void initializePlayer (PlayerData *player) { //placeholder
+void initializePlayer (PlayerData *player) {
 
     DiffSelect(player);
     InputUsername(player);
