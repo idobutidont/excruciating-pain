@@ -6,7 +6,7 @@
 #define SAVE_FILE "save.dat"
 
 typedef struct {
-    char username[64];
+    char username[16];
     int moves;
     int max_moves;
     int difficulty;
@@ -20,9 +20,6 @@ typedef struct {
 } PlayerData;
 
 int save(PlayerData *player);
-
 int load(PlayerData *player);
-
-//void initializePlayer(PlayerData *player);
 
 #endif

@@ -16,6 +16,12 @@ void setConsoleColor(int color) {
     SetConsoleTextAttribute(hConsole, (WORD)color);
 }
 
+void SetConsoleSize(int width, int height) {
+    char stringCommand[16];
+    sprintf(stringCommand, "mode %d,%d", width, height);
+    system(stringCommand);
+}
+
 // AUTHOR: CHATGPT
 // Significantly more efficient clear screen function
 void clear_screen() {
@@ -29,12 +35,6 @@ void clear_screen() {
     SetConsoleCursorPosition(hStdOut, coordScreen);
 }
 
-void SetConsoleSize(int width, int height) {
-    char stringCommand[16];
-    sprintf(stringCommand, "mode %d,%d", width, height);
-    system(stringCommand);
-}
-
 void PrintfColor(const char* input, int color) {
     setConsoleColor(color);
     printf("%s", input);
@@ -44,6 +44,23 @@ void PrintfColor(const char* input, int color) {
 // Basically what this does is print spaces for length time
 void printSpaces(int length) {
     printf("%*s", length, "");
+}
+
+// tab adds 8 spaces, jadi ini teh kayak ngurangin 1 tab tiap 8 karakter pada usernamenya
+void printEqualIndent(int input_length, int max_length) {
+
+    int current_indent = input_length / 8;
+    int max_indent = max_length / 8;
+    
+    for (int i = current_indent; i < max_indent; ++i)
+        printf("\t");
+}
+
+// this require the string to have a NULL at the end of the element.
+int sizeArrStr(const char* string[]) {
+    int i = -1;
+    while (string[++i] != NULL);
+    return i;
 }
 
 int StringIsEmpty(const char* string) {
@@ -57,36 +74,6 @@ void DeleteString(char* string) {
 void EmptyString(char* string, int size) {
     for (int i = 0 ; i < size; ++i)
         string[i] = 0;
-}
-
-// this require the string to have a NULL at the end of the element.
-int sizeArrStr(const char* string[]) {
-    int i = -1;
-    while (string[++i] != NULL);
-    return i;
-}
-
-int PlayerInput() {
-
-    switch (getch()) {
-
-        // case 224 || 0
-        case 224:
-        case 0:
-            switch(getch()) {
-                case 72: return UP;
-                case 75: return LEFT;  
-                case 80: return DOWN;
-                case 77: return RIGHT;
-                default : return UNNECESSARY_INPUT;
-            }
-
-        case 13: return PROCEED;
-
-        default: return UNNECESSARY_INPUT;
-    }
-
-
 }
 
 //PRECONDITION besar_disks pasti lebih dari 0.
@@ -171,7 +158,7 @@ int Menu(const char* MenuHeader, const char* MenuItems[], const char* MenuFooter
 int MenuItem(int ItemsCount, const char* MenuHeader, const char* MenuItems[], const char* MenuFooter) {
 
     int input;
-    int selected = 0;
+    int cursor = 0;
 
     SetConsoleSize((ItemsCount + 2) * 12, (ItemsCount + 2) * 2);
 
@@ -179,10 +166,10 @@ int MenuItem(int ItemsCount, const char* MenuHeader, const char* MenuItems[], co
     {
         clear_screen();
         printf("\n\t%s", MenuHeader);
-        PrintMenuItems(ItemsCount, MenuItems, selected);
+        PrintMenuItems(ItemsCount, MenuItems, cursor);
         printf("\t%s", MenuFooter);
 
-        while ((input = MenuInput(&selected, ItemsCount)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
+        while ((input = MenuInput(&cursor, ItemsCount)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
         
         if (input != MOVE_CURSOR) return input;
         
@@ -191,7 +178,6 @@ int MenuItem(int ItemsCount, const char* MenuHeader, const char* MenuItems[], co
     return -1;
 
 }
-
 
 void PrintMenuItems(int ItemsCount, const char* MenuItems[], int Cursor) {
 
@@ -205,26 +191,26 @@ void PrintMenuItems(int ItemsCount, const char* MenuItems[], int Cursor) {
 
 }
 
-
-int MenuInput(int *selected, int ItemsCount) {
+int MenuInput(int *cursor, int ItemsCount) {
     
     switch (PlayerInput()) {
-    case LEFT:
-    case UP:
 
-        if (CursorIsAtTop(*selected)) return UNNECESSARY_INPUT;
-        MoveMenuCursor(&(*selected), UP);
+    case LEFT: case UP:
 
-        break;
-    case RIGHT:
-    case DOWN:
-
-        if (CursorIsAtBottom(*selected, ItemsCount)) return UNNECESSARY_INPUT;
-        MoveMenuCursor(&(*selected), DOWN);
+        if (CursorIsAtTop(*cursor)) return UNNECESSARY_INPUT;
+        MoveMenuCursor(&(*cursor), UP);
 
         break;
+
+    case RIGHT: case DOWN:
+
+        if (CursorIsAtBottom(*cursor, ItemsCount)) return UNNECESSARY_INPUT;
+        MoveMenuCursor(&(*cursor), DOWN);
+
+        break;
+        
     case PROCEED: 
-        return *selected;
+        return *cursor;
 
     default: 
         return UNNECESSARY_INPUT;
@@ -247,4 +233,26 @@ int CursorIsAtTop(int cursor) {
 
 int CursorIsAtBottom(int cursor, int ItemsCount) {
     return cursor == ItemsCount - 1;
+}
+
+int PlayerInput() {
+
+    switch (getch()) {
+
+        // case 224 || 0
+        case 224: case 0:
+        
+            switch(getch()) {
+                case 72: return UP;
+                case 75: return LEFT;  
+                case 80: return DOWN;
+                case 77: return RIGHT;
+                default: return UNNECESSARY_INPUT;
+            }
+
+        case 13: return PROCEED;
+
+        default: return UNNECESSARY_INPUT;
+    }
+
 }

@@ -12,11 +12,6 @@
 #include <conio.h>
 #include "score.h"
 
-// Main Menu Modules
-int Menu();
-void printMenu(char Menu[]);
-// end Main Menu
-
 void NewGame();
 void Continue();
 
@@ -88,7 +83,7 @@ void startGame(PlayerData player) {
 
         printf("You Won!");
 
-        // PutPlayerDataToScore();
+        PutPlayerToScore(player);
 
         remove(SAVE_FILE);
         break;

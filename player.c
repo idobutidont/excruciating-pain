@@ -31,7 +31,3 @@ int load(PlayerData *player) {
     fclose(f);
     return 1;
 }
-
-// void initializePlayer(PlayerData *player) {
-
-// }

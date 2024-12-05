@@ -55,15 +55,19 @@ int HandAtLeftEdge(int hand_position) {
 }   
 
 int MoveIsValid(int move) {
+
     switch(move) {
-        case DISK_PUT_DOWN: return 1;
-        case DISK_PICK_UP: return 1;
-        case CURSOR_MOVE: return 1;
-        default: return 0;
+
+    case DISK_PUT_DOWN: case DISK_PICK_UP: case CURSOR_MOVE: 
+        return 1;
+
+    default:
+        return 0;
     }
+
 }
 
-int PlayerPutDownDisk(int input) {
+int HasPutDownDisk(int input) {
     return input == DISK_PUT_DOWN;
 }
 // End of cases
@@ -235,8 +239,6 @@ int PlayerEvent(PlayerData *player) {
     }
 }
 
-// return WON if won, LOSE if lose
-// TODO: MORE REFACTOR.
 int inGame(PlayerData *player) {
 
     MAX_DISKS = player->max_disks;
@@ -256,15 +258,15 @@ int inGame(PlayerData *player) {
         printTower(player->tower);  
         printUI(player->moves, player->max_moves, input);
 
-        if (MoveIsValid(input)) save(&*player);        // autosave, performance is very awful now.
+        if (MoveIsValid(input)) save(&*player);
 
-        if (HasWon(&*player)) return WON;               // print the last position before winning
-        if (HasLose(&*player)) return LOSE;             // print the last position before taking the L
+        if (HasWon(&*player)) return WON;
+        if (HasLose(&*player)) return LOSE;
 
         //refrain the player from spamming or making unnecessary input
         while ((input = PlayerEvent(&*player)) == UNNECESSARY_INPUT);
 
-        if (PlayerPutDownDisk(input)) IncrementMove(&player->moves);
+        if (HasPutDownDisk(input)) IncrementMove(&player->moves);
 
     } while (1);
 }
@@ -272,11 +274,13 @@ int inGame(PlayerData *player) {
 void initializePlayer (PlayerData *player) { //placeholder
 
     DiffSelect(player);
+    InputUsername(player);
 
     player->startTower = 0;
     player->hand = 0;
     player->moves = 0;
     player->handPosition = 0;
+    player->score = 0;
     player->max_moves = CalculateMaxMove(player->max_disks, player->max_towers);
 
     for (int i = 0; i < player->max_towers; ++i) 
@@ -299,9 +303,14 @@ void DiffSelect(PlayerData *player) {
     const char* MenuFooter =    "Press Enter to Start...\n";
 
     switch(Menu(MenuHeader, MenuItems, MenuFooter)){
-        case 0: player->max_disks = 16; player->max_towers = 3; break;
+        case 0: player->max_disks = 10; player->max_towers = 3; break;
         case 1: player->max_disks = 16; player->max_towers = 4; break;
-        case 2: player->max_disks = 7; player->max_towers = 3; break;
-        case 3: player->max_disks = 5; player->max_towers = 3; break;
+        case 2: player->max_disks = 5; player->max_towers = 3; break;
+        case 3: player->max_disks = 5; player->max_towers = 4; break;
     }
+}
+
+void InputUsername(PlayerData *player){
+    printf("\tInput your username (16): ");
+    scanf("%[^\n]%*c", player->username);
 }

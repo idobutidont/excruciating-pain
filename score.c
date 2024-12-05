@@ -9,19 +9,19 @@
 #include <stdio.h>
 #include <windows.h>
 #include "helper.h"
-#include <string.h>
+#include <conio.h>
+
 
 void printScoreMenu() {
 
-    
-    system("cls");
+    clear_screen();
+    SetConsoleSize(64, 32);
 
     printf("SCOREBOARD\n");
-    printf("\nUsername           Scores\n");
+    printf("Username\t\tScores\n");
     printScores();
 
-    getchar();
-    
+    getch();
 }
 
 
@@ -35,7 +35,9 @@ int printScores() {
     }
 
     while (fread (&player, sizeof(Score), 1, f)) {
-        printf("%s              %d\n", player.username, player.score);
+        printf("%s\t", player.username);
+        printEqualIndent( (int) strlen(player.username), 16); //16 as in username max size
+        printf("%d\n", player.score);
     }
     
     fclose(f);
