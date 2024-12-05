@@ -46,16 +46,6 @@ void printSpaces(int length) {
     printf("%*s", length, "");
 }
 
-// tab adds 8 spaces, jadi ini teh kayak ngurangin 1 tab tiap 8 karakter pada usernamenya
-void printEqualIndent(int input_length, int max_length) {
-
-    int current_indent = input_length / 8;
-    int max_indent = max_length / 8;
-    
-    for (int i = current_indent; i < max_indent; ++i)
-        printf("\t");
-}
-
 // this require the string to have a NULL at the end of the element.
 int sizeArrStr(const char* string[]) {
     int i = -1;
