@@ -84,7 +84,7 @@ int Sort() {
     }
 
     //Baca data dari file
-    while (fscanf(f, "%s %d", &players[count].username, &players[count].score) != feof(f)) {
+    while (fread(&players[count], sizeof(Score), 1, f)) {
         count++;
     }
     fclose(f);
@@ -106,7 +106,7 @@ int Sort() {
 
     //Tulis data yang sudah diurutkan ke dalam file
     for (int i = 0; i < count; i++) {
-        fprintf(f, "%s %d\n", players[i].username, players[i].score);
+        fwrite(&players[i], sizeof(Score), 1, f);
     }
     fclose(f);
 
