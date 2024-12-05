@@ -255,7 +255,6 @@ int inGame(PlayerData *player) {
     int diskStringLength = 2 * MAX_DISKS + 1;
     int input_result = 0;
 
-
     do
     {
         if (input_result == 0) setConsoleSize(diskStringLength * MAX_TOWERS, player->max_disks + 6);
@@ -274,7 +273,8 @@ int inGame(PlayerData *player) {
 
         if (MoveIsValid(input_result)) save(&*player);
 
-        if (input_result == FORFEIT) return LOSE;
+        if (HasGivenUp(input_result)) return LOSE;
+
         if (HasPutDownDisk(input_result)) IncrementMove(&player->moves);
 
     } while (1);
