@@ -12,7 +12,7 @@
 #include <conio.h>
 
 
-void printScoreMenu() {
+void ViewScore() {
 
     clear_screen();
     SetConsoleSize(64, 32);

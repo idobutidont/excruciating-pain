@@ -9,7 +9,7 @@ typedef struct
     
 } Score;
 
-void printScoreMenu();
+void ViewScore();
 /*
     SCOREBOARD
 
