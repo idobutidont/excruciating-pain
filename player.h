@@ -6,10 +6,9 @@
 #define SAVE_FILE "save.dat"
 
 typedef struct {
-    char username[16];
+    char initial[3];
     int moves;
     int max_moves;
-    int difficulty;
     Tower tower[6];
     int hand;
     int handPosition;

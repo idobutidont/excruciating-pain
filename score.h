@@ -1,29 +1,32 @@
 #ifndef score_h
 #define score_h
+
 #include "player.h"
+
+#define SCORE_FILE "score.dat"
+#define HIGHSCORE_FILE "highscore.dat"
 
 typedef struct
 {
-    char username[16];
+    char initial[3];
     int score;
     
 } Score;
 
 void ViewScore();
-/*  Example print:
-    SCOREBOARD
-
-    Username                Scores              
-    Guweh banget            42562               
-
-*/
 
 int printScores();
 
-int PutPlayerToScore(PlayerData player);
+int PutPlayerToScore(PlayerData player, Score *score);
 int PutScoreToFile(Score score);
 
-int Sort();
+int SortScore();
 
 int HitungScore();
+
+int loadHighscore(Score *highscore);
+int saveHighscore(Score *highscore);
+
+void initializeHighscore(Score *Highscore);
+
 #endif

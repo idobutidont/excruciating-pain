@@ -17,10 +17,10 @@
 #define LOSE -101
 #define FORFEIT -100
 
-#include "player.h"
+#include "score.h"
 
 // Main Module
-int inGame(PlayerData *player);
+int inGame(PlayerData *player, Score Highscore);
 /* Return 1 if the player won, -1 otherwise */
 
 // Cases
@@ -41,7 +41,7 @@ int HasPutDownDisk(int input_result);
 void printTower(Tower towers[]);
 void printCursor(int hand_position);
 void printHand(int hand_position, int hand);
-void printUI(int moves, int max_moves, int input_result);
+void printUI(int moves, int max_moves, int score, int input_result, Score Highscore);
 void printWrongMove(int input_result);
 // End Print Modules
 
@@ -62,7 +62,7 @@ void initializePlayer(PlayerData *player);
 void DiffSelect(PlayerData *player);
 
 // Username input
-void InputUsername(PlayerData *player);
+void InputUsername(char* initial);
 
 // Escape menu
 int EscapeMenu();

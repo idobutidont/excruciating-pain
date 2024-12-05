@@ -11,6 +11,8 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <conio.h>
+#include <ctype.h>
 
 #define INT_MAX 2147483647
 
@@ -140,10 +142,17 @@ void printHand(int hand_position, int hand) {
     printf("%s\n", stringHand);
 }
 
-void printUI(int moves, int max_moves, int input_result) {
+void printUI(int moves, int max_moves, int score, int input_result, Score Highscore) {
 
     printf("\nMoves: %d", moves);
     printf("\tMoves Left: %d", (max_moves-moves));
+    printf("\nScore: %d", score);
+
+    if (score > Highscore.score) {
+        printf("\tNew Highscore!");
+    }
+
+    printf("\nHighscore: %d (%s)", Highscore.score, Highscore.initial);
 
     printWrongMove(input_result);
 }
@@ -245,7 +254,7 @@ int PlayerEvent(PlayerData *player) {
     }
 }
 
-int inGame(PlayerData *player) {
+int inGame(PlayerData *player, Score Highscore) {
 
     MAX_DISKS = player->max_disks;
     MAX_TOWERS = player->max_towers;
@@ -254,15 +263,18 @@ int inGame(PlayerData *player) {
     int diskStringLength = 2 * MAX_DISKS + 1;
     int input_result = 0;
 
+    int windowWidth = diskStringLength * MAX_TOWERS;
+    int windowHeight = MAX_DISKS + 8;
+
     do
     {
-        if (input_result == 0) setConsoleSize(diskStringLength * MAX_TOWERS, player->max_disks + 6);
+        if (input_result == 0) setConsoleSize(windowWidth, windowHeight);
         clear_screen();
 
         printCursor(player->handPosition);
         printHand(player->handPosition, player->hand);
         printTower(player->tower);  
-        printUI(player->moves, player->max_moves, input_result);
+        printUI(player->moves, player->max_moves, player->score, input_result, Highscore);
 
         if (HasWon(&*player)) return WON;
         if (HasLost(&*player)) return LOSE;
@@ -272,7 +284,7 @@ int inGame(PlayerData *player) {
 
         if (MoveIsValid(input_result)) save(&*player);
 
-        if (HasGivenUp(input_result)) return LOSE;
+        if (HasGivenUp(input_result)) return FORFEIT;
 
         if (HasPutDownDisk(input_result)) IncrementMove(&player->moves);
 
@@ -282,7 +294,7 @@ int inGame(PlayerData *player) {
 void initializePlayer (PlayerData *player) {
 
     DiffSelect(player);
-    InputUsername(player);
+    InputUsername(player->initial);
 
     player->startTower = 0;
     player->hand = 0;
@@ -313,14 +325,37 @@ void DiffSelect(PlayerData *player) {
     switch(Menu(MenuHeader, MenuItems, MenuFooter)){
         case 0: player->max_disks = 10; player->max_towers = 3; break;
         case 1: player->max_disks = 16; player->max_towers = 4; break;
-        case 2: player->max_disks = 5; player->max_towers = 3; break;
+        case 2: player->max_disks = 6; player->max_towers = 3; break;
         case 3: player->max_disks = 5; player->max_towers = 4; break;
     }
 }
 
-void InputUsername(PlayerData *player){
-    printf("\tInput your username (16): ");
-    scanf("%[^\n]%*c", player->username);
+void InputUsername(char* initial){
+    printf("\tInput your initials (1-3): ");
+    int count = 0;
+    char input;
+
+    while (1) {
+        input = (char) toupper(getch());
+
+        if (input == '\r' && count > 0) break;
+
+        if (input == '\b') {
+            if (count > 0) {
+                count--;
+                initial[count] = '\0';
+                printf("\b \b");
+            }
+            continue;
+        }
+
+        if (count < 3 && input >= 'A' && input <= 'Z') {
+            initial[count++] = input;
+            printf("%c", input);
+        }
+    }
+
+    initial[count] = '\0';
 }
 
 int EscapeMenu(){
@@ -329,14 +364,14 @@ int EscapeMenu(){
 
                                 "\tQuit and abandon progress?\n";
     const char* MenuItems[] = {
-                                "Yes\n",
-                                "No!\n\n", NULL
+                                "No!\n",
+                                "Yes\n\n", NULL
     };
     const char* MenuFooter =    "Press Enter to Select...\n";
 
     switch(Menu(MenuHeader, MenuItems, MenuFooter)){
-    case 0: return FORFEIT;
-    case 1: return 0;
+    case 0: return 0;
+    case 1: return FORFEIT;
     }
 
     return UNNECESSARY_INPUT;

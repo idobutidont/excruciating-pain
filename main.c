@@ -12,6 +12,8 @@
 #include <conio.h>
 #include "score.h"
 
+void MainMenu();
+
 void NewGame();
 void Continue();
 void HowToPlay();
@@ -19,6 +21,11 @@ void HowToPlay();
 void startGame(PlayerData player);
 
 int main() {
+    MainMenu();
+    return 0;
+}
+
+void MainMenu() {
 
     const char* MenuHeader =    "Tower Of Hanoi\n";
     const char* MenuItems[] = {
@@ -38,13 +45,12 @@ int main() {
             case 1: Continue(); break;
             case 2: ViewScore(); break;
             case 3: HowToPlay(); break;
-            case 4: return 0;
+            case 4: return;
         }
 
     } while (1);
     // continously playing the game until user exited.
 
-    return 0;
 }
 
 void NewGame() {
@@ -78,13 +84,22 @@ void Continue() {
 
 void startGame(PlayerData player) {
 
-    switch (inGame(&player)) {
+    // InitiateHighscore
+    Score Highscore, playerScore;
+
+    initializeHighscore(&Highscore);
+
+    switch (inGame(&player, Highscore)) {
 
     case WON:
 
         printf("You Won!");
 
-        PutPlayerToScore(player);
+        PutPlayerToScore(player, &playerScore);
+        PutScoreToFile(playerScore);
+
+        if (playerScore.score > Highscore.score)
+            saveHighscore(&playerScore);
 
         remove(SAVE_FILE);
         break;
@@ -93,7 +108,11 @@ void startGame(PlayerData player) {
     
         printf("You Lose!");
 
-        PutPlayerToScore(player);
+        PutPlayerToScore(player, &playerScore);
+        PutScoreToFile(playerScore);
+
+        if (playerScore.score > Highscore.score)
+            saveHighscore(&playerScore);
 
         remove(SAVE_FILE);
         break;
