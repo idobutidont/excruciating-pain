@@ -29,4 +29,8 @@ int saveHighscore(Score *highscore);
 
 void initializeHighscore(Score *Highscore);
 
+int CalculateScoreWeight(PlayerData *player);
+
+void CalculateScore(PlayerData *player, int scoreWeight);
+
 #endif

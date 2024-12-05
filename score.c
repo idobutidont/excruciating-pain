@@ -93,7 +93,7 @@ int SortScore() {
     while (fread(&players[structAmount], sizeof(Score), 1, f)) {
         structAmount++;
     }
-    
+
     fclose(f);
 
     //Sorting (descending)
@@ -153,11 +153,17 @@ void initializeHighscore (Score *Highscore) {
 
 }
 
-int HitungScore(int max_disk, int max_tower, int moves, int min_move) {
+int CalculateScoreWeight(PlayerData *player) {
+    return CalculateMinMove(player->max_disks, player->max_towers) * player->difficultyFactor * player->max_disks / (player->max_towers * 50);
+}
 
-    int score_difficulty;
+void CalculateScore(PlayerData *player, int scoreWeight) {
+    
+    int minMove = CalculateMinMove(player->max_disks, player->max_towers);
 
-    score_difficulty = 1;
-
-    return score_difficulty; 
+    if (player->moves > minMove) {
+        player->score -= 2 * scoreWeight;
+    } else {
+        player->score += scoreWeight;
+    }
 }

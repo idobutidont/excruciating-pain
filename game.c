@@ -262,6 +262,7 @@ int inGame(PlayerData *player, Score Highscore) {
     // biggest_disk + '<' + '>'
     int diskStringLength = 2 * MAX_DISKS + 1;
     int input_result = 0;
+    int scoreWeight = CalculateScoreWeight(&*player);
 
     int windowWidth = diskStringLength * MAX_TOWERS;
     int windowHeight = MAX_DISKS + 8;
@@ -286,7 +287,7 @@ int inGame(PlayerData *player, Score Highscore) {
 
         if (HasGivenUp(input_result)) return FORFEIT;
 
-        if (HasPutDownDisk(input_result)) IncrementMove(&player->moves);
+        if (HasPutDownDisk(input_result)) { IncrementMove(&player->moves); CalculateScore(&*player, scoreWeight);}
 
     } while (1);
 }
@@ -301,7 +302,7 @@ void initializePlayer (PlayerData *player) {
     player->moves = 0;
     player->handPosition = 0;
     player->score = 0;
-    player->max_moves = CalculateMinMove(player->max_disks, player->max_towers);
+    player->max_moves = 3 * CalculateMinMove(player->max_disks, player->max_towers)/2;
 
     for (int i = 0; i < player->max_towers; ++i) 
         initializeTower(&player->tower[i]);
@@ -323,10 +324,10 @@ void DiffSelect(PlayerData *player) {
     const char* MenuFooter =    "Press Enter to Start...\n";
 
     switch(Menu(MenuHeader, MenuItems, MenuFooter)){
-        case 0: player->max_disks = 10; player->max_towers = 3; break;
-        case 1: player->max_disks = 16; player->max_towers = 4; break;
-        case 2: player->max_disks = 6; player->max_towers = 3; break;
-        case 3: player->max_disks = 5; player->max_towers = 4; break;
+        case 0: player->max_disks = 10; player->max_towers = 3; player->difficultyFactor = 1; break;
+        case 1: player->max_disks = 16; player->max_towers = 4; player->difficultyFactor = 5;break;
+        case 2: player->max_disks = 6; player->max_towers = 3; player->difficultyFactor = 25;break;
+        case 3: player->max_disks = 5; player->max_towers = 4; player->difficultyFactor = 50;break;
     }
 }
 
