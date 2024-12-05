@@ -326,8 +326,8 @@ void DiffSelect(PlayerData *player) {
     switch(Menu(MenuHeader, MenuItems, MenuFooter)){
         case 0: player->max_disks = 10; player->max_towers = 3; player->difficultyFactor = 1; break;
         case 1: player->max_disks = 16; player->max_towers = 4; player->difficultyFactor = 5;break;
-        case 2: player->max_disks = 6; player->max_towers = 3; player->difficultyFactor = 25;break;
-        case 3: player->max_disks = 5; player->max_towers = 4; player->difficultyFactor = 50;break;
+        case 2: player->max_disks = 6; player->max_towers = 3; player->difficultyFactor = 10;break;
+        case 3: player->max_disks = 5; player->max_towers = 4; player->difficultyFactor = 25;break;
     }
 }
 

@@ -16,7 +16,7 @@
 void ViewScore() {
 
     clear_screen();
-    setConsoleSize(32, 25);
+    setConsoleSize(32, 26);
 
     SortScore();
 
@@ -154,7 +154,7 @@ void initializeHighscore (Score *Highscore) {
 }
 
 int CalculateScoreWeight(PlayerData *player) {
-    return CalculateMinMove(player->max_disks, player->max_towers) * player->difficultyFactor * player->max_disks / (player->max_towers * 50);
+    return player->difficultyFactor * player->max_disks / (player->max_towers);
 }
 
 void CalculateScore(PlayerData *player, int scoreWeight) {

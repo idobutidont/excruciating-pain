@@ -20,6 +20,8 @@ void HowToPlay();
 
 void startGame(PlayerData player);
 
+void printEndScreen(int WinOrLose);
+
 int main() {
     MainMenu();
     return 0;
@@ -86,51 +88,34 @@ void startGame(PlayerData player) {
 
     // InitiateHighscore
     Score Highscore, playerScore;
-
     initializeHighscore(&Highscore);
 
-    switch (inGame(&player, Highscore)) {
+    int result = inGame(&player, Highscore);
+
+    switch (result) {
 
     case WON:
-
-        clear_screen();
-        printf(
-                " __   __           __        __          _ \n"
-                " \\ \\ / /__  _   _  \\ \\      / /__  _ __ | |\n"
-                "  \\ V / _ \\| | | |  \\ \\ /\\ / / _ \\| '_ \\| |\n"
-                "   | | (_) | |_| |   \\ V  V / (_) | | | |_|\n"
-                "   |_|\\___/ \\__,_|    \\_/\\_/ \\___/|_| |_(_)\n\n"
-        );
-        printf("Press any key to return to the main menu...");
-        getch();
 
         PutPlayerToScore(player, &playerScore);
         PutScoreToFile(playerScore);
 
         if (playerScore.score > Highscore.score)
             saveHighscore(&playerScore);
+
+        printEndScreen(result);
 
         remove(SAVE_FILE);
         break;
 
     case LOSE:
     
-        clear_screen();
-        printf(
-                " __   __            _              _   _ \n"
-                " \\ \\ / /__  _   _  | |    ___  ___| |_| |\n"
-                "  \\ V / _ \\| | | | | |   / _ \\/ __| __| |\n"
-                "   | | (_) | |_| | | |__| (_) \\__ \\ |_|_|\n"
-                "   |_|\\___/ \\__,_| |_____\\___/|___/\\__(_)\n\n"
-        );
-        printf("Press any key to return to the main menu...");
-        getch();
-
         PutPlayerToScore(player, &playerScore);
         PutScoreToFile(playerScore);
 
         if (playerScore.score > Highscore.score)
             saveHighscore(&playerScore);
+
+        printEndScreen(result);
 
         remove(SAVE_FILE);
         break;
@@ -145,6 +130,34 @@ void startGame(PlayerData player) {
     }
 
     return;
+}
+
+void printEndScreen(int WinOrLose) {
+
+    clear_screen();
+    setConsoleSize(43, 7);
+
+    if (WinOrLose == LOSE)
+    printfColor(
+            " __   __            _              _   _ \n"
+            " \\ \\ / /__  _   _  | |    ___  ___| |_| |\n"
+            "  \\ V / _ \\| | | | | |   / _ \\/ __| __| |\n"
+            "   | | (_) | |_| | | |__| (_) \\__ \\ |_|_|\n"
+            "   |_|\\___/ \\__,_| |_____\\___/|___/\\__(_)\n\n"
+    , 11);
+
+    else 
+    printfColor(
+                " __   __           __        __          _ \n"
+                " \\ \\ / /__  _   _  \\ \\      / /__  _ __ | |\n"
+                "  \\ V / _ \\| | | |  \\ \\ /\\ / / _ \\| '_ \\| |\n"
+                "   | | (_) | |_| |   \\ V  V / (_) | | | |_|\n"
+                "   |_|\\___/ \\__,_|    \\_/\\_/ \\___/|_| |_(_)\n\n"
+    , 10);
+
+    
+    printf("Press any key to return to the main menu...");
+    getch();
 }
 
 void HowToPlay() {
