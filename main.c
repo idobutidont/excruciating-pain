@@ -14,6 +14,7 @@
 
 void NewGame();
 void Continue();
+int HowToPlay();
 
 void startGame(PlayerData player);
 
@@ -35,7 +36,7 @@ int main() {
         switch(Menu(MenuHeader, MenuItems, MenuFooter)) {
             case 0: NewGame(); break;
             case 1: Continue(); break;
-            case 2: printScoreMenu(); break;
+            case 2: ViewScore(); break;
             case 3: HowToPlay(); break;
             case 4: return 0;
         }
