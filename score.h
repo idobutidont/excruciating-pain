@@ -25,5 +25,5 @@ int PutScoreToFile(Score score);
 
 int Sort();
 
-
+int HitungScore();
 #endif

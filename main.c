@@ -29,7 +29,7 @@ int main() {
                                 "New Game\n",
                                 "Continue\n",
                                 "View Scores\n",
-                                "Tutorial\n\n",
+                                "How To Play\n\n",
 
                                 "Exit\n\n", NULL
     };
@@ -41,7 +41,7 @@ int main() {
             case 0: NewGame(); break;
             case 1: Continue(); break;
             case 2: printScoreMenu(); break;
-            case 3: break;
+            case 3: HowToPlay(); break;
             case 4: return 0;
         }
 
@@ -104,4 +104,16 @@ void startGame(PlayerData player) {
     }
 
     return;
+}
+
+int HowToPlay() {
+    printf("How To Play? \n");
+    printf("\n1. Pilih tingkat kesulitan yang Anda inginkan. \n");
+    printf("2. Pindahkan seluruh disk dari tower yang satu ke tower lainnya sehingga disk tertumpuk sesuai ukurannya. \n");
+    printf("3. Tekan up arrow pada keyboard untuk mengangkat disk dan down arrow untuk menurunkan disk. \n");
+    printf("4. Disk yang diambil adalah disk yang berada di paling atas tower. \n");
+    printf("5. Hanya satu disk yang boleh dipindahkan dalam satu waktu. \n");
+    printf("6. Tidak boleh meletakkan disk di atas disk lain yang lebih kecil. \n");
+    printf("7. Anda akan memenangkan game jika disk sudah tertumpuk dalam satu tower selain tower awal. \n");
+    printf("8. Anda akan kalah apabila Anda kehabisan jatah pergerakan. \n");
 }

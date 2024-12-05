@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include "helper.h"
-
+#include <string.h>
 
 void printScoreMenu() {
 
@@ -17,7 +17,7 @@ void printScoreMenu() {
     system("cls");
 
     printf("SCOREBOARD\n");
-    printf("Username           Scores\n");
+    printf("\nUsername           Scores\n");
     printScores();
 
     getchar();
@@ -73,39 +73,47 @@ int PutScoreToFile(Score score) {
 
 int Sort() {
     FILE *f;
-    long i=0, j;
-    Score player, temp;
+    Score players[100];
+    int count = 0;
 
+    // Buka file untuk membaca
     if ((f = fopen("score.dat", "r")) == NULL) {
         return -1;
     }
-    
-    while (!feof(f)) {
-        fseek (f, (i*(sizeof(Score)+1)) + i, SEEK_SET);
-        fscanf (f, "%s %d", &player.username, &player.score);
-        j = i;
-        while (!feof(f)) {
-            j++;
-            fseek (f, (j*(sizeof(Score)+1))+j, SEEK_SET);
-            fscanf(f, "%s %d", &temp.username, &temp.score);
-            
-            if (player.score > temp.score) {
-                fseek (f, i*(sizeof(Score)+1)+i, SEEK_SET);
-                fprintf(f, "%s %d", temp.username, temp.score);
-                fseek (f, j*(sizeof(Score)+1)+j, SEEK_SET);
-                fprintf(f, "%s %d", player.username, player.score);
 
-                strcpy(player.username , temp.username);
-                player.score = temp.score;
+    //Baca data dari file
+    while (fscanf(f, "%s %d", &players[count].username, &players[count].score) != feof(f)) {
+        count++;
+    }
+    fclose(f);
+
+    //Sorting (descending)
+    for (int i = 0; i < count -1; i++) {
+        for (int j =0; j < count - i -1; j++) {
+            if (players[j].score < players[j+1].score) {
+                Score temp = players[j];
+                players[j] = players[j+1];
+                players[j+1] = temp;
             }
         }
-        if (i < j) {
-            fseek (f, 0, SEEK_SET); 
-            i++;
-        }
     }
-    fclose (f);
-    printf("\nSorted.\n");
 
+    if ((f = fopen("score.dat", "w")) == NULL) {
+        return -1;
+    }
+
+    //Tulis data yang sudah diurutkan ke dalam file
+    for (int i = 0; i < count; i++) {
+        fprintf(f, "%s %d\n", players[i].username, players[i].score);
+    }
+    fclose(f);
+
+    printf("\nSorted.\n");
     return 1;
+}
+
+int HitungScore(int difficulty, int moves) {
+    int score_difficulty;
+     score_difficulty = (10000*difficulty)/moves;
+     return score_difficulty;
 }
