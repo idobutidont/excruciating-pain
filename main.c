@@ -93,7 +93,16 @@ void startGame(PlayerData player) {
 
     case WON:
 
-        printf("You Won!");
+        clear_screen();
+        printf(
+                " __   __           __        __          _ \n"
+                " \\ \\ / /__  _   _  \\ \\      / /__  _ __ | |\n"
+                "  \\ V / _ \\| | | |  \\ \\ /\\ / / _ \\| '_ \\| |\n"
+                "   | | (_) | |_| |   \\ V  V / (_) | | | |_|\n"
+                "   |_|\\___/ \\__,_|    \\_/\\_/ \\___/|_| |_(_)\n\n"
+        );
+        printf("Press any key to return to the main menu...");
+        getch();
 
         PutPlayerToScore(player, &playerScore);
         PutScoreToFile(playerScore);
@@ -106,7 +115,16 @@ void startGame(PlayerData player) {
 
     case LOSE:
     
-        printf("You Lose!");
+        clear_screen();
+        printf(
+                " __   __            _              _   _ \n"
+                " \\ \\ / /__  _   _  | |    ___  ___| |_| |\n"
+                "  \\ V / _ \\| | | | | |   / _ \\/ __| __| |\n"
+                "   | | (_) | |_| | | |__| (_) \\__ \\ |_|_|\n"
+                "   |_|\\___/ \\__,_| |_____\\___/|___/\\__(_)\n\n"
+        );
+        printf("Press any key to return to the main menu...");
+        getch();
 
         PutPlayerToScore(player, &playerScore);
         PutScoreToFile(playerScore);
