@@ -40,6 +40,9 @@ void PrintMenuItems(int ItemsCount, const char* MenuItems[], int Cursor);
 int MenuInput(int *selected, int ItemsCount);
 void MoveMenuCursor(int *selected, int UpOrDown);
 
+void ChangeableMenu(int *item, const char* NameItem, int minSize, int maxSize);
+int ChangeableMenuInput(int *item, int minSize, int maxSize);
+
 // Cases
 int CursorIsAtTop(int cursor);
 int CursorIsAtBottom(int cursor, int ItemsCount);

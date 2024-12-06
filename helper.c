@@ -212,6 +212,58 @@ int CursorIsAtBottom(int cursor, int ItemsCount) {
     return cursor == ItemsCount - 1;
 }
 
+void ChangeableMenu(int *item, const char* NameItem, int minSize, int maxSize) {
+
+    int input_result, windowWidth, windowHeight;
+
+    *item = minSize;
+
+    // strlen + 2 indents (8) + " Amount: <  >" (13) + maxSize (roughly 3 digit at max lol)
+    // 42 = "Press Enter to Continue..." + 2 indents
+    windowWidth =(int) max( strlen(NameItem) + 32, 42);
+    windowHeight = 6;
+
+    setConsoleSize(windowWidth, windowHeight);
+
+    do
+    {
+        clear_screen();
+        printf("\n\t%s Amount: < %d >", NameItem, *item);
+
+        printf("\n\n\tPress Enter to Continue...");
+
+        while ((input_result = ChangeableMenuInput(&*item, minSize, maxSize)) == UNNECESSARY_INPUT);
+
+        if (input_result != MOVE_CURSOR) return;
+
+    } while (1);
+    
+}
+
+int ChangeableMenuInput(int *item, int minSize, int maxSize) {
+    switch (PlayerInput()) {
+
+    case RIGHT:
+        if (*item >= maxSize) return UNNECESSARY_INPUT;
+        ++(*item);
+        break;
+    
+    case LEFT:
+        if (*item <= minSize) return UNNECESSARY_INPUT;
+        --(*item);
+        break;
+
+    case PROCEED:
+        return *item;
+
+    default: 
+        return UNNECESSARY_INPUT;
+
+    }
+
+    return MOVE_CURSOR;
+}
+
 int PlayerInput() {
 
     switch (getch()) {

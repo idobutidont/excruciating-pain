@@ -55,8 +55,9 @@ void IncrementMove(int *moves);
 // Player Input
 int PlayerEvent(PlayerData *player);
 
-//Placeholder module
+// Player modules
 int initializePlayer(PlayerData *player);
+int initializePlayerMenu(PlayerData *player);
 
 // Diff select module
 int DiffSelect(PlayerData *player);
@@ -66,5 +67,8 @@ void InputInitial(char* initial);
 
 // Escape menu
 int EscapeMenu();
+
+// Custom Disk Tower Menu
+void InputCustom(int *disk, int *tower);
 
 #endif

@@ -294,9 +294,7 @@ int inGame(PlayerData *player, Score Highscore) {
 
 int initializePlayer (PlayerData *player) {
 
-    if (DiffSelect(&*player) == EXIT) return EXIT;
-
-    InputInitial(player->initial);
+    if (initializePlayerMenu(&*player) == EXIT) return EXIT;
 
     player->startTower = 0;
     player->hand = 0;
@@ -319,7 +317,8 @@ int DiffSelect(PlayerData *player) {
                                 "Very Hard\n",
                                 "Hard\n",
                                 "Medium\n",
-                                "Easy\n\n",
+                                "Easy\n",
+                                "Custom\n\n",
 
                                 "Return to Main Menu\n\n", NULL
     };
@@ -330,14 +329,49 @@ int DiffSelect(PlayerData *player) {
         case 1: player->max_disks = 16; player->max_towers = 4; player->difficultyFactor = 5;  break;
         case 2: player->max_disks = 6;  player->max_towers = 3; player->difficultyFactor = 10; break;
         case 3: player->max_disks = 5;  player->max_towers = 4; player->difficultyFactor = 25; break;
-        case 4: return EXIT;
+        case 4: InputCustom(&player->max_disks, &player->max_towers); player->difficultyFactor = 1; break;
+        case 5: return EXIT;
     }
 
     return 1;
 }
 
+int initializePlayerMenu(PlayerData *player) {
+
+    do
+    {
+        if (DiffSelect(&*player) == EXIT) return EXIT;
+        InputInitial(player->initial);
+
+        setConsoleSize(58, 8);
+
+        printf( "\n\tDisks: %d\n"
+                "\tTowers: %d\n"
+                "\tInitial: %s\n\n"
+
+                "\tPress Enter to start the game...\n"
+                "\tPress any key to redo all your settings...",
+                player->max_disks, player->max_towers, player->initial
+        );
+    } while (getch() != '\r');
+
+    return 1;
+
+}
+
+void InputCustom(int *disk, int *tower) {
+
+    ChangeableMenu(&*disk, "Disk", 3, 16);
+
+    ChangeableMenu(&*tower, "Tower", 3, 6);
+
+}
+
 void InputInitial(char* initial){
-    printf("\tInput your initials (1-3): ");
+
+    clear_screen();
+    setConsoleSize(46, 3);
+    printf("\n\tInput your initials (1-3): ");
     int count = 0;
     char input;
 
