@@ -58,7 +58,7 @@ void MainMenu() {
 void NewGame() {
     PlayerData player;
 
-    if (load(&player) == 1) {
+    if (loadPlayer(&player) == 1) {
         printf("\n\tYou have an ongoing Progress. Do you want to proceed? [Y/N]: ");
         if (toupper(getche()) != 'Y') return;
     }
@@ -72,7 +72,7 @@ void NewGame() {
 void Continue() {
 
     PlayerData player;
-    if (load(&player) == -1) {
+    if (loadPlayer(&player) == -1) {
         printf("\n\tYou do not have any recent progress. Please start a new game");
         getch();    // hold this screen until player input something
         return;

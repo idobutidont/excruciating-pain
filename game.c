@@ -283,7 +283,7 @@ int inGame(PlayerData *player, Score Highscore) {
         //refrain the player from spamming or making unnecessary input
         while ((input_result = PlayerEvent(&*player)) == UNNECESSARY_INPUT);
 
-        if (MoveIsValid(input_result)) save(&*player);
+        if (MoveIsValid(input_result)) savePlayer(&*player);
 
         if (HasExit(input_result)) return EXIT;
 

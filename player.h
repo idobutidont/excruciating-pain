@@ -19,7 +19,7 @@ typedef struct {
     int difficultyFactor;
 } PlayerData;
 
-int save(PlayerData *player);
-int load(PlayerData *player);
+int savePlayer(PlayerData *player);
+int loadPlayer(PlayerData *player);
 
 #endif

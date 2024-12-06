@@ -8,7 +8,7 @@
 #include "player.h"
 #include <stdio.h>
 
-int save(PlayerData *player) {
+int savePlayer(PlayerData *player) {
     FILE *f;
 
     if ( (f = fopen(SAVE_FILE, "w")) == NULL ) {
@@ -20,7 +20,7 @@ int save(PlayerData *player) {
     return 1;
 }
 
-int load(PlayerData *player) {
+int loadPlayer(PlayerData *player) {
     FILE *f;
 
     if ( (f = fopen(SAVE_FILE, "r")) == NULL ) {
