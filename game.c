@@ -43,8 +43,8 @@ int HasLost(PlayerData *player) {
     return HasRanOutOfMoves(player->moves, player->max_moves);
 }
 
-int HasGivenUp(int input_result) {
-    return input_result == FORFEIT;
+int HasExit(int input_result) {
+    return input_result == EXIT;
 }
 
 int HasRanOutOfMoves(int moves, int max_moves) {
@@ -285,53 +285,58 @@ int inGame(PlayerData *player, Score Highscore) {
 
         if (MoveIsValid(input_result)) save(&*player);
 
-        if (HasGivenUp(input_result)) return FORFEIT;
+        if (HasExit(input_result)) return EXIT;
 
         if (HasPutDownDisk(input_result)) { IncrementMove(&player->moves); CalculateScore(&*player, scoreWeight);}
 
     } while (1);
 }
 
-void initializePlayer (PlayerData *player) {
+int initializePlayer (PlayerData *player) {
 
-    DiffSelect(player);
-    InputUsername(player->initial);
+    if (DiffSelect(&*player) == EXIT) return EXIT;
+
+    InputInitial(player->initial);
 
     player->startTower = 0;
     player->hand = 0;
     player->moves = 0;
     player->handPosition = 0;
     player->score = 0;
-    player->max_moves = 3 * CalculateMinMove(player->max_disks, player->max_towers)/2;
+    player->max_moves = 4 * CalculateMinMove(player->max_disks, player->max_towers) / 3;
 
     for (int i = 0; i < player->max_towers; ++i) 
         initializeTower(&player->tower[i]);
     
-    // Initialize Disk onto starting Tower
-    for (int i = (player->max_disks * 2) - 1; i >= 1; i -= 2) 
-        push(&player->tower[player->startTower], i);
+    initializeDisks(&player->tower[player->startTower], player->max_disks);
 
+    return 1;
 }
 
-void DiffSelect(PlayerData *player) {
+int DiffSelect(PlayerData *player) {
     const char* MenuHeader =    "Select Difficulty\n";
     const char* MenuItems[] = {
                                 "Very Hard\n",
                                 "Hard\n",
                                 "Medium\n",
-                                "Easy\n\n", NULL
+                                "Easy\n\n",
+
+                                "Return to Main Menu\n\n", NULL
     };
-    const char* MenuFooter =    "Press Enter to Start...\n";
+    const char* MenuFooter =    "Press Enter to Continue...\n";
 
     switch(Menu(MenuHeader, MenuItems, MenuFooter)){
-        case 0: player->max_disks = 10; player->max_towers = 3; player->difficultyFactor = 1; break;
-        case 1: player->max_disks = 16; player->max_towers = 4; player->difficultyFactor = 5;break;
-        case 2: player->max_disks = 6; player->max_towers = 3; player->difficultyFactor = 10;break;
-        case 3: player->max_disks = 5; player->max_towers = 4; player->difficultyFactor = 25;break;
+        case 0: player->max_disks = 10; player->max_towers = 3; player->difficultyFactor = 3;  break;
+        case 1: player->max_disks = 16; player->max_towers = 4; player->difficultyFactor = 5;  break;
+        case 2: player->max_disks = 6;  player->max_towers = 3; player->difficultyFactor = 10; break;
+        case 3: player->max_disks = 5;  player->max_towers = 4; player->difficultyFactor = 25; break;
+        case 4: return EXIT;
     }
+
+    return 1;
 }
 
-void InputUsername(char* initial){
+void InputInitial(char* initial){
     printf("\tInput your initials (1-3): ");
     int count = 0;
     char input;
@@ -339,18 +344,17 @@ void InputUsername(char* initial){
     while (1) {
         input = (char) toupper(getch());
 
-        if (input == '\r' && count > 0) break;
+        if (input == '\r' && count > 0) break; // enter
 
-        if (input == '\b') {
+        if (input == '\b') { // backspace (hapus karakter sebelumnya)
             if (count > 0) {
-                count--;
-                initial[count] = '\0';
+                initial[--count] = '\0';
                 printf("\b \b");
             }
             continue;
         }
 
-        if (count < 3 && input >= 'A' && input <= 'Z') {
+        if (count < 3 && input >= 'A' && input <= 'Z') { // inisial harus huruf kapital alfabet.
             initial[count++] = input;
             printf("%c", input);
         }
@@ -361,18 +365,16 @@ void InputUsername(char* initial){
 
 int EscapeMenu(){
 
-    const char* MenuHeader =    "Pause Menu\n\n"
-
-                                "\tQuit and abandon progress?\n";
+    const char* MenuHeader =    "Pause Menu\n\n";
     const char* MenuItems[] = {
-                                "No!\n",
-                                "Yes\n\n", NULL
+                                "Back to Game\n",
+                                "Return to Main Menu\n\n", NULL
     };
     const char* MenuFooter =    "Press Enter to Select...\n";
 
     switch(Menu(MenuHeader, MenuItems, MenuFooter)){
-    case 0: return 0;
-    case 1: return FORFEIT;
+        case 0: return 0;
+        case 1: return EXIT;
     }
 
     return UNNECESSARY_INPUT;

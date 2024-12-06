@@ -15,7 +15,7 @@
 
 #define WON 101
 #define LOSE -101
-#define FORFEIT -100
+#define EXIT -100
 
 #include "score.h"
 
@@ -28,7 +28,7 @@ int HandIsEmpty(int hand);
 int HandIsBiggerThanTower(int hand, Tower tower);
 int HasWon(PlayerData *player);
 int HasLost(PlayerData *player);
-int HasGivenUp(int input_result);
+int HasExit(int input_result);
 int HasDiskStacked(Tower tower[], int start_pos);
 int HasRanOutOfMoves(int moves, int max_moves);
 int HandAtRightEdge(int hand);
@@ -56,13 +56,13 @@ void IncrementMove(int *moves);
 int PlayerEvent(PlayerData *player);
 
 //Placeholder module
-void initializePlayer(PlayerData *player);
+int initializePlayer(PlayerData *player);
 
 // Diff select module
-void DiffSelect(PlayerData *player);
+int DiffSelect(PlayerData *player);
 
 // Username input
-void InputUsername(char* initial);
+void InputInitial(char* initial);
 
 // Escape menu
 int EscapeMenu();

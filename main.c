@@ -59,11 +59,11 @@ void NewGame() {
     PlayerData player;
 
     if (load(&player) == 1) {
-        printf("\nYou have an ongoing Progress. Do you want to proceed? [Y/N]: ");
+        printf("\n\tYou have an ongoing Progress. Do you want to proceed? [Y/N]: ");
         if (toupper(getche()) != 'Y') return;
     }
 
-    initializePlayer(&player);
+    if (initializePlayer(&player) == EXIT) return;
 
     startGame(player);
     return;
@@ -73,7 +73,7 @@ void Continue() {
 
     PlayerData player;
     if (load(&player) == -1) {
-        printf("\nYou do not have any recent progress. Please start a new game");
+        printf("\n\tYou do not have any recent progress. Please start a new game");
         getch();    // hold this screen until player input something
         return;
     }
@@ -94,7 +94,7 @@ void startGame(PlayerData player) {
 
     switch (result) {
 
-    case WON:
+    case WON: case LOSE:
 
         PutPlayerToScore(player, &playerScore);
         PutScoreToFile(playerScore);
@@ -105,31 +105,14 @@ void startGame(PlayerData player) {
         printEndScreen(result);
 
         remove(SAVE_FILE);
-        break;
+        return;
 
-    case LOSE:
-    
-        PutPlayerToScore(player, &playerScore);
-        PutScoreToFile(playerScore);
-
-        if (playerScore.score > Highscore.score)
-            saveHighscore(&playerScore);
-
-        printEndScreen(result);
-
-        remove(SAVE_FILE);
-        break;
-
-    case FORFEIT:
-        
-        remove(SAVE_FILE);
-        break;
+    case EXIT:
+        return;
 
     default:
         return;
     }
-
-    return;
 }
 
 void printEndScreen(int WinOrLose) {
@@ -144,7 +127,7 @@ void printEndScreen(int WinOrLose) {
             "  \\ V / _ \\| | | | | |   / _ \\/ __| __| |\n"
             "   | | (_) | |_| | | |__| (_) \\__ \\ |_|_|\n"
             "   |_|\\___/ \\__,_| |_____\\___/|___/\\__(_)\n\n"
-    , 11);
+    , 12);
 
     else 
     printfColor(
@@ -153,7 +136,7 @@ void printEndScreen(int WinOrLose) {
                 "  \\ V / _ \\| | | |  \\ \\ /\\ / / _ \\| '_ \\| |\n"
                 "   | | (_) | |_| |   \\ V  V / (_) | | | |_|\n"
                 "   |_|\\___/ \\__,_|    \\_/\\_/ \\___/|_| |_(_)\n\n"
-    , 10);
+    , 11);
 
     
     printf("Press any key to return to the main menu...");

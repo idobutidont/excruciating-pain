@@ -12,6 +12,12 @@ void initializeTower(Tower *tower) {
     tower->top = -1; // Initialize the tower as empty
 }
 
+// Fill the tower from the bottom, hence the loop started at the biggest disk first.
+void initializeDisks(Tower *tower, int MAX_DISKS) {
+    for (int i = 2 * MAX_DISKS - 1; i>= 1; i -= 2)
+        push(&*tower, i);
+}
+
 // Cases
 int TowerIsEmpty(Tower tower) {
     return tower.top <= -1;

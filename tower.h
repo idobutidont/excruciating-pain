@@ -7,6 +7,7 @@ typedef struct {
 } Tower;
 
 void initializeTower(Tower *tower);
+void initializeDisks(Tower *tower, int MAX_DISKS);
 
 void push(Tower *tower, int disk);
 

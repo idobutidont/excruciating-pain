@@ -30,49 +30,6 @@ void ViewScore() {
 
 }
 
-int printScores() {
-
-    FILE *f;
-    Score player;
-    int count = 1;
-
-    if ((f = fopen(SCORE_FILE, "r")) == NULL) {
-        return -1;
-    }
-
-    while (fread (&player, sizeof(Score), 1, f) && count <= 20) {
-        printf("\t%s\t%d\n", player.initial, player.score);
-        count++;
-    }
-
-    fclose(f);
-    return 1;
-
-}
-
-int PutPlayerToScore(PlayerData player, Score *score) {
-    
-    strcpy(score->initial, player.initial);
-    score->score = player.score;
-
-    return 1;
-}
-
-int PutScoreToFile(Score score) {
-
-    FILE *f;
-
-    if ((f = fopen(SCORE_FILE, "a")) == NULL) {
-        return -1;
-    }
-
-    fwrite(&score, sizeof(Score), 1, f);
-        
-    fclose(f);
-    return 1;
-}
-
-
 int SortScore() {
     FILE *f;
 
@@ -117,6 +74,48 @@ int SortScore() {
     }
     fclose(f);
 
+    return 1;
+}
+
+int printScores() {
+
+    FILE *f;
+    Score player;
+    int count = 1;
+
+    if ((f = fopen(SCORE_FILE, "r")) == NULL) {
+        return -1;
+    }
+
+    while (fread (&player, sizeof(Score), 1, f) && count <= 20) {
+        printf("\t%s\t%d\n", player.initial, player.score);
+        count++;
+    }
+
+    fclose(f);
+    return 1;
+
+}
+
+int PutPlayerToScore(PlayerData player, Score *score) {
+    
+    strcpy(score->initial, player.initial);
+    score->score = player.score;
+
+    return 1;
+}
+
+int PutScoreToFile(Score score) {
+
+    FILE *f;
+
+    if ((f = fopen(SCORE_FILE, "a")) == NULL) {
+        return -1;
+    }
+
+    fwrite(&score, sizeof(Score), 1, f);
+        
+    fclose(f);
     return 1;
 }
 
