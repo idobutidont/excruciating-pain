@@ -120,7 +120,7 @@ void printCursor(int hand_position) {
     int diskStringLength = biggest_disk + 2;
 
     char stringCursor[diskStringLength];    
-    TowerToString(stringCursor, biggest_disk, 'V');
+    TowerToString(stringCursor, biggest_disk, 25); // 25 is the ASCII code for ↓ 
 
     printf("\n\t");
 
