@@ -153,12 +153,12 @@ void printUI(int moves, int max_moves, int score, int input_result, Score Highsc
     printf("\n\tMoves: %d", moves);
     printf("\t\tMoves Left: %d", (max_moves-moves));
     printf("\n\tScore: %d", score);
+    printf("\t\tHighscore: %d (%s)", Highscore.score, Highscore.initial);
+
 
     if (score > Highscore.score) {
-        printf("\t\tNew Highscore!");
+        printf("\n\tNew Highscore!");
     }
-
-    printf("\n\tHighscore: %d (%s)", Highscore.score, Highscore.initial);
 
     printWrongMove(input_result);
 }
