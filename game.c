@@ -15,6 +15,7 @@
 #include <ctype.h>
 
 #define INT_MAX 2147483647
+#define max(a,b) a > b ? a : b
 
 int MAX_DISKS, MAX_TOWERS;
 
@@ -93,6 +94,7 @@ void printTower(Tower towers[]) {
     TowerToString(stringTower, biggest_disk, '|');
 
     for (int height = MAX_DISKS - 1; height >= 0; --height) {
+        strcat(stringDiskTower, "\t");
         for (int tower = 0; tower < MAX_TOWERS; ++tower) {
             if (height <= towers[tower].top) {                          // check if there's a disk on the tower, done by checking if the top is higher than current height level
 
@@ -120,6 +122,8 @@ void printCursor(int hand_position) {
     char stringCursor[diskStringLength];    
     TowerToString(stringCursor, biggest_disk, 'V');
 
+    printf("\n\t");
+
     printSpaces(diskStringLength * hand_position);
     printf("%s\n", stringCursor);
 }
@@ -138,21 +142,23 @@ void printHand(int hand_position, int hand) {
     char stringHand[diskStringLength];
     DiskToString(stringHand, hand, biggest_disk);
 
+    printf("\t");
+
     printSpaces(diskStringLength * hand_position);
     printf("%s\n", stringHand);
 }
 
 void printUI(int moves, int max_moves, int score, int input_result, Score Highscore) {
 
-    printf("\nMoves: %d", moves);
-    printf("\tMoves Left: %d", (max_moves-moves));
-    printf("\nScore: %d", score);
+    printf("\n\tMoves: %d", moves);
+    printf("\t\tMoves Left: %d", (max_moves-moves));
+    printf("\n\tScore: %d", score);
 
     if (score > Highscore.score) {
-        printf("\tNew Highscore!");
+        printf("\t\tNew Highscore!");
     }
 
-    printf("\nHighscore: %d (%s)", Highscore.score, Highscore.initial);
+    printf("\n\tHighscore: %d (%s)", Highscore.score, Highscore.initial);
 
     printWrongMove(input_result);
 }
@@ -160,19 +166,19 @@ void printUI(int moves, int max_moves, int score, int input_result, Score Highsc
 void printWrongMove(int input_result) {
     switch(input_result) {
     case WM_DISK_AT_HAND: 
-        printfColor("\nYou already got disk on your hand.", 12);
+        printfColor("\n\tYou already got disk on your hand.", 12);
         break;
 
     case WM_TOWER_IS_EMPTY: 
-        printfColor("\nThere's no disk there.", 12);
+        printfColor("\n\tThere's no disk there.", 12);
         break;
 
     case WM_HAND_IS_EMPTY: 
-        printfColor("\nYour hand is empty.", 12);
+        printfColor("\n\tYour hand is empty.", 12);
         break;
 
     case WM_HAND_IS_BIGGER_THAN_TOWER: 
-        printfColor("\nThe disk on your hand is bigger than the one on the tower.", 12);
+        printfColor("\n\tThe disk on your hand is bigger than the one on the tower.", 12);
         break;
 
     }
@@ -264,8 +270,8 @@ int inGame(PlayerData *player, Score Highscore) {
     int input_result = 0;
     int scoreWeight = CalculateScoreWeight(&*player);
 
-    int windowWidth = diskStringLength * MAX_TOWERS;
-    int windowHeight = MAX_DISKS + 8;
+    int windowWidth = max(diskStringLength * MAX_TOWERS + 16, 74);
+    int windowHeight = MAX_DISKS + 9;
 
     do
     {
