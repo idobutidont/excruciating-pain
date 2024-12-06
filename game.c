@@ -35,8 +35,8 @@ int inGame(PlayerData *player, Score Highscore) {
 
     do
     {
-        if (input_result == 0) setConsoleSize(windowWidth, windowHeight);
         clear_screen();
+        if (input_result == 0) setConsoleSize(windowWidth, windowHeight);
 
         printCursor(player->handPosition);
         printHand(player->handPosition, player->hand);
@@ -444,6 +444,7 @@ int initializePlayerMenu(PlayerData *player) {
         if (DiffSelect(&*player) == EXIT) return EXIT;
         InputInitial(player->initial);
 
+        clear_screen();
         setConsoleSize(58, 8);
 
         printf( "\n\tDisks: %d\n"

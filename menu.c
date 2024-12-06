@@ -69,6 +69,7 @@ int MenuItem(int ItemsCount, const char* MenuHeader, const char* MenuItems[], co
     int input;
     int cursor = 0;
 
+    clear_screen();
     setConsoleSize((ItemsCount + 2) * 12, (ItemsCount + 2) * 2);
 
     do
@@ -155,6 +156,7 @@ void ChangeableMenu(int *item, const char* NameItem, int minSize, int maxSize) {
     windowWidth =(int) max( strlen(NameItem) + 32, 42);
     windowHeight = 6;
 
+    clear_screen();
     setConsoleSize(windowWidth, windowHeight);
 
     do

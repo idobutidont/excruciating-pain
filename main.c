@@ -19,9 +19,10 @@ void HowToPlay();
 
 void startGame(PlayerData player);
 
-void printEndScreen(int WinOrLose);
+void printEndScreen(int WinOrLose, Score playerScore);
 
 int main() {
+    SetConsoleTitle("Tower Of Hanoi");
     MainMenu();
     return 0;
 }
@@ -101,9 +102,10 @@ void startGame(PlayerData player) {
         if (playerScore.score > Highscore.score)
             saveHighscore(&playerScore);
 
-        printEndScreen(result);
-
         remove(SAVE_FILE);
+
+        printEndScreen(result, playerScore);
+
         return;
 
     case EXIT:
@@ -114,10 +116,12 @@ void startGame(PlayerData player) {
     }
 }
 
-void printEndScreen(int WinOrLose) {
+void printEndScreen(int WinOrLose, Score playerScore) {
 
     clear_screen();
-    setConsoleSize(43, 7);
+    setConsoleSize(45, 10);
+
+    printf("\n");
 
     if (WinOrLose == LOSE)
     printfColor(
@@ -128,7 +132,7 @@ void printEndScreen(int WinOrLose) {
             "   |_|\\___/ \\__,_| |_____\\___/|___/\\__(_)\n\n"
     , 12);
 
-    else 
+    else if (WinOrLose == WON)
     printfColor(
                 " __   __           __        __          _ \n"
                 " \\ \\ / /__  _   _  \\ \\      / /__  _ __ | |\n"
@@ -137,8 +141,9 @@ void printEndScreen(int WinOrLose) {
                 "   |_|\\___/ \\__,_|    \\_/\\_/ \\___/|_| |_(_)\n\n"
     , 11);
 
+    printf("\tName: %s\tScore: %d", playerScore.initial, playerScore.score);
     
-    printf("Press any key to return to the main menu...");
+    printf("\n Press any key to return to the main menu...");
     getch();
 }
 

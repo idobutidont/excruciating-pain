@@ -49,7 +49,6 @@ void printWrongMove(int input_result);
 int MoveCursor(int LeftOrRight, int *hand_position);
 int PickUpDisk(Tower *tower, int *hand);
 int PutDownDisk(Tower *tower, int *hand);
-void IncrementMove(int *moves);
 // End Gameplay Modules
 
 // String Conversion Handling Modules
@@ -58,6 +57,7 @@ void TowerToString(char* stringTower,int biggest_disk, char accessories);
 // End String Conversion
 
 // Game Calculation Modules
+void IncrementMove(int *moves);
 int CalculateMinMove(int disk, int tower);
 int CalculateScoreWeight(PlayerData *player);
 void CalculateScore(PlayerData *player, int scoreWeight);
