@@ -28,9 +28,4 @@ int saveHighscore(Score *highscore);
 void initializeHighscore(Score *Highscore);
 // End Highscore handling
 
-// In game score handling modules
-int CalculateScoreWeight(PlayerData *player);
-void CalculateScore(PlayerData *player, int scoreWeight);
-// end score handling
-
 #endif

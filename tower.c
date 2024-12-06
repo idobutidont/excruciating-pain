@@ -1,8 +1,8 @@
 /***************************************************************
 * FILENAME: tower.c
-* DESCRIPTION: 
-* AUTHOR: 
-* DATE: 
+* DESCRIPTION: Basic Tower of Hanoi disk and tower handling, using stack array implementation
+* AUTHOR: Idotoho
+* DATE: 13 / 11 / 2024
 ****************************************************************/
 
 #include "tower.h"

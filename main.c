@@ -1,11 +1,11 @@
 /***************************************************************
 * FILENAME: main.c
-* DESCRIPTION: 
-* AUTHOR: 
-* DATE: 
+* DESCRIPTION: Program utama yang memulai permainan
+* AUTHOR: Azzar, Idotoho
+* DATE: 11 / 11 / 2024
 ****************************************************************/
 
-#include "helper.h"
+#include "menu.h"
 #include "game.h"
 #include <stdio.h>
 #include <windows.h>

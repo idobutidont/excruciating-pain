@@ -1,12 +1,12 @@
 /***************************************************************
 * FILENAME: game.c
-* DESCRIPTION: 
-* AUTHOR: 
-* DATE: 
+* DESCRIPTION: Permainan Tower Of Hanoi, dari inisialisasi Player sampai selesai.
+* AUTHOR: AZZAR, IDO, Nurahma
+* DATE: 13 / 11 / 2024
 ****************************************************************/
 
 
-#include "helper.h"
+#include "menu.h"
 #include "game.h"
 
 #include <string.h>
@@ -18,6 +18,45 @@
 #define max(a,b) a > b ? a : b
 
 int MAX_DISKS, MAX_TOWERS;
+
+// Main module
+int inGame(PlayerData *player, Score Highscore) {
+
+    MAX_DISKS = player->max_disks;
+    MAX_TOWERS = player->max_towers;
+
+    // biggest_disk + '<' + '>'
+    int diskStringLength = 2 * MAX_DISKS + 1;
+    int input_result = 0;
+    int scoreWeight = CalculateScoreWeight(&*player);
+
+    int windowWidth = max(diskStringLength * MAX_TOWERS + 16, 74);
+    int windowHeight = MAX_DISKS + 9;
+
+    do
+    {
+        if (input_result == 0) setConsoleSize(windowWidth, windowHeight);
+        clear_screen();
+
+        printCursor(player->handPosition);
+        printHand(player->handPosition, player->hand);
+        printTower(player->tower);  
+        printUI(player->moves, player->max_moves, player->score, input_result, Highscore);
+
+        if (HasWon(&*player)) return WON;
+        if (HasLost(&*player)) return LOSE;
+
+        //refrain the player from spamming or making unnecessary input
+        while ((input_result = PlayerEvent(&*player)) == UNNECESSARY_INPUT);
+
+        if (MoveIsValid(input_result)) savePlayer(&*player);
+
+        if (HasExit(input_result)) return EXIT;
+
+        if (HasPutDownDisk(input_result)) { IncrementMove(&player->moves); CalculateScore(&*player, scoreWeight);}
+
+    } while (1);
+}
 
 // Cases
 int HandIsEmpty(int hand) {
@@ -185,6 +224,100 @@ void printWrongMove(int input_result) {
 }
 // end of Prints
 
+// String Conversion Modules
+//PRECONDITION besar_disks pasti lebih dari 0.
+void DiskToString(char* stringDisk, int current_disk, int biggest_disk) {
+    
+    int count = 0;
+    int space = (biggest_disk - current_disk) / 2;
+
+    for (int i = 0; i < space; ++i)
+        stringDisk[count++] = ' ';
+
+    stringDisk[count++] = '<';
+
+    for (int i = 0; i < current_disk; ++i)
+        stringDisk[count++] = '=';
+
+    stringDisk[count++] = '>';
+
+    for (int i = 0; i < space; ++i)
+        stringDisk[count++] = ' ';
+
+    stringDisk[count] = '\0';
+}
+
+void TowerToString(char* stringTower, int biggest_disk, char accessories) {
+
+    int count = 0;
+    int space = (biggest_disk / 2) + 1;
+
+    for (int i = 0; i < space; ++i)
+        stringTower[count++] = ' ';
+    
+    stringTower[count++] = accessories;
+
+    for (int i = 0; i < space; ++i)
+        stringTower[count++] = ' ';
+
+    stringTower[count] = '\0';
+}
+// End String Conversion
+
+// Game Calculation Modules
+// Use a Memo to handle repeating T(disk, tower) calculation.
+int moveMemo[32][8] = {0};
+
+// FSC Implemented using ChatGPT
+// Memoization, more base cases, code cleanup by Azzar
+// Based on Frame Stewart Conjecture
+int CalculateMinMove(int disk, int tower) {
+
+    // base cases
+    if (disk == 0) return 0;
+    if (disk == 1) return 1;
+    if (tower == 3) return (1 << disk) - 1;     // 2^disks - 1
+    if (tower < 3) return INT_MAX;              // since there's no way to solve a 1 or 2 towers in tower of hanoi with more than 1 disk
+    if (disk < tower) return (2 * disk) - 1;
+    if (disk == tower) return (2 * disk) + 1;
+
+    // Check if the current calculation has already been saved into memo
+    if (moveMemo[disk][tower] != 0) return moveMemo[disk][tower];
+
+    int moves;
+    int min_moves = INT_MAX;
+
+    // T(disk, tower) = Min (1 <= i < disk) [2 * T(i, tower) + T(disk - i, tower - 1)]
+    for (int i = 1; i < disk; ++i) {
+        moves = 2 * CalculateMinMove(i, tower) + CalculateMinMove(disk - i, tower - 1);
+
+        if (moves < min_moves) {
+            min_moves = moves;
+        }
+    }
+
+    // "Memorize" the result for the current disk and tower
+    moveMemo[disk][tower] = min_moves; 
+
+    return min_moves;
+}
+
+int CalculateScoreWeight(PlayerData *player) {
+    return player->difficultyFactor * player->max_disks / (player->max_towers);
+}
+
+void CalculateScore(PlayerData *player, int scoreWeight) {
+    
+    int minMove = CalculateMinMove(player->max_disks, player->max_towers);
+
+    if (player->moves > minMove) {
+        player->score -= 2 * scoreWeight;
+    } else {
+        player->score += scoreWeight;
+    }
+}
+// End Calculation
+
 // Gameplay Modules
 int MoveCursor(int LeftOrRight, int *hand_position) {
 
@@ -258,44 +391,6 @@ int PlayerEvent(PlayerData *player) {
         return UNNECESSARY_INPUT;
         
     }
-}
-
-int inGame(PlayerData *player, Score Highscore) {
-
-    MAX_DISKS = player->max_disks;
-    MAX_TOWERS = player->max_towers;
-
-    // biggest_disk + '<' + '>'
-    int diskStringLength = 2 * MAX_DISKS + 1;
-    int input_result = 0;
-    int scoreWeight = CalculateScoreWeight(&*player);
-
-    int windowWidth = max(diskStringLength * MAX_TOWERS + 16, 74);
-    int windowHeight = MAX_DISKS + 9;
-
-    do
-    {
-        if (input_result == 0) setConsoleSize(windowWidth, windowHeight);
-        clear_screen();
-
-        printCursor(player->handPosition);
-        printHand(player->handPosition, player->hand);
-        printTower(player->tower);  
-        printUI(player->moves, player->max_moves, player->score, input_result, Highscore);
-
-        if (HasWon(&*player)) return WON;
-        if (HasLost(&*player)) return LOSE;
-
-        //refrain the player from spamming or making unnecessary input
-        while ((input_result = PlayerEvent(&*player)) == UNNECESSARY_INPUT);
-
-        if (MoveIsValid(input_result)) savePlayer(&*player);
-
-        if (HasExit(input_result)) return EXIT;
-
-        if (HasPutDownDisk(input_result)) { IncrementMove(&player->moves); CalculateScore(&*player, scoreWeight);}
-
-    } while (1);
 }
 
 int initializePlayer (PlayerData *player) {

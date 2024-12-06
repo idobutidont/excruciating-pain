@@ -52,6 +52,17 @@ int PutDownDisk(Tower *tower, int *hand);
 void IncrementMove(int *moves);
 // End Gameplay Modules
 
+// String Conversion Handling Modules
+void DiskToString(char* stringDisk,int current_disk, int biggest_disk);
+void TowerToString(char* stringTower,int biggest_disk, char accessories);
+// End String Conversion
+
+// Game Calculation Modules
+int CalculateMinMove(int disk, int tower);
+int CalculateScoreWeight(PlayerData *player);
+void CalculateScore(PlayerData *player, int scoreWeight);
+// End Game Calculation
+
 // Player Input
 int PlayerEvent(PlayerData *player);
 

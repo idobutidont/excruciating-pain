@@ -1,12 +1,12 @@
 /***************************************************************
 * FILENAME: score.c
-* DESCRIPTION: 
-* AUTHOR: 
+* DESCRIPTION: file untuk Scoreboard, simpan skor, dan highskor
+* AUTHOR: NURAHMA, AZZAR
 * DATE: 
 ****************************************************************/
 
 #include "score.h"
-#include "helper.h"
+#include "menu.h"
 
 #include <stdio.h>
 #include <windows.h>
@@ -150,19 +150,4 @@ void initializeHighscore (Score *Highscore) {
         strcpy(Highscore->initial, "NUL");
     }
 
-}
-
-int CalculateScoreWeight(PlayerData *player) {
-    return player->difficultyFactor * player->max_disks / (player->max_towers);
-}
-
-void CalculateScore(PlayerData *player, int scoreWeight) {
-    
-    int minMove = CalculateMinMove(player->max_disks, player->max_towers);
-
-    if (player->moves > minMove) {
-        player->score -= 2 * scoreWeight;
-    } else {
-        player->score += scoreWeight;
-    }
 }

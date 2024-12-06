@@ -1,5 +1,5 @@
-#ifndef helper_h
-#define helper_h
+#ifndef menu_h
+#define menu_h
 
 #define UP                  0
 #define LEFT                1
@@ -25,12 +25,6 @@ void printSpaces(int length);
 // String Handling
 int sizeArrStr(const char* string[]);
 // End String handling
-
-// Game Handling
-void DiskToString(char* stringDisk,int current_disk, int biggest_disk);
-void TowerToString(char* stringTower,int biggest_disk, char accessories);
-int CalculateMinMove(int disk, int tower);
-// End Game Handling
 
 // Menu Modules
 // MenuItems[] require a NULL at the end of the array as a breakpoint.

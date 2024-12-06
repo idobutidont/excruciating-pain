@@ -1,8 +1,8 @@
 /***************************************************************
 * FILENAME: player.c
-* DESCRIPTION: 
-* AUTHOR: 
-* DATE: 
+* DESCRIPTION: Player state handling, guna untuk saving and loading.
+* AUTHOR: Azzar
+* DATE: 21 / 11 / 2024
 ****************************************************************/
 
 #include "player.h"
