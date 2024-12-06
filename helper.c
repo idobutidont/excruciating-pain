@@ -53,19 +53,6 @@ int sizeArrStr(const char* string[]) {
     return i;
 }
 
-int StringIsEmpty(const char* string) {
-    return string[0] == '\0';
-}
-
-void DeleteString(char* string) {
-    string[0] = '\0';
-}
-
-void EmptyString(char* string, int size) {
-    for (int i = 0 ; i < size; ++i)
-        string[i] = 0;
-}
-
 //PRECONDITION besar_disks pasti lebih dari 0.
 void DiskToString(char* stringDisk, int current_disk, int biggest_disk) {
     

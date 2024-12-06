@@ -24,9 +24,6 @@ void printSpaces(int length);
 
 // String Handling
 int sizeArrStr(const char* string[]);
-int StringIsEmpty(const char* string);
-void DeleteString(char* string);
-void EmptyString(char* string, int size);
 // End String handling
 
 // Game Handling
