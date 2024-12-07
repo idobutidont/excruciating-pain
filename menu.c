@@ -149,6 +149,12 @@ void ChangeableMenu(int *item, const char* NameItem, int minSize, int maxSize) {
 
     int input_result, windowWidth, windowHeight;
 
+    if (minSize > maxSize) {
+        int temp = minSize;
+        minSize = maxSize;
+        maxSize = temp;
+    }
+
     *item = minSize;
 
     // strlen + 2 indents (8) + " Amount: <  >" (13) + maxSize (roughly 3 digit at max lol)
