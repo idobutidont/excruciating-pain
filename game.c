@@ -204,19 +204,19 @@ void printUI(int moves, int max_moves, int score, int input_result, Score Highsc
 
 void printWrongMove(int input_result) {
     switch(input_result) {
-    case WM_DISK_AT_HAND: 
+    case ERR_DISK_AT_HAND: 
         printfColor("\n\tYou already got disk on your hand.", 12);
         break;
 
-    case WM_TOWER_IS_EMPTY: 
+    case ERR_TOWER_IS_EMPTY: 
         printfColor("\n\tThere's no disk there.", 12);
         break;
 
-    case WM_HAND_IS_EMPTY: 
+    case ERR_HAND_IS_EMPTY: 
         printfColor("\n\tYour hand is empty.", 12);
         break;
 
-    case WM_HAND_IS_BIGGER_THAN_TOWER: 
+    case ERR_HAND_IS_BIGGER_THAN_TOWER: 
         printfColor("\n\tThe disk on your hand is bigger than the one on the tower.", 12);
         break;
 
@@ -372,10 +372,10 @@ int MoveCursor(int LeftOrRight, int *hand_position) {
 int PickUpDisk(Tower *tower, int *hand) {
 
     if (!HandIsEmpty(*hand)) {
-        return WM_DISK_AT_HAND;
+        return ERR_DISK_AT_HAND;
     }
     if (TowerIsEmpty(*tower)) {
-        return WM_TOWER_IS_EMPTY;
+        return ERR_TOWER_IS_EMPTY;
     }
 
     *hand = pop(&(*tower));
@@ -385,10 +385,10 @@ int PickUpDisk(Tower *tower, int *hand) {
 int PutDownDisk(Tower *tower, int *hand) {
 
     if (HandIsEmpty(*hand)) {
-        return WM_HAND_IS_EMPTY;
+        return ERR_HAND_IS_EMPTY;
     }
     if ((!TowerIsEmpty(*tower) && HandIsBiggerThanTower(*hand, *tower))) {
-        return WM_HAND_IS_BIGGER_THAN_TOWER;
+        return ERR_HAND_IS_BIGGER_THAN_TOWER;
     }
 
     push(&(*tower), *hand);
@@ -509,11 +509,11 @@ void InputInitial(char* initial){
     char input;
 
     while (1) {
-        input = (char) toupper(getch());
+        input = (char) toupper(getch()); // initial must be capital.
 
-        if (input == '\r' && count > 0) break; // enter
+        if (input == '\r' && count > 0) break;
 
-        if (input == '\b') { // backspace (hapus karakter sebelumnya)
+        if (input == '\b') {
             if (count > 0) {
                 initial[--count] = '\0';
                 printf("\b \b");
@@ -521,7 +521,8 @@ void InputInitial(char* initial){
             continue;
         }
 
-        if (count < 3 && input >= 'A' && input <= 'Z') { // inisial harus huruf kapital alfabet.
+        // make sure player input somewhere between A - Z
+        if (count < 3 && input >= 'A' && input <= 'Z') {
             initial[count++] = input;
             printf("%c", input);
         }

@@ -3,10 +3,10 @@
 
 // WM = WRONG MOVE
 // Invalid Player Moves
-#define WM_DISK_AT_HAND                -50
-#define WM_TOWER_IS_EMPTY              -51
-#define WM_HAND_IS_EMPTY               -52
-#define WM_HAND_IS_BIGGER_THAN_TOWER   -53
+#define ERR_DISK_AT_HAND                -50
+#define ERR_TOWER_IS_EMPTY              -51
+#define ERR_HAND_IS_EMPTY               -52
+#define ERR_HAND_IS_BIGGER_THAN_TOWER   -53
 
 // Valid Player Moves
 #define DISK_PUT_DOWN   111

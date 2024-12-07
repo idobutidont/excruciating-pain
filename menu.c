@@ -23,7 +23,7 @@ void setConsoleSize(int width, int height) {
 }
 
 // AUTHOR: (Duthomhas) https://cplusplus.com/articles/4z18T05o/
-// Significantly more efficient clear screen function
+// Significantly faster clear screen function
 void clear_screen() {
     HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD coordScreen = { 0, 0 };
