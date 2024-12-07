@@ -18,7 +18,7 @@ void Continue();
 void HowToPlay();
 
 void playGame(PlayerData *player);
-void endGame(int result, PlayerData *player, Score Highscore);
+void endGame(int result, PlayerData *player);
 
 void printEndScreen(int WinOrLose, Score playerScore);
 
@@ -88,10 +88,10 @@ void playGame(PlayerData *player) {
 
     int result = processGame(&*player, Highscore);
 
-    endGame(result, &*player, Highscore);
+    endGame(result, &*player);
 }
 
-void endGame(int result, PlayerData *player, Score Highscore) {
+void endGame(int result, PlayerData *player) {
 
     Score playerScore;
 
@@ -101,9 +101,6 @@ void endGame(int result, PlayerData *player, Score Highscore) {
 
         PutPlayerToScore(&*player, &playerScore);
         PutScoreToFile(playerScore);
-
-        if (playerScore.score > Highscore.score)
-            saveHighscore(&playerScore);
 
         remove(SAVE_FILE);
 

@@ -2,7 +2,7 @@
 * FILENAME: score.c
 * DESCRIPTION: file untuk Scoreboard, simpan skor, dan highskor
 * AUTHOR: NURAHMA, AZZAR
-* DATE: 
+* DATE: 24 / 11 / 2024
 ****************************************************************/
 
 #include "score.h"
@@ -136,34 +136,27 @@ int PutScoreToFile(Score score) {
 }
 
 int loadHighscore(Score *highscore) {
+
     FILE *f;
 
-    if ((f = fopen(HIGHSCORE_FILE, "r")) == NULL) {
+    // the result is either score.dat is sorted OR score.dat does not exist.
+    if (SortScore() == -1) {
         return -1;
     }
 
+    // guaranteed highest score
+    f = fopen(SCORE_FILE, "r");
     fread (&(*highscore), sizeof(Score), 1, f);
     fclose(f);
     return 1;
 }
 
-int saveHighscore(Score *highscore) {
-    FILE *f;
-
-    if ((f = fopen(HIGHSCORE_FILE, "w")) == NULL) {
-        return -1;
-    }
-
-    fwrite (&(*highscore), sizeof(Score), 1, f);
-    fclose(f);
-    return 1;
-}
-
-void initializeHighscore (Score *Highscore) {
+void initializeHighscore (Score *highscore) {
     
-    if (loadHighscore(&*Highscore) == -1) {
-        Highscore->score = -1;
-        strcpy(Highscore->initial, "NUL");
+    if (loadHighscore(&*highscore) == -1) {
+        highscore->score = -1;
+        strcpy(highscore->initial, "NUL");
+        return;
     }
 
 }

@@ -4,7 +4,6 @@
 #include "player.h"
 
 #define SCORE_FILE "score.dat"
-#define HIGHSCORE_FILE "highscore.dat"
 
 typedef struct {
     char initial[3];
@@ -25,8 +24,7 @@ int PutScoreToFile(Score score);
 
 // Highscore handling modules
 int loadHighscore(Score *highscore);
-int saveHighscore(Score *highscore);
-void initializeHighscore(Score *Highscore);
+void initializeHighscore(Score *highscore);
 // End Highscore handling
 
 #endif
