@@ -15,7 +15,7 @@
 
 void ViewScore() {
 
-    if (SortScore() == -1) {
+    if (SortScoreFile() == -1) {
         printNoScore();
         return;
     }
@@ -44,7 +44,7 @@ void printNoScore() {
     getch();
 }
 
-int SortScore() {
+int SortScoreFile() {
     FILE *f;
 
     // Buka file untuk membaca
