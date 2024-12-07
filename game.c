@@ -476,7 +476,7 @@ int initializePlayerMenu(PlayerData *player) {
         InputInitial(player->initial);
 
         clear_screen();
-        setConsoleSize(58, 8);
+        setConsoleSize(64, 8);
 
         printf( "\n\tDisks: %d\n"
                 "\tTowers: %d\n"
