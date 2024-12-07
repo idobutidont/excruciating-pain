@@ -38,8 +38,8 @@ void printNoScore() {
 
     clear_screen();
     setConsoleSize(45 ,4);
-    printf( "\n\tNo Score Data Exist."
-            "\n\tComplete a game to input one.");
+    printf( "\n\tNo Score Data Exists."
+            "\n\tFinish a game to input one.");
 
     getch();
 }

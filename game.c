@@ -483,7 +483,7 @@ int initializePlayerMenu(PlayerData *player) {
                 "\tInitial: %s\n\n"
 
                 "\tPress Enter to start the game...\n"
-                "\tPress any key to redo all your settings...",
+                "\tPress any other key to redo all your settings...",
                 player->max_disks, player->max_towers, player->initial
         );
     } while (getch() != '\r');

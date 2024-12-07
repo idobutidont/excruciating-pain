@@ -18,7 +18,7 @@ void initializeDisks(Tower *tower, int MAX_DISKS) {
         push(&*tower, i);
 }
 
-// Cases
+// Returns 1 if tower.top is empty
 int TowerIsEmpty(Tower tower) {
     return tower.top <= -1;
 }
@@ -29,7 +29,7 @@ void push(Tower *tower, int disk) {
     tower->disks[++(tower->top)] = disk;    // add the disk to the new top position
 }
 
-// Function to "pop" a disk from a tower
+// Function to remove the topmost disk from a tower, and returns the disk
 // Precondition Tower is not empty
 int pop(Tower *tower) {
     return tower->disks[(tower->top)--];    // return the removed disk (tower.disks[top]; top--;)
