@@ -101,7 +101,7 @@ void endGame(int result, PlayerData *player) {
 
         PutPlayerToScore(&*player, &playerScore);
         PutScoreToFile(playerScore);
-        SortScore();
+        SortScoreFile();
 
         remove(SAVE_FILE);
 

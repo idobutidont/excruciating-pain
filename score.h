@@ -12,7 +12,7 @@ typedef struct {
 
 // Scoreboard modules
 void ViewScore();
-int SortScore();
+int SortScoreFile();
 int printScores();
 void printNoScore();
 // End Scoreboard
