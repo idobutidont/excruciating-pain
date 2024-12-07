@@ -15,6 +15,7 @@ typedef struct {
 void ViewScore();
 int SortScore();
 int printScores();
+void printNoScore();
 // End Scoreboard
 
 // file score handling modules

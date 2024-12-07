@@ -15,19 +15,33 @@
 
 void ViewScore() {
 
+    if (SortScore() == -1) {
+        printNoScore();
+        return;
+    }
+
     clear_screen();
     setConsoleSize(32, 26);
 
-    SortScore();
-
     printf("\n\t  SCOREBOARD\n");
     printf("\tName\tScores\n");
+
     printScores();
 
     printf("\n    Press any key to exit...");
 
     getch();
 
+}
+
+void printNoScore() {
+
+    clear_screen();
+    setConsoleSize(45 ,4);
+    printf( "\n\tNo Score Data Exist."
+            "\n\tComplete a game to input one.");
+
+    getch();
 }
 
 int SortScore() {
