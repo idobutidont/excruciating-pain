@@ -14,13 +14,13 @@
 #define CURSOR_MOVE     113
 
 #define WON 101
-#define LOSE -101
+#define LOST -101
 #define EXIT -100
 
 #include "score.h"
 
 // Main Module
-int inGame(PlayerData *player, Score Highscore);
+int processGame(PlayerData *player, Score Highscore);
 /* Return 1 if the player won, -1 otherwise */
 
 // Cases
@@ -43,6 +43,7 @@ void printCursor(int hand_position);
 void printHand(int hand_position, int hand);
 void printUI(int moves, int max_moves, int score, int input_result, Score Highscore);
 void printWrongMove(int input_result);
+void printEndScreen(int WinOrLose, Score playerScore);
 // End Print Modules
 
 // Gameplay Modules

@@ -20,7 +20,7 @@
 int MAX_DISKS, MAX_TOWERS;
 
 // Main module
-int inGame(PlayerData *player, Score Highscore) {
+int processGame(PlayerData *player, Score Highscore) {
 
     MAX_DISKS = player->max_disks;
     MAX_TOWERS = player->max_towers;
@@ -44,7 +44,7 @@ int inGame(PlayerData *player, Score Highscore) {
         printUI(player->moves, player->max_moves, player->score, input_result, Highscore);
 
         if (HasWon(&*player)) return WON;
-        if (HasLost(&*player)) return LOSE;
+        if (HasLost(&*player)) return LOST;
 
         //refrain the player from spamming or making unnecessary input
         while ((input_result = PlayerEvent(&*player)) == UNNECESSARY_INPUT);
@@ -159,7 +159,7 @@ void printCursor(int hand_position) {
     int diskStringLength = biggest_disk + 2;
 
     char stringCursor[diskStringLength];    
-    TowerToString(stringCursor, biggest_disk, 25); // 25 is the ASCII code for ↓ 
+    TowerToString(stringCursor, biggest_disk, 25); // 25 is the ASCII code for ↓ (DOWN_ARROW)
 
     printf("\n\t");
 
@@ -221,6 +221,37 @@ void printWrongMove(int input_result) {
         break;
 
     }
+}
+
+void printEndScreen(int WinOrLose, Score playerScore) {
+
+    clear_screen();
+    setConsoleSize(45, 10);
+
+    printf("\n");
+
+    if (WinOrLose == LOST)
+    printfColor(
+            " __   __            _              _   _ \n"
+            " \\ \\ / /__  _   _  | |    ___  ___| |_| |\n"
+            "  \\ V / _ \\| | | | | |   / _ \\/ __| __| |\n"
+            "   | | (_) | |_| | | |__| (_) \\__ \\ |_|_|\n"
+            "   |_|\\___/ \\__,_| |_____\\___/|___/\\__(_)\n\n"
+    , 12);
+
+    else if (WinOrLose == WON)
+    printfColor(
+                " __   __           __        __          _ \n"
+                " \\ \\ / /__  _   _  \\ \\      / /__  _ __ | |\n"
+                "  \\ V / _ \\| | | |  \\ \\ /\\ / / _ \\| '_ \\| |\n"
+                "   | | (_) | |_| |   \\ V  V / (_) | | | |_|\n"
+                "   |_|\\___/ \\__,_|    \\_/\\_/ \\___/|_| |_(_)\n\n"
+    , 11);
+
+    printf("\tName: %s\tScore: %d", playerScore.initial, playerScore.score);
+    
+    printf("\n Press any key to return to the main menu...");
+    getch();
 }
 // end of Prints
 
@@ -308,13 +339,17 @@ int CalculateScoreWeight(PlayerData *player) {
 
 void CalculateScore(PlayerData *player, int scoreWeight) {
     
-    int minMove = CalculateMinMove(player->max_disks, player->max_towers);
+    int minMove = 3 * player->max_moves / 4 + 1;
 
     if (player->moves > minMove) {
         player->score -= 2 * scoreWeight;
     } else {
         player->score += scoreWeight;
     }
+}
+
+void IncrementMove(int *moves) {
+    ++(*moves);
 }
 // End Calculation
 
@@ -360,10 +395,6 @@ int PutDownDisk(Tower *tower, int *hand) {
     *hand = 0;
 
     return DISK_PUT_DOWN;
-}
-
-void IncrementMove(int *moves) {
-    ++(*moves);
 }
 // End Gameplay
 

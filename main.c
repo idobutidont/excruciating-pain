@@ -17,7 +17,8 @@ void NewGame();
 void Continue();
 void HowToPlay();
 
-void startGame(PlayerData player);
+void playGame(PlayerData *player);
+void endGame(int result, PlayerData *player, Score Highscore);
 
 void printEndScreen(int WinOrLose, Score playerScore);
 
@@ -56,8 +57,8 @@ void MainMenu() {
 }
 
 void NewGame() {
-    PlayerData player;
 
+    PlayerData player;
     if (loadPlayer(&player) == 1) {
         printf("\n\tYou have an ongoing Progress. Do you want to proceed? [Y/N]: ");
         if (toupper(getche()) != 'Y') return;
@@ -65,8 +66,7 @@ void NewGame() {
 
     if (initializePlayer(&player) == EXIT) return;
 
-    startGame(player);
-    return;
+    playGame(&player);
 }
 
 void Continue() {
@@ -78,25 +78,28 @@ void Continue() {
         return;
     }
 
-    startGame(player);
-
-    return;
-
+    playGame(&player);
 }
 
-void startGame(PlayerData player) {
+void playGame(PlayerData *player) {
 
-    // InitiateHighscore
-    Score Highscore, playerScore;
+    Score Highscore;
     initializeHighscore(&Highscore);
 
-    int result = inGame(&player, Highscore);
+    int result = processGame(&*player, Highscore);
+
+    endGame(result, &*player, Highscore);
+}
+
+void endGame(int result, PlayerData *player, Score Highscore) {
+
+    Score playerScore;
 
     switch (result) {
 
-    case WON: case LOSE:
+    case WON: case LOST:
 
-        PutPlayerToScore(player, &playerScore);
+        PutPlayerToScore(&*player, &playerScore);
         PutScoreToFile(playerScore);
 
         if (playerScore.score > Highscore.score)
@@ -114,37 +117,7 @@ void startGame(PlayerData player) {
     default:
         return;
     }
-}
 
-void printEndScreen(int WinOrLose, Score playerScore) {
-
-    clear_screen();
-    setConsoleSize(45, 10);
-
-    printf("\n");
-
-    if (WinOrLose == LOSE)
-    printfColor(
-            " __   __            _              _   _ \n"
-            " \\ \\ / /__  _   _  | |    ___  ___| |_| |\n"
-            "  \\ V / _ \\| | | | | |   / _ \\/ __| __| |\n"
-            "   | | (_) | |_| | | |__| (_) \\__ \\ |_|_|\n"
-            "   |_|\\___/ \\__,_| |_____\\___/|___/\\__(_)\n\n"
-    , 12);
-
-    else if (WinOrLose == WON)
-    printfColor(
-                " __   __           __        __          _ \n"
-                " \\ \\ / /__  _   _  \\ \\      / /__  _ __ | |\n"
-                "  \\ V / _ \\| | | |  \\ \\ /\\ / / _ \\| '_ \\| |\n"
-                "   | | (_) | |_| |   \\ V  V / (_) | | | |_|\n"
-                "   |_|\\___/ \\__,_|    \\_/\\_/ \\___/|_| |_(_)\n\n"
-    , 11);
-
-    printf("\tName: %s\tScore: %d", playerScore.initial, playerScore.score);
-    
-    printf("\n Press any key to return to the main menu...");
-    getch();
 }
 
 void HowToPlay() {

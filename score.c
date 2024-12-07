@@ -38,8 +38,9 @@ int SortScore() {
         return -1;
     }
 
+    // Dapatkan jumlah struct dari, besar file dibagi besar struct nya.
+    // Karena setiap kita nge "write" data ke file, kita tulis dengan besar satu struct.
     fseek(f, 0, SEEK_END);
-
     int structAmount = (int) ftell(f) / (int) sizeof(Score);
 
     Score players[structAmount];
@@ -68,6 +69,9 @@ int SortScore() {
         return -1;
     }
 
+    // hanya tulis 20 atau kurang score saja.
+    structAmount = min(structAmount, 20);
+
     //Tulis data yang sudah diurutkan ke dalam file
     for (int i = 0; i < structAmount; i++) {
         fwrite(&players[i], sizeof(Score), 1, f);
@@ -81,15 +85,13 @@ int printScores() {
 
     FILE *f;
     Score player;
-    int count = 1;
 
     if ((f = fopen(SCORE_FILE, "r")) == NULL) {
         return -1;
     }
 
-    while (fread (&player, sizeof(Score), 1, f) && count <= 20) {
+    while (fread (&player, sizeof(Score), 1, f)) {
         printf("\t%s\t%d\n", player.initial, player.score);
-        count++;
     }
 
     fclose(f);
@@ -97,10 +99,10 @@ int printScores() {
 
 }
 
-int PutPlayerToScore(PlayerData player, Score *score) {
+int PutPlayerToScore(PlayerData *player, Score *score) {
     
-    strcpy(score->initial, player.initial);
-    score->score = player.score;
+    strcpy(score->initial, player->initial);
+    score->score = player->score;
 
     return 1;
 }

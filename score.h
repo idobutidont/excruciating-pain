@@ -18,7 +18,7 @@ int printScores();
 // End Scoreboard
 
 // file score handling modules
-int PutPlayerToScore(PlayerData player, Score *score);
+int PutPlayerToScore(PlayerData *player, Score *score);
 int PutScoreToFile(Score score);
 // end file score handling
 
