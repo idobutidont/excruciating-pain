@@ -139,13 +139,11 @@ int loadHighscore(Score *highscore) {
 
     FILE *f;
 
-    // the result is either score.dat is sorted OR score.dat does not exist.
-    if (SortScore() == -1) {
+    if ( (f = fopen(SCORE_FILE, "r")) == NULL) {
         return -1;
     }
 
     // guaranteed highest score
-    f = fopen(SCORE_FILE, "r");
     fread (&(*highscore), sizeof(Score), 1, f);
     fclose(f);
     return 1;
