@@ -21,7 +21,6 @@
 
 // Main Module
 int processGame(PlayerData *player, Score Highscore);
-/* Return 1 if the player won, -1 otherwise */
 
 // Cases
 int HandIsEmpty(int hand);

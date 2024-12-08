@@ -12,7 +12,7 @@
 #define MOVE_CURSOR 101
 
 // Console Handling
-void setConsoleColor(int color);
+void setConsoleTextColor(int color);
 void setConsoleSize(int width, int height);
 void clear_screen();
 // End Console Handling
@@ -31,15 +31,13 @@ int sizeArrStr(const char* string[]);
 int Menu(const char* MenuHeader, const char* MenuItems[], const char* MenuExtras);
 int MenuItem(int ItemsCount, const char* MenuHeader, const char* MenuItems[], const char* MenuFooter);
 void PrintMenuItems(int ItemsCount, const char* MenuItems[], int Cursor);
-int MenuInput(int *selected, int ItemsCount);
-void MoveMenuCursor(int *selected, int UpOrDown);
+int MenuInput(int *cursor, int minSize, int maxSize);
+void MoveMenuCursor(int *cursor, int UpOrDown);
 
 void ChangeableMenu(int *item, const char* NameItem, int minSize, int maxSize);
-int ChangeableMenuInput(int *item, int minSize, int maxSize);
-
 // Cases
-int CursorIsAtTop(int cursor);
-int CursorIsAtBottom(int cursor, int ItemsCount);
+int isAtLast(int cursor, int last);
+int isAtFirst(int cursor, int first);
 // End Cases
 // End Menu Modules
 

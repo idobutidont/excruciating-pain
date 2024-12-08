@@ -11,7 +11,8 @@
 #include <windows.h>
 #include <stdio.h>
 
-void setConsoleColor(int color) {
+// AUTHOR: (vegaseat)  https://www.daniweb.com/programming/software-development/code/216345/add-a-little-color-to-your-console-text
+void setConsoleTextColor(int color) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, (WORD)color);
 }
@@ -42,9 +43,9 @@ void clear_screen() {
 }
 
 void printfColor(const char* input, int color) {
-    setConsoleColor(color);
+    setConsoleTextColor(color);
     printf("%s", input);
-    setConsoleColor(15); //default console color
+    setConsoleTextColor(15); //default console color
 }
 
 // Basically what this does is print spaces for length time
@@ -79,7 +80,7 @@ int MenuItem(int ItemsCount, const char* MenuHeader, const char* MenuItems[], co
         PrintMenuItems(ItemsCount, MenuItems, cursor);
         printf("\t%s", MenuFooter);
 
-        while ((input = MenuInput(&cursor, ItemsCount)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
+        while ((input = MenuInput(&cursor, 0, ItemsCount - 1)) == UNNECESSARY_INPUT);    // refrain the player from making unnecessary input
         
         if (input != MOVE_CURSOR) return input;
         
@@ -101,20 +102,20 @@ void PrintMenuItems(int ItemsCount, const char* MenuItems[], int Cursor) {
 
 }
 
-int MenuInput(int *cursor, int ItemsCount) {
+int MenuInput(int *cursor, int minSize, int maxSize) {
     
     switch (PlayerInput()) {
 
     case LEFT: case UP:
 
-        if (CursorIsAtTop(*cursor)) return UNNECESSARY_INPUT;
+        if (isAtFirst(*cursor, minSize)) return UNNECESSARY_INPUT;
         MoveMenuCursor(&(*cursor), UP);
 
         break;
 
     case RIGHT: case DOWN:
 
-        if (CursorIsAtBottom(*cursor, ItemsCount)) return UNNECESSARY_INPUT;
+        if (isAtLast(*cursor, maxSize)) return UNNECESSARY_INPUT;
         MoveMenuCursor(&(*cursor), DOWN);
 
         break;
@@ -131,7 +132,7 @@ int MenuInput(int *cursor, int ItemsCount) {
 
 void MoveMenuCursor(int *cursor, int UpOrDown) {
     
-    if (UpOrDown == UP) --*(cursor);
+    if (UpOrDown == UP)  --*(cursor);
 
     if (UpOrDown == DOWN) ++*(cursor);
 
@@ -168,11 +169,11 @@ void ChangeableMenu(int *item, const char* NameItem, int minSize, int maxSize) {
     do
     {
         clear_screen();
-        printf("\n\t%s Amount: < %d >", NameItem, *item);
+        printf("\n\t%s Amount (%d-%d): < %d >", NameItem, minSize, maxSize, *item);
 
         printf("\n\n\tPress Enter to Continue...");
 
-        while ((input_result = ChangeableMenuInput(&*item, minSize, maxSize)) == UNNECESSARY_INPUT);
+        while ((input_result = MenuInput(&*item, minSize, maxSize)) == UNNECESSARY_INPUT);
 
         if (input_result != MOVE_CURSOR) return;
 
@@ -180,28 +181,12 @@ void ChangeableMenu(int *item, const char* NameItem, int minSize, int maxSize) {
     
 }
 
-int ChangeableMenuInput(int *item, int minSize, int maxSize) {
-    switch (PlayerInput()) {
+int isAtLast(int item, int last) {
+    return item >= last;
+}
 
-    case RIGHT:
-        if (*item >= maxSize) return UNNECESSARY_INPUT;
-        ++(*item);
-        break;
-    
-    case LEFT:
-        if (*item <= minSize) return UNNECESSARY_INPUT;
-        --(*item);
-        break;
-
-    case PROCEED:
-        return *item;
-
-    default: 
-        return UNNECESSARY_INPUT;
-
-    }
-
-    return MOVE_CURSOR;
+int isAtFirst(int item, int first) {
+    return item <= first;
 }
 
 int PlayerInput() {

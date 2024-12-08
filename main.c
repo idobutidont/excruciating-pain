@@ -20,8 +20,6 @@ void HowToPlay();
 void playGame(PlayerData *player);
 void endGame(int result, PlayerData *player);
 
-void printEndScreen(int WinOrLose, Score playerScore);
-
 int main() {
     SetConsoleTitle("Tower Of Hanoi");
     MainMenu();
